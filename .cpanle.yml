@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/jghfrodu/mgskill.jhdindustrialsolution.com/mgskill/
+    - /bin/cp -R * $DEPLOYPATH
