@@ -5,8 +5,8 @@ $url = $scheme.'://'.$host.(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_U
 $origin = $scheme.'://'.$host.'/';
 $basePath = rtrim(str_replace('\\','/', dirname($_SERVER['SCRIPT_NAME'])), '/');
 $baseUrl = $scheme.'://'.$host.($basePath === '' ? '/' : $basePath.'/');
-$logo = $baseUrl.'assets/images/mg-logo.jpg';
-$promo = $baseUrl.'assets/images/about-us-page/promotional-banner.webp';
+$logo = $baseUrl.'../../assets/images/mg-logo.jpg';
+$promo = $baseUrl.'../../assets/images/about-us-page/promotional-banner.webp';
 ?>
 <!doctype html>
 <html lang="en">
