@@ -48,9 +48,9 @@ $ogImage=$origin.'assets/images/mg-logo.jpg';
 <body>
   <?php require_once __DIR__.'/includes/header.php'; ?>
   <?php require_once __DIR__.'/components/hero-new.php'; ?>
-  <?php require_once __DIR__.'/components/internship-banner.php'; ?>
   <?php require_once __DIR__.'/components/courses-grid.php'; ?>
   <?php require_once __DIR__.'/components/skills-ticker.php'; ?>
+  <?php require_once __DIR__.'/components/promo-banners.php'; ?>
   <?php require_once __DIR__.'/components/nsdc-certificate.php'; ?>
   <?php require_once __DIR__.'/includes/footer.php'; ?>
 </body>

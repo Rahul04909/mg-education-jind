@@ -178,6 +178,7 @@ $promo = $baseUrl.'../../assets/images/about-us-page/promotional-banner.webp';
       </div>
     </div>
   </section>
+  <?php require_once __DIR__.'/../../components/stories-wall.php'; ?>
   <section class="section" aria-label="Mission and focus areas">
     <div class="section-wrap">
       <div class="card">

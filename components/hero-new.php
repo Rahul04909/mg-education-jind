@@ -45,6 +45,22 @@
   .card{min-height:200px}
   .ticker-track{animation-duration:36s}
 }
+@media(max-width:640px){
+  .hero2-title{font-size:24px}
+  .brand-callout{font-size:18px}
+  .card{gap:12px;flex-wrap:wrap;padding:16px;justify-content:flex-start}
+  .card h3{font-size:20px}
+  .card p{font-size:14px}
+  .slide-media img{width:66px}
+  .hero-dotbar{position:static;transform:none;margin-top:10px}
+  .bubble-arrows{display:none}
+  .ticker{padding:6px}
+  .ticker-track{gap:8px;animation-duration:42s}
+  .course-chip{padding:8px 10px;font-weight:600;font-size:14px}
+  .course-chip svg{height:14px;width:14px}
+  .card-slider{display:none}
+  .ticker{display:none}
+}
 </style>
 <section class="hero2" role="region" aria-label="Hero">
   <div class="hero2-wrap">

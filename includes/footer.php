@@ -31,7 +31,7 @@ $baseUrl=$scheme.'://'.$host.($basePath===''?'/':$basePath.'/');
 .legal a{color:#aeb4bf}
 .legal a:hover{color:#fff}
 @media(max-width:900px){.site-footer{--cta-offset:220px}.footer-grid{grid-template-columns:1fr 1fr}.footer-top{flex-direction:column;align-items:flex-start}.footer-form{grid-template-columns:1fr;}}
-@media(max-width:640px){.site-footer{--cta-offset:260px}.footer-grid{grid-template-columns:1fr}.footer-bottom{flex-direction:column;gap:8px}}
+@media(max-width:640px){.site-footer{--cta-offset:0}.footer-top{display:none}.footer-grid{grid-template-columns:1fr 1fr}.footer-bottom{flex-direction:column;gap:8px}}
 </style>
 <footer class="site-footer" role="contentinfo">
   <div class="ft-wrap">
