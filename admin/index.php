@@ -10,6 +10,7 @@ body.sidebar-collapsed .admin-content{margin-left:88px}
 .topchip{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:#fff;border:1px solid var(--line);color:#1a1f27}
 .topchip .icon{height:18px;width:18px;stroke:#1e293b;fill:none;stroke-width:2}
 .top-actions{display:flex;align-items:center;gap:10px;margin-left:auto}
+.top-avatar{height:64px;width:64px;border-radius:12px;object-fit:cover;box-shadow:0 8px 18px rgba(0,0,0,.12);border:2px solid #fff}
 .title{margin:8px 0 4px 0;color:#0b1020;font-size:26px;font-weight:800}
 .crumbs{color:#6f7787}
 .hero{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:14px;margin-top:16px}
@@ -68,7 +69,7 @@ body.sidebar-collapsed .admin-content{margin-left:88px}
       <div class="topchip"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>WorkDo</div>
       <div class="topchip"><svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/></svg>Add-On Manager</div>
       <div class="top-actions">
-        <button class="cta"><svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Create Workspace</button>
+        <img src="../assets/images/rajkumar.jpeg" alt="Rajkumar" class="top-avatar"/>
       </div>
     </div>
     <h1 class="title">Dashboard</h1>

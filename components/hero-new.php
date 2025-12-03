@@ -15,7 +15,7 @@
 .feature span{color:#3a4050;font-weight:600}
 .brands{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
 .brand-chip{padding:8px 12px;border-radius:999px;border:1px solid #e1e6f0;background:#fff;color:#2b313b;font-weight:600}
-.portrait{height:250px;width:132px;border-radius:24px;background:#fff;border:1px solid #e3ebf7;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 24px rgba(0,0,0,.08);overflow:hidden}
+.portrait{height:160px;width:152px;border-radius:24px;background:#fff;border:1px solid #e3ebf7;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 24px rgba(0,0,0,.08);overflow:hidden}
 .portrait img{width:100%;height:100%;object-fit:cover}
 .card-slider{position:relative;overflow:hidden}
 .card{background:linear-gradient(135deg,#3b0f7b 0%,#5b15bd 60%,#8b5cf6 100%);color:#fff;border-radius:18px;box-shadow:none;padding:18px;min-height:220px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex:0 0 100%}
@@ -86,7 +86,7 @@
           </div>
         </div>
       </div>
-      <div class="portrait"><img src="assets/images/rahul-1.webp" alt="Student"/></div>
+      <div class="portrait"><img src="assets/images/rajkumar.jpeg" alt="Student"/></div>
       <div class="card-slider">
         <div class="slides">
           <div class="card is-active">

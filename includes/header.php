@@ -1,4 +1,8 @@
 <?php
+$scheme=(!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off')?'https':'http';
+$host=isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'localhost';
+$basePath=rtrim(str_replace('\\','/',dirname($_SERVER['SCRIPT_NAME'])),'/');
+$baseUrl=$scheme.'://'.$host.($basePath===''?'/':$basePath.'/');
 ?>
 <style>
 :root{--brand:#1358db;--accent:#b2560a;--bg:#ffffff;--muted:#6f7787;--line:#e6e8ee;--chip:#f4f5f7;--pill:#0a7cff}
@@ -50,7 +54,7 @@ body.noscroll{overflow:hidden}
       <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
     <a href="/" class="brand">
-      <img src="assets/images/logo.jpg" alt="MG Skill" class="brand-logo"/>
+      <img src="<?php echo htmlspecialchars($baseUrl,ENT_QUOTES,'UTF-8'); ?>../../assets/images/logo.jpg" alt="MG Skill" class="brand-logo"/>
     </a>
     <div class="search-wrap">
       <form class="search-form" action="/search" method="get">

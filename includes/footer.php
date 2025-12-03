@@ -1,4 +1,8 @@
 <?php
+$scheme=(!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off')?'https':'http';
+$host=isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'localhost';
+$basePath=rtrim(str_replace('\\','/',dirname($_SERVER['SCRIPT_NAME'])),'/');
+$baseUrl=$scheme.'://'.$host.($basePath===''?'/':$basePath.'/');
 ?>
 <style>
 .site-footer{--cta-offset:140px;background:#0f1419;color:#e7ecf4;margin-top:calc(var(--cta-offset)/2 + 24px);position:relative}
@@ -33,7 +37,7 @@
   <div class="ft-wrap">
     <div class="footer-top">
       <div class="footer-brand">
-        <img src="assets/images/mg-logo.jpg" alt="MG Skill" class="footer-logo"/>
+        <img src="<?php echo htmlspecialchars($baseUrl,ENT_QUOTES,'UTF-8'); ?>../../assets/images/mg-logo.jpg" alt="MG Skill" class="footer-logo"/>
         <div class="cta-text">
           <p class="cta-title">Join MG Skill — Empower Your Career</p>
           <p class="cta-sub">Get updates on new courses, scholarships and events.</p>
