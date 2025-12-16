@@ -102,7 +102,7 @@
           </div>
         </div>
       </div>
-      <div class="portrait"><img src="assets/images/rajkumar.jpeg" alt="Student"/></div>
+      <div class="portrait"><img src="assets/images/logo.jpg" alt="Student"/></div>
       <div class="card-slider">
         <div class="slides">
           <div class="card is-active">
