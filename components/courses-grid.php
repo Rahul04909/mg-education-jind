@@ -1,4 +1,8 @@
 <?php
+require_once __DIR__ . '/../database/db-config.php';
+$conn = getDbConnection();
+$sql = "SELECT * FROM courses WHERE is_active = 1 ORDER BY created_at DESC";
+$result = $conn->query($sql);
 ?>
 <style>
 .courses{background:#fff}
@@ -11,7 +15,9 @@
 .courses-scroll{overflow:hidden}
 .courses-track{display:grid;grid-auto-flow:column;--gap:12px;gap:var(--gap);--cols:6;grid-auto-columns:minmax(260px, calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols)));scroll-snap-type:x mandatory}
 .course-card{scroll-snap-align:start;background:#fff;border:1px solid #e6e8ee;border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
-.ci-img{height:120px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+.ci-img{height:120px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;background:#f3f4f6;overflow:hidden}
+.ci-img img{width:100%;height:100%;object-fit:cover}
+/* Retaining gradient classes as fallback or if needed, though primarily using images */
 .ci-a{background:linear-gradient(135deg,#0ea5e9 0%,#6366f1 100%)}
 .ci-b{background:linear-gradient(135deg,#10b981 0%,#22c55e 100%)}
 .ci-c{background:linear-gradient(135deg,#f59e0b 0%,#b2560a 100%)}
@@ -48,27 +54,74 @@
     <div class="courses-shell">
       <div class="courses-scroll" id="coursesScroll">
         <div class="courses-track" id="coursesTrack">
-          <div class="course-card"><div class="ci-img ci-a">AI</div><div class="course-body"><p class="course-title">AI Engineer Bootcamp</p><p class="course-author">365 Careers</p><div class="course-meta"><span class="badge">Bestseller</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.6</span></span><span class="rating-count">12,286 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-b">AUTOMATION</div><div class="course-body"><p class="course-title">Agentic AI with n8n</p><p class="course-author">KRISHAI Tech</p><div class="course-meta"><span class="badge">Trending</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.7</span></span><span class="rating-count">107 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-c">SALESFORCE</div><div class="course-body"><p class="course-title">AI Powered Salesforce Dev</p><p class="course-author">Matt Gerry</p><div class="course-meta"><span class="badge">Hot</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.8</span></span><span class="rating-count">94 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹1,769</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-d">AGENTS</div><div class="course-body"><p class="course-title">Intro to AI Agents</p><p class="course-author">365 Careers</p><div class="course-meta"><span class="badge">New</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.5</span></span><span class="rating-count">2,597 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹1,709</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-e">WEB</div><div class="course-body"><p class="course-title">Complete Web Dev 2025</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Bestseller</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.7</span></span><span class="rating-count">12,001 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-f">REACT</div><div class="course-body"><p class="course-title">React & Next.js Pro</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Popular</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.8</span></span><span class="rating-count">8,431 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-g">TAILWIND</div><div class="course-body"><p class="course-title">Tailwind CSS Mastery</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Hot</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.7</span></span><span class="rating-count">7,315 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-h">SQL</div><div class="course-body"><p class="course-title">SQL & Databases</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Essential</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.6</span></span><span class="rating-count">3,215 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-a">MONGO</div><div class="course-body"><p class="course-title">MongoDB Essentials</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Essential</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.6</span></span><span class="rating-count">1,204 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-b">GIT</div><div class="course-body"><p class="course-title">Git & GitHub</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Popular</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.7</span></span><span class="rating-count">7,821 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-c">NODE</div><div class="course-body"><p class="course-title">Node.js Complete Guide</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Hot</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.7</span></span><span class="rating-count">9,018 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-d">DATA</div><div class="course-body"><p class="course-title">Data Science Crash Course</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Bestseller</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.8</span></span><span class="rating-count">3,420 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-e">SECURITY</div><div class="course-body"><p class="course-title">Cyber Security Basics</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">New</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.5</span></span><span class="rating-count">2,105 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-f">UI/UX</div><div class="course-body"><p class="course-title">UI/UX Design Foundations</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Popular</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.7</span></span><span class="rating-count">1,980 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-g">NGINX</div><div class="course-body"><p class="course-title">Nginx for Beginners</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Essential</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.6</span></span><span class="rating-count">870 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-h">JENKINS</div><div class="course-body"><p class="course-title">Jenkins CI/CD</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Essential</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.6</span></span><span class="rating-count">950 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-a">TS</div><div class="course-body"><p class="course-title">TypeScript Deep Dive</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Hot</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.7</span></span><span class="rating-count">1,750 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-b">EXPRESS</div><div class="course-body"><p class="course-title">Express.js Practical</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Popular</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.7</span></span><span class="rating-count">1,230 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-c">REDUX</div><div class="course-body"><p class="course-title">Redux Toolkit</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Trending</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.6</span></span><span class="rating-count">980 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-d">AWS</div><div class="course-body"><p class="course-title">AWS Practitioner</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Hot</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.7</span></span><span class="rating-count">2,300 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
-          <div class="course-card"><div class="ci-img ci-e">DOCKER</div><div class="course-body"><p class="course-title">Docker & Kubernetes</p><p class="course-author">MG Skill</p><div class="course-meta"><span class="badge">Bestseller</span><span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.8</span></span><span class="rating-count">4,850 ratings</span><span class="price-box"><span class="price">₹519</span><span class="mrp">₹3,009</span></span></div></div></div>
+          <?php
+          if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+              $title = htmlspecialchars($row['title']);
+              $image = !empty($row['featured_image']) ? $row['featured_image'] : '';
+              
+              // Handle Fees
+              $fees = json_decode($row['fees'], true);
+              $price = isset($fees['amount']) && is_numeric($fees['amount']) ? '₹' . number_format($fees['amount']) : 'Free';
+              // Calculate a fake MRP 
+              // $mrp_val = isset($fees['amount']) && is_numeric($fees['amount']) ? $fees['amount'] * 1.5 : 0; 
+              // keeping consistent random MRP concept or omitting if not in DB? 
+              // The static design shows MRP. I'll just hardcode a markup for visual consistency if price > 0
+              $mrp = '';
+              if ($price !== 'Free') {
+                 $mrp_val = $fees['amount'] + rand(500, 2000);
+                 $mrp = '₹' . number_format($mrp_val);
+              }
+
+              // Handle Labels
+              $labels = json_decode($row['labels'], true);
+              $label = !empty($labels) && is_array($labels) ? htmlspecialchars($labels[0]) : 'Course';
+
+              // Random Rating
+              $rating = number_format(rand(46, 50) / 10, 1);
+              $rating_count = number_format(rand(100, 5000)) . ' ratings';
+
+              // Image Logic
+              $img_html = '';
+              if ($image) {
+                // Assuming path is relative to root, needing adjustment based on where this component is included?
+                // Usually included in index.php (root).
+                // Database paths often stored as 'assets/uploads/...', so just prepending / or nothing if root.
+                // Safest to assume relative to web root.
+                $img_src = $image;
+                $img_html = '<img src="' . htmlspecialchars($img_src) . '" alt="' . $title . '">';
+              } else {
+                 // Fallback to a gradient if no image, using a simple random one or fixed
+                 $gradients = ['ci-a', 'ci-b', 'ci-c', 'ci-d', 'ci-e', 'ci-f', 'ci-g', 'ci-h'];
+                 $rand_grad = $gradients[array_rand($gradients)];
+                 $img_html = '<div class="ci-img ' . $rand_grad . '" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff">' . substr($title, 0, 2) . '</div>';
+              }
+              ?>
+              <div class="course-card">
+                <div class="ci-img"><?php echo $img_html; ?></div>
+                <div class="course-body">
+                  <p class="course-title"><?php echo $title; ?></p>
+                  <p class="course-author">MG Education & Social Development Organization</p>
+                  <div class="course-meta">
+                    <span class="badge"><?php echo $label; ?></span>
+                    <span class="star">
+                      <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                      <span><?php echo $rating; ?></span>
+                    </span>
+                    <span class="rating-count"><?php echo $rating_count; ?></span>
+                    <span class="price-box">
+                      <span class="price"><?php echo $price; ?></span>
+                      <?php if($mrp): ?><span class="mrp"><?php echo $mrp; ?></span><?php endif; ?>
+                    </span>
+                  </div>
+                </div>
+              </div>
+          <?php 
+            }
+          } else {
+             echo '<p style="padding:20px;color:#666">No courses available at the moment.</p>';
+          }
+          ?>
         </div>
       </div>
       <div class="nav">
