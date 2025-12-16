@@ -4,8 +4,56 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb4afaf2fddcdf875bd24dbc4633d255",
+    "content-hash": "bf7971bd8050fc67d2c1024a8dd542e1",
     "packages": [
+        {
+            "name": "ckeditor/ckeditor",
+            "version": "4.25.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ckeditor/ckeditor4-releases.git",
+                "reference": "3fa1987d35342526e4eb2e64f6ec7172561b7328"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ckeditor/ckeditor4-releases/zipball/3fa1987d35342526e4eb2e64f6ec7172561b7328",
+                "reference": "3fa1987d35342526e4eb2e64f6ec7172561b7328",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+",
+                "LGPL-2.1+",
+                "MPL-1.1+"
+            ],
+            "authors": [
+                {
+                    "name": "CKSource",
+                    "homepage": "https://cksource.com"
+                }
+            ],
+            "description": "JavaScript WYSIWYG web text editor.",
+            "homepage": "https://ckeditor.com/ckeditor-4/",
+            "keywords": [
+                "CKEditor",
+                "ckeditor4",
+                "editor",
+                "fckeditor",
+                "html",
+                "javascript",
+                "richtext",
+                "text",
+                "wysiwyg"
+            ],
+            "support": {
+                "forum": "https://stackoverflow.com/tags/ckeditor",
+                "issues": "https://github.com/ckeditor/ckeditor4/issues",
+                "source": "https://github.com/ckeditor/ckeditor4",
+                "wiki": "https://ckeditor.com/docs/ckeditor4/latest/"
+            },
+            "time": "2025-02-05T12:32:07+00:00"
+        },
         {
             "name": "phpmailer/phpmailer",
             "version": "v7.0.1",
@@ -238,6 +286,44 @@
                 "source": "https://github.com/WordPress/Requests"
             },
             "time": "2025-11-21T23:56:29+00:00"
+        },
+        {
+            "name": "summernote/summernote",
+            "version": "v0.8.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/summernote/summernote.git",
+                "reference": "28b5be6cd5e1c422cdb15aae6ef237b6c2f3f16c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/summernote/summernote/zipball/28b5be6cd5e1c422cdb15aae6ef237b6c2f3f16c",
+                "reference": "28b5be6cd5e1c422cdb15aae6ef237b6c2f3f16c",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alan",
+                    "email": "susukang98@gmail.com",
+                    "role": "lead"
+                }
+            ],
+            "description": "Super Simple WYSIWYG Editor on Bootstrap(3.0 and 2.x).",
+            "homepage": "http://summernote.org/",
+            "keywords": [
+                "wysiwyg"
+            ],
+            "support": {
+                "issues": "https://github.com/summernote/summernote/issues",
+                "source": "https://github.com/summernote/summernote/tree/v0.8.8"
+            },
+            "abandoned": true,
+            "time": "2017-09-09T11:08:25+00:00"
         }
     ],
     "packages-dev": [],

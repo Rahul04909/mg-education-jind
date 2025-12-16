@@ -1,0 +1,35 @@
+Admin - 
+1. Admin can create course add edit & delete them also
+2. Admin can configure the smtp server & also configure 
+the api keys to payment gateway ( Razorpay Suggested to use )
+3. Admin can add the students ( edit & delete them also,)
+4. Admin can manage the fees for the students
+5. admin can manage the blogs 
+6. admin can add edit and delete the teachers & also can assign in the courses if needed 
+7. admin can manage the student exmination ( add edit & delete the exams)
+8. admin can manage the student practical or assignments subjcets wise in the added couse 
+9. admin can manage the online admissons and fees also reuslt updates for the students 
+
+
+Student - 
+1. student can check their course enrolled date 
+2. student can check & manage their fees 
+3. students can pay their fees using the razorpay ( livetime data insertion logics & algorithms to be implemented)
+4. student birthday wishes ( it can be automate as per date of birth )
+5. student can attempt online exams ( optional feature takes time to be implement )
+6. student can download their marksheet & also can check their results form the 
+frontend and also from the student dashboard 
+7. student can download their internship certificate ( module details to be needed )
+8. Artifical intelligence acess ( optional feature developed copyright given to the developer )
+No acess & llm provided for ai chatbot 
+9. student attendence management ( way to attendence to be depend on client side )
+10. email notifcation automation 
+
+Thing to be get updated 
+email id -
+info@mgedu.in
+
+enrollment - id genration format - MG202501
+
+certificate desigens - 1. marksheet 2. intership certificare 
+
