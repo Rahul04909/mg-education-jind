@@ -1,0 +1,32 @@
+in the online-admisson folder now your task is to create a online admisson page with sidebar banner on left side, in admisson form user will select the course added by admin then we need 
+Basic details of student :
+1. Full Name 
+2. Father's/Gurdian Name
+3. Mother's Name
+4. Date of Birth ( Selection Using Calender )
+5. Category ( Genral/Obc/SC/ST)
+6. Student Photo ( Upload with preview )
+7. Student Signature ( Upload With Preview )
+
+Contact Details - Mobile Number ( with +91 default country code ) Only 10 digit mobile number allowed, Alternate Mobile number (optional same as mobile number ), Email id, 
+
+Address Details - Pincode, Country, State, City, Full address in this use the indiapost pincode api key to enter Country, State, City Automatic same like as we have done in the add center file full adress student need to enter manually & country state & city student can update manually also
+
+Educational Details - 
+1. Highest Qualification
+2. School/College Name
+3. Board/University
+4. Passing Year
+6. Percentage/Grade 
+
+Skill Background - 
+1. Computer Knowledge ( Beginner/Intermediate/Advanced )
+2. Typing Speed ( if Any )
+3. Previous Any Course done with MG Education & Social Development Orgination ( yes/no ) if yes then enter enrollment number, course name, course session 
+
+Documents
+1. Aadhar Number 
+2. Upload Aadhar 
+3. Upload educational certificate
+
+Fees & Payment Details :

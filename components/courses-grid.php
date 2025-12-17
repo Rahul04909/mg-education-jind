@@ -97,7 +97,7 @@ $result = $conn->query($sql);
                  $img_html = '<div class="ci-img ' . $rand_grad . '" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff">' . substr($title, 0, 2) . '</div>';
               }
               ?>
-              <div class="course-card">
+              <a href="/course-details.php?slug=<?php echo urlencode($row['slug']); ?>" class="course-card" style="text-decoration:none;color:inherit">
                 <div class="ci-img"><?php echo $img_html; ?></div>
                 <div class="course-body">
                   <p class="course-title"><?php echo $title; ?></p>
@@ -115,7 +115,7 @@ $result = $conn->query($sql);
                     </span>
                   </div>
                 </div>
-              </div>
+              </a>
           <?php 
             }
           } else {

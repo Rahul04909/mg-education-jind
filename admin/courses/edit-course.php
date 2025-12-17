@@ -1,6 +1,7 @@
 <?php
 // Include database configuration
 require_once __DIR__ . '/../../database/db-config.php';
+require_once __DIR__ . '/../../database/update_course_schema.php';
 
 // Create database connection
 $conn = getDbConnection();
@@ -44,6 +45,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $title = mysqli_real_escape_string($conn, $_POST['title']);
     $category_id = intval($_POST['category_id']);
     $video_url = mysqli_real_escape_string($conn, $_POST['video_url']);
+    
+    // Duration
+    $duration_value = isset($_POST['duration_value']) ? intval($_POST['duration_value']) : 0;
+    $duration_type = mysqli_real_escape_string($conn, $_POST['duration_type']);
     
     // Slug
     $slug = !empty($_POST['slug']) ? $_POST['slug'] : strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title)));
@@ -104,6 +109,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             slug = '$slug',
             video_url = '$video_url',
             description = '$description',
+            duration_value = $duration_value,
+            duration_type = '$duration_type',
             labels = '$labels_json',
             features = '$features_json',
             fees = '$fees_json',
@@ -244,10 +251,27 @@ $fees = json_decode($course['fees'], true) ?? ['amount' => '', 'description' => 
                 <div class="card">
                     <h3 class="section-title">Features & Highlights</h3>
                     
-                    <div class="form-group">
-                        <label class="form-label">Labels / Badges</label>
-                        <input type="text" name="labels" class="form-input" value="<?php echo htmlspecialchars(implode(', ', $labels)); ?>" placeholder="e.g., 100% Offline Classes, Class 12, New Batch">
-                        <div class="form-help">Separate multiple labels with commas.</div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Course Duration</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="number" name="duration_value" class="form-input" value="<?php echo isset($course['duration_value']) ? $course['duration_value'] : ''; ?>" placeholder="Value" required style="width: 120px;">
+                                <select name="duration_type" class="form-select" required>
+                                    <?php
+                                    $dtypes = ['Months', 'Weeks', 'Days', 'Years'];
+                                    $cur_dtype = isset($course['duration_type']) ? $course['duration_type'] : 'Months';
+                                    foreach ($dtypes as $dt) {
+                                        $sel = ($cur_dtype == $dt) ? 'selected' : '';
+                                        echo "<option value='$dt' $sel>$dt</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Labels / Badges</label>
+                            <input type="text" name="labels" class="form-input" value="<?php echo htmlspecialchars(implode(', ', $labels)); ?>" placeholder="e.g., 100% Offline Classes, Class 12, New Batch">
+                        </div>
                     </div>
 
                     <div class="form-group">

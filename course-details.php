@@ -1,20 +1,48 @@
 <?php
+require_once __DIR__ . '/database/db-config.php';
+$conn = getDbConnection();
+
+$slug = isset($_GET['slug']) ? mysqli_real_escape_string($conn, $_GET['slug']) : '';
+$course = null;
+
+if ($slug) {
+    $sql = "SELECT c.*, cat.name as category_name 
+            FROM courses c 
+            LEFT JOIN course_categories cat ON c.category_id = cat.id 
+            WHERE c.slug = '$slug' AND c.is_active = 1";
+    $result = $conn->query($sql);
+    if ($result && $result->num_rows > 0) {
+        $course = $result->fetch_assoc();
+    }
+}
+
+if (!$course) {
+    // Redirect to courses page if not found
+    header("Location: /courses");
+    exit;
+}
+
 $scheme=(!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off')?'https':'http';
 $host=isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'localhost';
 $url=$scheme.'://'.$host.(isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'/');
 $origin=$scheme.'://'.$host.'/';
-$ogImage=$origin.'../../assets/images/mg-logo.jpg';
+// Use course image for OG if available
+$ogImage = !empty($course['featured_image']) ? $origin . $course['featured_image'] : $origin.'assets/images/mg-logo.jpg';
+
+// Helpers for arrays
+$labels = json_decode($course['labels'], true);
+$features = json_decode($course['features'], true);
 ?>
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>Course Details • MG Skill</title>
+  <title><?php echo htmlspecialchars($course['meta_title'] ?: $course['title'] . ' • MG Skill'); ?></title>
   <link rel="canonical" href="<?php echo htmlspecialchars($url,ENT_QUOTES,'UTF-8'); ?>"/>
-  <meta name="description" content="Explore detailed curriculum, features, and classroom tour for this course."/>
-  <meta property="og:title" content="Course Details • MG Skill"/>
-  <meta property="og:description" content="Course overview, features, and classroom tour."/>
+  <meta name="description" content="<?php echo htmlspecialchars($course['meta_desc'] ?: substr(strip_tags($course['description']), 0, 160)); ?>"/>
+  <meta property="og:title" content="<?php echo htmlspecialchars($course['title'] . ' • MG Skill'); ?>"/>
+  <meta property="og:description" content="<?php echo htmlspecialchars($course['meta_desc'] ?: 'Explore detailed curriculum and features.'); ?>"/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="<?php echo htmlspecialchars($url,ENT_QUOTES,'UTF-8'); ?>"/>
   <meta property="og:image" content="<?php echo htmlspecialchars($ogImage,ENT_QUOTES,'UTF-8'); ?>"/>
@@ -55,20 +83,47 @@ $ogImage=$origin.'../../assets/images/mg-logo.jpg';
       <div class="cd-grid">
         <div>
           <div class="badge-bar">
-            <span class="badge green">100% Offline Classes</span>
-            <span class="badge blue">Class 12 JEE ADVANCED</span>
+            <?php 
+            if (!empty($labels)) {
+                $colors = ['green', 'blue'];
+                foreach($labels as $index => $lbl) {
+                    $color = $colors[$index % count($colors)];
+                    echo '<span class="badge ' . $color . '">' . htmlspecialchars($lbl) . '</span>';
+                }
+            } else {
+                // Fallback or static if requested, but plan was dynamic
+                echo '<span class="badge blue">Course</span>';
+            }
+            ?>
           </div>
-          <h1 class="cd-title"><span class="strong">Grade 12 JEE ADVANCED</span> <span class="accent-gradient">(2025–26)</span></h1>
+          <h1 class="cd-title"><span class="strong"><?php echo htmlspecialchars($course['title']); ?></span></h1>
           <div class="feats">
-            <div class="feat"><span class="icon-bubble"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/></svg></span><span>Learn from India’s Top Teachers</span></div>
-            <div class="feat"><span class="icon-bubble"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="12" rx="2"/></svg></span><span>Dedicated Academic Mentor</span></div>
-            <div class="feat"><span class="icon-bubble"><svg viewBox="0 0 24 24"><path d="M4 12h6l2-4 4 8 2-4h2"/></svg></span><span>3‑Way Doubt Support</span></div>
-            <div class="feat"><span class="icon-bubble"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8v8H8z"/></svg></span><span>Smart Clickers & Hi‑tech Classroom</span></div>
+            <?php if (!empty($features)): ?>
+                <?php foreach($features as $feat): ?>
+                <div class="feat">
+                    <span class="icon-bubble">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l10 6-10 6L2 8l10-6z"/><path d="M22 14l-10 6-10-6"/></svg>
+                    </span>
+                    <span><?php echo htmlspecialchars($feat); ?></span>
+                </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <!-- Fallback features if none -->
+                 <div class="feat"><span class="icon-bubble"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/></svg></span><span>Industry Recommended</span></div>
+                 <div class="feat"><span class="icon-bubble"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="12" rx="2"/></svg></span><span>Expert Support</span></div>
+            <?php endif; ?>
           </div>
         </div>
         <div class="video-box" aria-label="Classroom preview">
-          <img src="assets/images/placement-banner.webp" alt="Classroom"/>
-          <a class="play-cta" href="/classroom-tour" aria-label="Take a Tour"><span class="dot"><svg viewBox="0 0 24 24"><path d="M8 5l10 7-10 7z"/></svg></span>Take a Tour</a>
+          <?php if (!empty($course['featured_image'])): ?>
+            <img src="<?php echo htmlspecialchars($course['featured_image']); ?>" alt="<?php echo htmlspecialchars($course['title']); ?>"/>
+          <?php else: ?>
+            <img src="assets/images/placement-banner.webp" alt="Classroom"/>
+          <?php endif; ?>
+          <a class="play-cta" href="<?php echo htmlspecialchars($course['video_url'] ?: '/classroom-tour'); ?>" aria-label="Watch Video" target="_blank">
+              <span class="dot"><svg viewBox="0 0 24 24"><path d="M8 5l10 7-10 7z"/></svg></span>
+              <?php echo $course['video_url'] ? 'Watch Intro' : 'Take a Tour'; ?>
+          </a>
         </div>
       </div>
     </div>
