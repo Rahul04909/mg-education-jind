@@ -104,7 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     )";
     
     if ($conn->query($sql) === TRUE) {
-        $success_message = "Student added successfully! Enrollment No: <strong>$enrollment_no</strong>";
+        $success_message = "Student added successfully!<br>Enrollment No: <strong>$enrollment_no</strong><br>Password: <strong>$raw_password</strong><br><small>(Please copy these credentials, email might not work locally)</small>";
 
         // Fetch SMTP Settings and Send Email
         $smtp_sql = "SELECT * FROM smtp_settings WHERE id = 1 AND is_active = 1";
@@ -151,6 +151,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $mail->send();
             } catch (Exception $e) {
                 // Email failed
+                $error_message = "Student added, but Email sending failed: " . $mail->ErrorInfo;
             }
         }
     } else {
