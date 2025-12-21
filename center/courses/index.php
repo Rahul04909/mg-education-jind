@@ -12,6 +12,28 @@ $search = $_GET['search'] ?? '';
 $category = $_GET['category'] ?? '';
 
 
+// Pagination
+$limit = 10;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+
+// Query Construction
+$where = "WHERE c.is_active = 1";
+$params = [];
+$types = "";
+
+if ($search) {
+    $where .= " AND c.title LIKE ?";
+    $params[] = "%$search%";
+    $types .= "s";
+}
+
+if ($category) {
+    $where .= " AND c.category_id = ?";
+    $params[] = $category;
+    $types .= "i";
+}
+
 // Total Count for Pagination
 $count_sql = "SELECT COUNT(*) as total FROM courses c $where";
 $stmt = $conn->prepare($count_sql);
