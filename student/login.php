@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $enrollment_no = mysqli_real_escape_string($conn, $_POST['enrollment_no']);
     $password = $_POST['password'];
 
-    $sql = "SELECT * FROM admissions WHERE enrollment_no = '$enrollment_no' AND payment_status = 'success'";
+    $sql = "SELECT * FROM admissions WHERE enrollment_no = '$enrollment_no'";
     $result = $conn->query($sql);
 
     if ($result->num_rows === 1) {
