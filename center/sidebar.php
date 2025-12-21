@@ -455,6 +455,20 @@
                     <span class="nav-text">Certificates</span>
                 </a>
             </li>
+        <div class="nav-label" style="margin-top: 24px;">Settings</div>
+        <ul class="nav-list">
+             <li class="nav-item">
+                <a href="profile.php" class="nav-link">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <span class="nav-text">My Profile</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="bank-details.php" class="nav-link">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                    <span class="nav-text">Bank Details</span>
+                </a>
+            </li>
         </ul>
 
         <div class="promo-card">
