@@ -1,3 +1,4 @@
+<?php require_once 'auth_check.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -270,18 +271,18 @@
         <div class="icon-btn position-relative has-dot">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
         </div>
-        <div class="user-pill">
+        <div class="user-pill" onclick="window.location.href='logout.php'" title="Click to Logout">
             <div style="text-align: right;">
-                <div style="font-size: 14px; font-weight: 700;">Alexander</div>
+                <div style="font-size: 14px; font-weight: 700;"><?php echo htmlspecialchars($_SESSION['center_name']); ?></div>
                 <div style="font-size: 11px; color: var(--text-light);">Center Manager</div>
             </div>
-            <div class="avatar">A</div>
+            <div class="avatar"><?php echo strtoupper(substr($_SESSION['center_name'], 0, 1)); ?></div>
         </div>
     </div>
 
     <div class="welcome-banner">
         <div class="welcome-text">
-            <h1>Welcome back, Alexander!</h1>
+            <h1>Welcome back, <?php echo htmlspecialchars($_SESSION['center_name']); ?>!</h1>
             <p>Here's what's happening at your center today.</p>
         </div>
         <div class="date-badge">
