@@ -1,6 +1,10 @@
 <?php
+// Include database and PHPMailer
 require_once __DIR__ . '/../../database/db-config.php';
-require_once __DIR__ . '/../../database/update_admission_schema.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 $conn = getDbConnection();
 
@@ -17,7 +21,7 @@ $error_message = "";
 function uploadAdminFile($file, $dir) {
     if (!isset($file['name']) || $file['error'] != 0) return null;
     $target_dir = "../../assets/uploads/students/" . $dir . "/";
-    if (!file_exists($target_dir)) mkdir($target_dir, 0777, true);
+    if (!file_exists($target_dir)) mkdir($target_dir, 0755, true);
     $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
     $filename = "ADMIN_" . uniqid() . "." . $ext;
     if (move_uploaded_file($file['tmp_name'], $target_dir . $filename)) {
@@ -41,6 +45,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $seq = $last_seq + 1;
     }
     $enrollment_no = "MG" . $year . str_pad($seq, 4, "0", STR_PAD_LEFT);
+
+    // Generate Password
+    $raw_password = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@#$!"), 0, 10);
+    $hashed_password = password_hash($raw_password, PASSWORD_BCRYPT);
 
     // Fields
     $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
@@ -74,12 +82,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $aadhar = uploadAdminFile($_FILES['aadhar_file'], 'documents');
     $cert = uploadAdminFile($_FILES['edu_cert_file'], 'documents');
 
-    // Payment Defaults to 'Success' for Admin Entry? Or allow manual? 
-    // Usually admin entries are manual payments.
-    $course_fee = 0; // Or fetch from course
+    // Payment
+    $course_fee = 0; // Fetch from DB if needed, but admin entry usually overrides
     
     $sql = "INSERT INTO admissions (
-        enrollment_no, course_id, full_name, father_name, mother_name, dob, category, admission_mode,
+        enrollment_no, password, course_id, full_name, father_name, mother_name, dob, category, admission_mode,
         student_photo, student_sign, mobile, alt_mobile, email,
         pincode, country, state, city, address,
         highest_qual, school_name, board_university, passing_year, percentage,
@@ -87,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         aadhar_no, aadhar_file, edu_cert_file,
         course_fee, payment_status
     ) VALUES (
-        '$enrollment_no', $course_id, '$full_name', '$father_name', '$mother_name', '$dob', '$category', '$admission_mode',
+        '$enrollment_no', '$hashed_password', $course_id, '$full_name', '$father_name', '$mother_name', '$dob', '$category', '$admission_mode',
         '$photo', '$sign', '$mobile', '$alt_mobile', '$email',
         '$pincode', '$country', '$state', '$city', '$address',
         '$highest_qual', '$school_name', '$board', $passing_year, '$percentage',
@@ -97,7 +104,55 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     )";
     
     if ($conn->query($sql) === TRUE) {
-        $success_message = "Student added with Enrollment No: $enrollment_no";
+        $success_message = "Student added successfully! Enrollment No: <strong>$enrollment_no</strong>";
+
+        // Fetch SMTP Settings and Send Email
+        $smtp_sql = "SELECT * FROM smtp_settings WHERE id = 1 AND is_active = 1";
+        $smtp_result = $conn->query($smtp_sql);
+        
+        if ($smtp_result->num_rows > 0) {
+            $smtp = $smtp_result->fetch_assoc();
+            $mail = new PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host = $smtp['smtp_host'];
+                $mail->SMTPAuth = true;
+                $mail->Username = $smtp['smtp_username'];
+                $mail->Password = $smtp['smtp_password'];
+                $mail->SMTPSecure = $smtp['smtp_encryption'];
+                $mail->Port = $smtp['smtp_port'];
+
+                $mail->setFrom($smtp['from_email'], $smtp['from_name']);
+                $mail->addAddress($email, $full_name);
+
+                $mail->isHTML(true);
+                $mail->Subject = "Welcome to MG Skills - Your Student Credentials";
+                $mail->Body = "
+                    <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;'>
+                        <div style='text-align: center; margin-bottom: 20px;'>
+                            <h2 style='color: #6f75ff;'>Welcome to MG Education!</h2>
+                        </div>
+                        <p>Dear <strong>$full_name</strong>,</p>
+                        <p>Congratulations! Your admission has been confirmed.</p>
+                        
+                        <div style='background-color: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0;'>
+                            <h3 style='margin-top: 0; color: #333;'>Your Login Credentials</h3>
+                            <p style='margin-bottom: 5px;'><strong>Enrollment No (User ID):</strong> <span style='color: #2563eb; font-weight: bold;'>$enrollment_no</span></p>
+                            <p style='margin-bottom: 5px;'><strong>Password:</strong> <span style='color: #dc2626; font-weight: bold;'>$raw_password</span></p>
+                            <p style='font-size: 12px; color: #666;'>Please change your password after your first login.</p>
+                        </div>
+                        
+                        <a href='http://localhost/mg-skill/student/login.php' style='display: inline-block; background-color: #6f75ff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;'>Login to Student Dashboard</a>
+                        
+                        <br><br>
+                        <p>Best Regards,<br>MG Skills Team</p>
+                    </div>
+                ";
+                $mail->send();
+            } catch (Exception $e) {
+                // Email failed
+            }
+        }
     } else {
         $error_message = "Error: " . $conn->error;
     }
@@ -176,7 +231,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <div class="form-group"><label>Mobile *</label><input type="text" name="mobile" required></div>
                         <div class="form-group"><label>Email *</label><input type="email" name="email" required></div>
                         <div class="form-group"><label>Alt Mobile</label><input type="text" name="alt_mobile"></div>
-                        <div class="form-group"><label>Pincode *</label><input type="text" name="pincode" id="pincode" required></div>
+                        <div class="form-group"><label>Pincode *</label>
+                            <input type="text" name="pincode" id="pincode" required>
+                            <small id="pincode-msg" style="color: var(--indigo); display:none">Fetching details...</small>
+                        </div>
                         <div class="form-group"><label>City</label><input type="text" name="city" id="city"></div>
                         <div class="form-group"><label>State</label><input type="text" name="state" id="state"></div>
                         <div class="form-group"><label>Country</label><input type="text" name="country" id="country" value="India"></div>
@@ -214,16 +272,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
     </main>
     <script>
-        document.getElementById('pincode').addEventListener('blur', function() {
-            let pin = this.value;
-            if(pin.length == 6) {
-                fetch('https://api.postalpincode.in/pincode/' + pin).then(r=>r.json()).then(d=>{
+        const pincodeInput = document.getElementById('pincode');
+        const cityInput = document.getElementById('city');
+        const stateInput = document.getElementById('state');
+        const countryInput = document.getElementById('country');
+        const msgSpan = document.getElementById('pincode-msg');
+
+        pincodeInput.addEventListener('blur', function() {
+            const pincode = this.value.trim();
+            if(pincode.length == 6) {
+                msgSpan.style.display = 'block';
+                msgSpan.textContent = 'Fetching details...';
+
+                fetch('https://api.postalpincode.in/pincode/' + pincode).then(r=>r.json()).then(d=>{
                     if(d[0].Status=='Success'){
                         let p = d[0].PostOffice[0];
-                        document.getElementById('city').value = p.District;
-                        document.getElementById('state').value = p.State;
-                        document.getElementById('country').value = p.Country;
+                        cityInput.value = p.District;
+                        stateInput.value = p.State;
+                        countryInput.value = p.Country;
+                        msgSpan.textContent = 'Details fetched!';
+                        msgSpan.style.color = '#22c55e';
+                    } else {
+                        msgSpan.textContent = 'Invalid Pincode';
+                        msgSpan.style.color = '#ef4444';
                     }
+                }).catch(err => {
+                    msgSpan.textContent = 'Error fetching details';
                 });
             }
         });
