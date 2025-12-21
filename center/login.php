@@ -130,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="logo-area">
                 <!-- Replace with actual path if logo exists, usually in uploads or footer logos -->
                 <img src="../assets/logo/logo.png" alt="MG Skills Logo" onerror="this.style.display='none'; document.getElementById('logo-text').style.display='block'">
-                <h2 id="logo-text" style="display:none; color: #4f46e5; font-weight: 800; font-size: 28px;">MG SKILLS</h2>
+                <h2 id="logo-text" style="display:none; color: #4f46e5; font-weight: 800; font-size: 28px;">MG Education & Social Development Organisation</h2>
                 <h3 class="text-2xl font-bold text-gray-800 mt-6">Center Login</h3>
                 <p class="text-gray-500 mt-2">Welcome back! Please enter your details.</p>
             </div>

@@ -1,4 +1,7 @@
-<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/../../database/db-config.php';
 
 $conn = getDbConnection();
@@ -28,7 +31,7 @@ function uploadFile($file, $dir) {
     
     $target_dir = "../../assets/uploads/centers/" . $dir . "/";
     if (!file_exists($target_dir)) {
-        mkdir($target_dir, 0777, true);
+        mkdir($target_dir, 0755, true);
     }
     
     $ext = pathinfo($file['name'], PATHINFO_EXTENSION);

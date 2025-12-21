@@ -21,7 +21,7 @@ function uploadFile($file, $dir) {
     
     $target_dir = "../../assets/uploads/centers/" . $dir . "/";
     if (!file_exists($target_dir)) {
-        mkdir($target_dir, 0777, true);
+        mkdir($target_dir, 0755, true);
     }
     
     $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
