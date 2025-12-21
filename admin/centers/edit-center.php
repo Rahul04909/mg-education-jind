@@ -129,6 +129,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Constructive merge is safest for "Add New".
     $final_docs = array_merge($current_docs, $new_docs);
     $legal_docs_json = mysqli_real_escape_string($conn, json_encode($final_docs));
+    
+    // Password Update Logic
+    $password_sql = "";
+    if (!empty($_POST['new_password'])) {
+        $hashed_password = password_hash($_POST['new_password'], PASSWORD_BCRYPT);
+        $password_sql = ", password='$hashed_password'";
+    }
 
     // Update SQL
     $sql = "UPDATE centers SET 
@@ -141,6 +148,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         social_links='$social_links', center_logo='$center_logo', owner_image='$owner_image',
         authorized_signatory='$signatory', digital_stamp='$stamp', is_active=$is_active,
         legal_documents='$legal_docs_json'
+        $password_sql
         WHERE id=$center_id";
 
     if ($conn->query($sql) === TRUE) {
@@ -256,6 +264,11 @@ $docs_arr = json_decode($center['legal_documents'], true) ?? [];
                                 Active Center
                             </label>
                         </div>
+                    </div>
+                    <div class="form-group" style="background: #f1f5f9; padding: 15px; border-radius: 8px;">
+                        <label class="form-label">Reset Password</label>
+                        <input type="text" name="new_password" class="form-input" placeholder="Enter new password to reset (leave blank to keep current)">
+                        <small style="color:var(--muted)">Use this to manually set a new password for the center.</small>
                     </div>
                 </div>
 

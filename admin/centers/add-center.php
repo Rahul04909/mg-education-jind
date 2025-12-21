@@ -41,6 +41,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $mobile = mysqli_real_escape_string($conn, $_POST['mobile']);
     $owner_name = mysqli_real_escape_string($conn, $_POST['owner_name']);
 
+    // Generate Center ID: MGI-YYYY-CTR-XX
+    $currentYear = date("Y");
+    $result_id = $conn->query("SELECT id FROM centers ORDER BY id DESC LIMIT 1");
+    $last_id = 0;
+    if ($result_id->num_rows > 0) {
+        $row_id = $result_id->fetch_assoc();
+        $last_id = $row_id['id'];
+    }
+    $next_sequence = str_pad($last_id + 1, 2, "0", STR_PAD_LEFT);
+    $center_code = "MGI-{$currentYear}-CTR-{$next_sequence}";
+
+    // Generate Password
+    $raw_password = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@#$!"), 0, 10);
+    $hashed_password = password_hash($raw_password, PASSWORD_BCRYPT);
+
     // Location
     $country = mysqli_real_escape_string($conn, $_POST['country']);
     $state = mysqli_real_escape_string($conn, $_POST['state']);
@@ -109,14 +124,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // SQL Insert
     $sql = "INSERT INTO centers (
-        center_name, email, mobile, owner_name,
+        center_code, password, center_name, email, mobile, owner_name,
         country, state, city, pincode, address,
         num_classrooms, num_computers, has_internet, has_power_backup, lab_type,
         working_hours_from, working_hours_to, total_staff, weekend_off,
         legal_documents, franchise_fee, royalty_percentage,
         social_links, center_logo, owner_image, authorized_signatory, digital_stamp
     ) VALUES (
-        '$center_name', '$email', '$mobile', '$owner_name',
+        '$center_code', '$hashed_password', '$center_name', '$email', '$mobile', '$owner_name',
         '$country', '$state', '$city', '$pincode', '$address',
         $num_classrooms, $num_computers, $has_internet, $has_power_backup, '$lab_type',
         '$working_hours_from', '$working_hours_to', $total_staff, '$weekend_off',
@@ -125,7 +140,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     )";
 
     if ($conn->query($sql) === TRUE) {
-        $success_message = "Center added successfully!";
+        $success_message = "Center added successfully! Center Code: <strong>$center_code</strong>";
         
         // Send Welcome Email
         // Fetch SMTP Settings
@@ -148,17 +163,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $mail->addAddress($email, $owner_name);
 
                 $mail->isHTML(true);
-                $mail->Subject = "Welcome to MG Skills - Center Registration Successful";
+                $mail->Subject = "Welcome to MG Skills - Your Center Credentials";
                 $mail->Body = "
-                    <h2>Welcome to MG Skills Network!</h2>
-                    <p>Dear $owner_name,</p>
-                    <p>Congratulations! Your center <strong>$center_name</strong> has been successfully registered with us.</p>
-                    <p><strong>Center Details:</strong><br>
-                    Location: $city, $state<br>
-                    Franchise ID: " . $conn->insert_id . "</p>
-                    <p>We look forward to a successful partnership.</p>
-                    <br>
-                    <p>Best Regards,<br>MG Skills Team</p>
+                    <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;'>
+                        <div style='text-align: center; margin-bottom: 20px;'>
+                            <h2 style='color: #6f75ff;'>Welcome to MG Skills Network!</h2>
+                        </div>
+                        <p>Dear <strong>$owner_name</strong>,</p>
+                        <p>Congratulations! Your center <strong>$center_name</strong> has been successfully registered with us.</p>
+                        
+                        <div style='background-color: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0;'>
+                            <h3 style='margin-top: 0; color: #333;'>Your Login Credentials</h3>
+                            <p style='margin-bottom: 5px;'><strong>Center Code (User ID):</strong> <span style='color: #2563eb; font-weight: bold;'>$center_code</span></p>
+                            <p style='margin-bottom: 5px;'><strong>Password:</strong> <span style='color: #dc2626; font-weight: bold;'>$raw_password</span></p>
+                            <p style='font-size: 12px; color: #666;'>Please change your password after your first login.</p>
+                        </div>
+
+                        <p><strong>Center Details:</strong><br>
+                        Location: $city, $state</p>
+                        
+                        <a href='http://localhost/mg-skill/center/login.php' style='display: inline-block; background-color: #6f75ff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;'>Login to Dashboard</a>
+                        
+                        <br><br>
+                        <p>We look forward to a successful partnership.</p>
+                        <p>Best Regards,<br>MG Skills Team</p>
+                    </div>
                 ";
                 $mail->send();
             } catch (Exception $e) {
