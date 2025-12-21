@@ -11,7 +11,7 @@ $conn = getDbConnection();
 $error_message = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $enrollment_no = mysqli_real_escape_string($conn, $_POST['enrollment_no']);
+    $enrollment_no = mysqli_real_escape_string($conn, trim($_POST['enrollment_no']));
     $password = $_POST['password'];
 
     $sql = "SELECT * FROM admissions WHERE enrollment_no = '$enrollment_no'";
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $error_message = "Invalid Password.";
         }
     } else {
-        $error_message = "Invalid Enrollment No or Admission not active.";
+        $error_message = "Enrollment Number not found. Please contact Admin.";
     }
 }
 ?>
