@@ -10,43 +10,7 @@ $cats = $conn->query("SELECT id, name FROM course_categories WHERE is_active = 1
 // Filters
 $search = $_GET['search'] ?? '';
 $category = $_GET['category'] ?? '';
-$min_price = $_GET['min_price'] ?? '';
-$max_price = $_GET['max_price'] ?? '';
 
-// Pagination
-$limit = 10;
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$offset = ($page - 1) * $limit;
-
-// Query Construction
-$where = "WHERE c.is_active = 1";
-$params = [];
-$types = "";
-
-if ($search) {
-    $where .= " AND c.title LIKE ?";
-    $params[] = "%$search%";
-    $types .= "s";
-}
-
-if ($category) {
-    $where .= " AND c.category_id = ?";
-    $params[] = $category;
-    $types .= "i";
-}
-
-if ($min_price) {
-    // Assuming MySQL 5.7+ or MariaDB for JSON
-    $where .= " AND CAST(JSON_UNQUOTE(JSON_EXTRACT(c.fees, '$.amount')) AS UNSIGNED) >= ?";
-    $params[] = $min_price;
-    $types .= "i";
-}
-
-if ($max_price) {
-    $where .= " AND CAST(JSON_UNQUOTE(JSON_EXTRACT(c.fees, '$.amount')) AS UNSIGNED) <= ?";
-    $params[] = $max_price;
-    $types .= "i";
-}
 
 // Total Count for Pagination
 $count_sql = "SELECT COUNT(*) as total FROM courses c $where";
@@ -173,16 +137,6 @@ $result = $stmt->get_result();
                 </select>
             </div>
             
-            <div class="filter-group">
-                <label class="filter-label">Min Price</label>
-                <input type="number" name="min_price" class="form-input" placeholder="₹ Min" value="<?php echo htmlspecialchars($min_price); ?>">
-            </div>
-            
-            <div class="filter-group">
-                <label class="filter-label">Max Price</label>
-                <input type="number" name="max_price" class="form-input" placeholder="₹ Max" value="<?php echo htmlspecialchars($max_price); ?>">
-            </div>
-            
             <button type="submit" class="btn-filter">Filters</button>
             <a href="index.php" class="btn-reset">Reset</a>
         </form>
@@ -242,13 +196,13 @@ $result = $stmt->get_result();
         <!-- Pagination -->
         <?php if($total_pages > 1): ?>
         <div class="pagination">
-            <a href="?page=<?php echo max(1, $page - 1); ?>&search=<?php echo urlencode($search); ?>&category=<?php echo $category; ?>&min_price=<?php echo $min_price; ?>&max_price=<?php echo $max_price; ?>" class="page-link <?php echo $page <= 1 ? 'disabled' : ''; ?>">←</a>
+            <a href="?page=<?php echo max(1, $page - 1); ?>&search=<?php echo urlencode($search); ?>&category=<?php echo $category; ?>" class="page-link <?php echo $page <= 1 ? 'disabled' : ''; ?>">←</a>
             
             <?php for($i = 1; $i <= $total_pages; $i++): ?>
-                <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>&category=<?php echo $category; ?>&min_price=<?php echo $min_price; ?>&max_price=<?php echo $max_price; ?>" class="page-link <?php echo $i == $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
+                <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>&category=<?php echo $category; ?>" class="page-link <?php echo $i == $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
             <?php endfor; ?>
             
-            <a href="?page=<?php echo min($total_pages, $page + 1); ?>&search=<?php echo urlencode($search); ?>&category=<?php echo $category; ?>&min_price=<?php echo $min_price; ?>&max_price=<?php echo $max_price; ?>" class="page-link <?php echo $page >= $total_pages ? 'disabled' : ''; ?>">→</a>
+            <a href="?page=<?php echo min($total_pages, $page + 1); ?>&search=<?php echo urlencode($search); ?>&category=<?php echo $category; ?>" class="page-link <?php echo $page >= $total_pages ? 'disabled' : ''; ?>">→</a>
         </div>
         <?php endif; ?>
         
