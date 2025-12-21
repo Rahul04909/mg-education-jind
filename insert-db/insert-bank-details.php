@@ -1,4 +1,9 @@
 <?php
+// Enable Error Reporting
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 require_once '../database/db-config.php';
 
@@ -21,7 +26,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Handle File Uploads
     $upload_dir = '../assets/uploads/center-qr/';
     if (!file_exists($upload_dir)) {
-        mkdir($upload_dir, 0777, true);
+        if (!mkdir($upload_dir, 0777, true)) {
+            die("Failed to create upload directory");
+        }
     }
     
     // Function to handle upload
@@ -33,6 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             if (move_uploaded_file($_FILES[$fileInputName]['tmp_name'], $target_file)) {
                 return 'assets/uploads/center-qr/' . $new_name;
+            } else {
+                // Log or handle upload error
+                error_log("Failed to move uploaded file: " . $_FILES[$fileInputName]['name']);
             }
         }
         return $existingPath;
@@ -72,5 +82,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $conn->close();
+} else {
+    // Fallback for non-POST requests to prevent white screen
+    header("Location: ../center/bank-details.php");
+    exit;
 }
 ?>
