@@ -26,26 +26,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Handle File Uploads
     $upload_dir = '../assets/uploads/center-qr/';
     if (!file_exists($upload_dir)) {
-        if (!mkdir($upload_dir, 0777, true)) {
+        if (!mkdir($upload_dir, 0755, true)) {
             die("Failed to create upload directory");
         }
-    }
-    
-    // Function to handle upload
-    function handleUpload($fileInputName, $existingPath, $upload_dir) {
-        if (isset($_FILES[$fileInputName]) && $_FILES[$fileInputName]['error'] == 0) {
-            $ext = pathinfo($_FILES[$fileInputName]['name'], PATHINFO_EXTENSION);
-            $new_name = uniqid('qr_') . '.' . $ext;
-            $target_file = $upload_dir . $new_name;
-            
-            if (move_uploaded_file($_FILES[$fileInputName]['tmp_name'], $target_file)) {
-                return 'assets/uploads/center-qr/' . $new_name;
-            } else {
-                // Log or handle upload error
-                error_log("Failed to move uploaded file: " . $_FILES[$fileInputName]['name']);
-            }
-        }
-        return $existingPath;
     }
 
     // Get existing paths if any
@@ -86,5 +69,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Fallback for non-POST requests to prevent white screen
     header("Location: ../center/bank-details.php");
     exit;
+}
+
+// Function to handle upload
+function handleUpload($fileInputName, $existingPath, $upload_dir) {
+    if (isset($_FILES[$fileInputName]) && $_FILES[$fileInputName]['error'] == 0) {
+        $ext = pathinfo($_FILES[$fileInputName]['name'], PATHINFO_EXTENSION);
+        $new_name = uniqid('qr_') . '.' . $ext;
+        $target_file = $upload_dir . $new_name;
+        
+        if (move_uploaded_file($_FILES[$fileInputName]['tmp_name'], $target_file)) {
+            return 'assets/uploads/center-qr/' . $new_name;
+        } else {
+             // Log error
+             error_log("Failed to move uploaded file: " . $_FILES[$fileInputName]['name']);
+        }
+    }
+    return $existingPath;
 }
 ?>
