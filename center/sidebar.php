@@ -385,7 +385,7 @@
     <div class="brand">
         <div class="brand-logo">MG</div>
         <div class="brand-text">
-            <span class="brand-title">MG Education & Social Development Organization</span>
+            <span class="brand-title">MG Education</span>
             <span class="brand-subtitle">Center Panel</span>
         </div>
     </div>
