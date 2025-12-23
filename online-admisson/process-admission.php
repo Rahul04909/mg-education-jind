@@ -132,6 +132,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     if ($conn->query($sql) === TRUE) {
         
+        // Log Transaction
+        $txn_sql = "INSERT INTO student_transactions (enrollment_no, transaction_id, amount, payment_mode, status, remarks) 
+                    VALUES ('$enrollment_no', '$payment_id', $course_fee, 'Razorpay', 'success', 'Admission Fee')";
+        $conn->query($txn_sql);
+        
         // Send Email
         // Fetch SMTP
         $smtp_sql = "SELECT * FROM smtp_settings WHERE id = 1 AND is_active = 1";

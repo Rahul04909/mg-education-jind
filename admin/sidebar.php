@@ -222,6 +222,7 @@
                     <li class="submenu-item"><a href="/admin/students">All Students</a></li>
                     <li class="submenu-item"><a href="/admin/student-new">Add Student</a></li>
                     <li class="submenu-item"><a href="/admin/batches">Batches</a></li>
+                    <li class="submenu-item"><a href="/mg-skill/admin/mg-students/manage-fees.php">Manage Fees</a></li>
                 </ul>
             </li>
         </ul>
