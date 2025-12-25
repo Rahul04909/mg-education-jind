@@ -200,6 +200,12 @@
                         Explore
                     </a>
                 </li>
+                <li>
+                    <a href="idcard.php" class="s-nav-link">
+                        <svg class="s-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><path d="M7 7h10v10H7z"/><path d="M10 2v2"/><path d="M14 2v2"/><path d="M10 20v2"/><path d="M14 20v2"/></svg>
+                        ID Card
+                    </a>
+                </li>
             </ul>
         </div>
 
