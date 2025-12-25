@@ -291,7 +291,7 @@ try {
                 <div class="header-content">
                     <div class="company-text">
                         <h2>MG Education</h2>
-                        <span>SKILLS</span>
+                        <span>& Social Development Organization</span>
                     </div>
                     <img src="<?php echo htmlspecialchars($logo_path); ?>" class="company-logo-img" alt="Logo" crossorigin="anonymous">
                 </div>
@@ -356,7 +356,7 @@ try {
                  <?php else: ?>
                     <div style="font-family: 'Brush Script MT', cursive; font-size: 20px; color: #333; min-width: 100px;">Digitally Signed</div>
                  <?php endif; ?>
-                 <div style="font-size: 10px; color: #94a3b8; margin-top: 4px; border-top: 1px solid #e2e8f0; padding-top: 4px;">Authorized Signature</div>
+                 <div style="font-size: 10px; color: #94a3b8; margin-top: 4px; border-top: 1px solid #e2e8f0; padding-top: 4px;">Student Signature</div>
             </div>
 
         </div>
