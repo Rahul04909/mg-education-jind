@@ -184,6 +184,9 @@ try {
         .student-main-info {
             margin-left: 170px; /* push right of profile pic */
             margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
         }
         .student-name {
             font-size: 28px;
@@ -195,6 +198,9 @@ try {
             font-size: 16px;
             color: #64748b;
             font-weight: 500;
+        }
+        .student-text-group {
+            flex: 1;
         }
 
         .details-grid {
@@ -228,22 +234,21 @@ try {
             position: absolute;
             bottom: 25px;
             right: 30px;
-            width: calc(100% - 250px); /* Adjust width to not hit signature area if shifted, or just use flex */
-            left: 210px; /* Start after where left column would be roughly */
+            width: calc(100% - 250px);
+            left: 210px;
         }
         
         .signature-area {
             text-align: center;
             position: absolute; 
-            bottom: 80px; 
+            bottom: 120px;  /* Moved up slightly as request might imply signature stays but barcode moves */
             right: 40px;
             z-index: 10;
         }
         
         .barcode-area {
              text-align: right;
-             margin-left: auto; /* Push to right */
-             margin-right: 40px; /* Align roughly with content */
+             /* margin-left: auto; */
         }
 
         .download-btn {
@@ -300,10 +305,26 @@ try {
             </div>
 
             <div class="card-body">
-                <!-- Name & Title -->
+                <!-- Name & Title & Barcode (New Layout) -->
                 <div class="student-main-info">
-                    <div class="student-name"><?php echo htmlspecialchars($student['full_name']); ?></div>
-                    <div class="student-course"><?php echo htmlspecialchars($course_name); ?></div>
+                    <div class="student-text-group">
+                        <div class="student-name"><?php echo htmlspecialchars($student['full_name']); ?></div>
+                        <div class="student-course"><?php echo htmlspecialchars($course_name); ?></div>
+                    </div>
+                    
+                    <!-- Moved Barcode Here -->
+                    <div class="barcode-area">
+                         <?php if(!empty($barcode_base64)): ?>
+                            <img src="data:image/png;base64,<?php echo $barcode_base64; ?>" style="height: 35px; width: auto; display: block; margin-bottom: 2px;" alt="Barcode">
+                            <div style="font-size: 9px; text-align: center; letter-spacing: 1px; color: #333;">
+                                <?php echo htmlspecialchars($student['enrollment_no']); ?>
+                            </div>
+                         <?php else: ?>
+                            <div style="height: 35px; background: #eee; width: 120px; display: flex; align-items: center; justify-content: center; font-size: 9px;">
+                                NO BARCODE
+                            </div>
+                         <?php endif; ?>
+                     </div>
                 </div>
 
                 <!-- Details Grid -->
@@ -326,26 +347,10 @@ try {
                     </div>
                 </div>
 
-                <!-- Footer with Barcode -->
-                <div class="card-footer">
-                     <div class="barcode-area">
-                         <?php if(!empty($barcode_base64)): ?>
-                            <img src="data:image/png;base64,<?php echo $barcode_base64; ?>" style="height: 40px; width: auto; display: block;" alt="Barcode">
-                            <div style="font-size: 10px; text-align: center; letter-spacing: 1px; color: #333; margin-top:2px;">
-                                <?php echo htmlspecialchars($student['enrollment_no']); ?>
-                            </div>
-                         <?php else: ?>
-                            <!-- Fallback if generator failed -->
-                            <div style="height: 40px; background: #eee; width: 150px; display: flex; align-items: center; justify-content: center; font-size: 10px;">
-                                NO BARCODE
-                            </div>
-                         <?php endif; ?>
-                     </div>
-                </div>
             </div>
             
-            <!-- Signature -->
-            <div class="signature-area">
+            <!-- Signature (Bottom Right) -->
+            <div class="signature-area" style="bottom: 30px; right: 40px;">
                  <?php if(!empty($student['student_sign'])): ?>
                     <img src="../<?php echo htmlspecialchars($student['student_sign']); ?>" style="height: 40px; display:block; margin: 0 auto;" crossorigin="anonymous">
                  <?php else: ?>
@@ -374,9 +379,8 @@ try {
         btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Generating...';
         lucide.createIcons();
         
-        // Wait a moment for images to be fully ready if needed, though they should be loaded
         html2canvas(card, {
-            scale: 3, // High resolution
+            scale: 3, 
             useCORS: true, 
             allowTaint: true,
             backgroundColor: null
