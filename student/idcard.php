@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../database/db-config.php';
+require_once __DIR__ . '/../vendor/autoload.php'; // Include composer autoload
 
 if (!isset($_SESSION['student_id'])) {
     header("Location: login.php");
@@ -26,11 +27,19 @@ $join_date = isset($student['created_at']) ? date('d/m/Y', strtotime($student['c
 $expire_date = date('d/m/Y', strtotime('+1 year', strtotime(str_replace('/', '-', $join_date))));
 $dob = date('d/m/Y', strtotime($student['dob']));
 
-// Handle Image Paths (Admin uploads might be relative to admin folder, need to adjust for student folder)
-// DB stores: assets/uploads/students/...
-// Adding ../ prefix since we are in student/ folder
+// Handle Image Paths
 $photo_path = !empty($student['student_photo']) ? '../' . $student['student_photo'] : 'https://i.pravatar.cc/300';
-$logo_path = '../assets/images/logo.png'; // Assuming a logo exists, or use text
+$logo_path = '../assets/images/logo.jpg';
+
+// Generate Barcode
+$generator = new Picqer\Barcode\BarcodeGeneratorPNG();
+// Use Enrollment No for barcode
+try {
+    $barcode_data = $generator->getBarcode($student['enrollment_no'], $generator::TYPE_CODE_128, 2, 50);
+    $barcode_base64 = base64_encode($barcode_data);
+} catch (Exception $e) {
+    $barcode_base64 = ""; // Fallback or handle error
+}
 
 ?>
 <!DOCTYPE html>
@@ -39,7 +48,7 @@ $logo_path = '../assets/images/logo.png'; // Assuming a logo exists, or use text
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My ID Card - MG Skills</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
@@ -48,7 +57,7 @@ $logo_path = '../assets/images/logo.png'; // Assuming a logo exists, or use text
         body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--secondary);display:flex;min-height:100vh}
         
         /* Layout similar to index.php */
-        .sidebar{width:260px;background:var(--white);border-right:1px solid var(--border);position:fixed;height:100vh;display:flex;flex-direction:column;z-index:10;}
+        .sidebar{width:260px;background:var(--white);border-right:1px solid var(--border);position:fixed;height:100vh;display:flex;flex-direction:column;z-index:99;}
         .main{margin-left:260px;flex:1;padding:30px; display: flex; flex-direction: column; align-items: center;}
         
         /* Mobile */
@@ -107,16 +116,37 @@ $logo_path = '../assets/images/logo.png'; // Assuming a logo exists, or use text
             opacity: 0.3;
         }
         
-        .company-logo {
-            position: absolute;
-            top: 25px;
-            right: 30px;
-            text-align: right;
-            color: #fff;
+        /* New Header Layout */
+        .header-content {
+            position: relative;
             z-index: 2;
+            height: 100%;
+            display: flex;
+            justify-content: center; /* Center the text */
+            align-items: center;
+            padding: 0 30px;
         }
-        .company-logo h2 { font-size: 24px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0; line-height: 1; }
-        .company-logo span { font-size: 12px; opacity: 0.9; letter-spacing: 2px; text-transform: uppercase; }
+
+        .company-text {
+            text-align: center;
+            color: #fff;
+        }
+        .company-text h2 { font-size: 26px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0; line-height: 1.1; }
+        .company-text span { font-size: 14px; opacity: 0.9; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; display: block; margin-top: 4px;}
+
+        .company-logo-img {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            padding: 5px;
+            border-radius: 8px;
+            height: 70px;
+            width: 70px;
+            object-fit: contain;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
         /* Profile Image Area */
         .profile-container {
@@ -192,53 +222,30 @@ $logo_path = '../assets/images/logo.png'; // Assuming a logo exists, or use text
         /* Barcode / Footer Area */
         .card-footer {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: flex-end;
             margin-top: auto;
             position: absolute;
             bottom: 25px;
             right: 30px;
-            width: 100%;
+            width: calc(100% - 250px); /* Adjust width to not hit signature area if shifted, or just use flex */
+            left: 210px; /* Start after where left column would be roughly */
         }
         
         .signature-area {
             text-align: center;
-            margin-right: 40px;
-        }
-        .signature-img {
-            height: 30px;
-            display: block;
-            margin: 0 auto 5px auto;
-            opacity: 0.8;
-        }
-        .signature-text {
-            font-size: 10px;
-            color: #94a3b8;
-            border-top: 1px solid #cbd5e1;
-            padding-top: 2px;
-            display: inline-block;
-            min-width: 100px;
-        }
-
-        .barcode {
-             height: 35px;
-             /* Simple CSS barcode representation or image */
-             background: repeating-linear-gradient(
-                90deg,
-                #333 0px,
-                #333 2px,
-                transparent 2px,
-                transparent 4px,
-                #333 4px,
-                #333 8px,
-                transparent 8px,
-                transparent 9px
-             );
-             width: 120px;
-             margin-left: auto;
-             margin-right: 70px; /* From right edge */
+            position: absolute; 
+            bottom: 80px; 
+            right: 40px;
+            z-index: 10;
         }
         
+        .barcode-area {
+             text-align: right;
+             margin-left: auto; /* Push to right */
+             margin-right: 40px; /* Align roughly with content */
+        }
+
         .download-btn {
             background: var(--primary);
             color: white;
@@ -276,9 +283,12 @@ $logo_path = '../assets/images/logo.png'; // Assuming a logo exists, or use text
         <div class="id-card" id="captureCard">
             <!-- Header Background -->
             <div class="card-header-bg">
-                <div class="company-logo">
-                    <span>MG Education</span>
-                    <h2>SKILLS</h2>
+                <div class="header-content">
+                    <div class="company-text">
+                        <h2>MG Education</h2>
+                        <span>SKILLS</span>
+                    </div>
+                    <img src="<?php echo htmlspecialchars($logo_path); ?>" class="company-logo-img" alt="Logo" crossorigin="anonymous">
                 </div>
             </div>
 
@@ -316,22 +326,32 @@ $logo_path = '../assets/images/logo.png'; // Assuming a logo exists, or use text
                     </div>
                 </div>
 
-                <!-- Footer with Signature/Barcode -->
+                <!-- Footer with Barcode -->
                 <div class="card-footer">
-                     <!-- Fake Barcode for visual -->
-                     <div class="barcode"></div>
+                     <div class="barcode-area">
+                         <?php if(!empty($barcode_base64)): ?>
+                            <img src="data:image/png;base64,<?php echo $barcode_base64; ?>" style="height: 40px; width: auto; display: block;" alt="Barcode">
+                            <div style="font-size: 10px; text-align: center; letter-spacing: 1px; color: #333; margin-top:2px;">
+                                <?php echo htmlspecialchars($student['enrollment_no']); ?>
+                            </div>
+                         <?php else: ?>
+                            <!-- Fallback if generator failed -->
+                            <div style="height: 40px; background: #eee; width: 150px; display: flex; align-items: center; justify-content: center; font-size: 10px;">
+                                NO BARCODE
+                            </div>
+                         <?php endif; ?>
+                     </div>
                 </div>
             </div>
             
-            <!-- Signature Overlapping bottom right slightly -->
-            <div style="position: absolute; bottom: 80px; right: 40px; text-align: center;">
-                 <!-- If signature image exists -->
+            <!-- Signature -->
+            <div class="signature-area">
                  <?php if(!empty($student['student_sign'])): ?>
                     <img src="../<?php echo htmlspecialchars($student['student_sign']); ?>" style="height: 40px; display:block; margin: 0 auto;" crossorigin="anonymous">
                  <?php else: ?>
-                    <div style="font-family: 'Brush Script MT', cursive; font-size: 20px; color: #333;">Digitally Signed</div>
+                    <div style="font-family: 'Brush Script MT', cursive; font-size: 20px; color: #333; min-width: 100px;">Digitally Signed</div>
                  <?php endif; ?>
-                 <div style="font-size: 10px; color: #94a3b8; margin-top: 4px;">Authorized Signature</div>
+                 <div style="font-size: 10px; color: #94a3b8; margin-top: 4px; border-top: 1px solid #e2e8f0; padding-top: 4px;">Authorized Signature</div>
             </div>
 
         </div>
@@ -354,9 +374,11 @@ $logo_path = '../assets/images/logo.png'; // Assuming a logo exists, or use text
         btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Generating...';
         lucide.createIcons();
         
+        // Wait a moment for images to be fully ready if needed, though they should be loaded
         html2canvas(card, {
             scale: 3, // High resolution
-            useCORS: true, // For images
+            useCORS: true, 
+            allowTaint: true,
             backgroundColor: null
         }).then(canvas => {
             const link = document.createElement('a');
