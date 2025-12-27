@@ -38,23 +38,6 @@ $course_name = ($c_res->num_rows > 0) ? $c_res->fetch_assoc()['title'] : "Unknow
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--secondary);display:flex;min-height:100vh}
         
-        /* Sidebar */
-        .sidebar{width:260px;background:var(--white);border-right:1px solid var(--border);position:fixed;height:100vh;display:flex;flex-direction:column;z-index: 10;}
-        .logo{padding:24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
-        .logo img{height:32px;}
-        .logo span{font-weight:700;font-size:18px;color:var(--primary)}
-        
-        .nav-links{padding:20px;flex:1}
-        .nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;color:#64748b;text-decoration:none;border-radius:8px;margin-bottom:4px;transition:0.2s}
-        .nav-item:hover, .nav-item.active{background:#eff6ff;color:var(--primary)}
-        .nav-item i{width:20px;height:20px}
-        
-        .user-profile{padding:20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:12px}
-        .user-avatar{width:40px;height:40px;border-radius:50%;background:var(--primary);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700}
-        .user-info{flex:1}
-        .user-name{font-weight:600;font-size:14px}
-        .user-role{font-size:12px;color:#64748b}
-        
         /* Main Content */
         .main{margin-left:260px;flex:1;padding:30px}
         .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}
@@ -84,26 +67,7 @@ $course_name = ($c_res->num_rows > 0) ? $c_res->fetch_assoc()['title'] : "Unknow
 </head>
 <body>
 
-<div class="sidebar">
-    <div class="logo">
-        <i data-lucide="graduation-cap" class="text-indigo-600"></i>
-        <span>MG Student</span>
-    </div>
-    <div class="nav-links">
-        <a href="index.php" class="nav-item active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-        <a href="#" class="nav-item"><i data-lucide="book-open"></i> My Courses</a>
-        <a href="#" class="nav-item"><i data-lucide="file-text"></i> Results</a>
-        <a href="#" class="nav-item"><i data-lucide="award"></i> Certificates</a>
-        <a href="logout.php" class="nav-item"><i data-lucide="log-out"></i> Logout</a>
-    </div>
-    <div class="user-profile">
-        <div class="user-avatar"><?php echo strtoupper(substr($student_name, 0, 1)); ?></div>
-        <div class="user-info">
-            <div class="user-name"><?php echo htmlspecialchars($student_name); ?></div>
-            <div class="user-role"><?php echo htmlspecialchars($enrollment_no); ?></div>
-        </div>
-    </div>
-</div>
+    <?php include 'sidebar.php'; ?>
 
 <main class="main">
     <div class="header">
