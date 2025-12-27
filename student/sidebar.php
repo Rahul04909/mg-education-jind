@@ -182,10 +182,38 @@
                         My Courses
                     </a>
                 </li>
+                
+                <?php
+                // Fetch student origin to determine fee page
+                // Assuming $conn is available from index.php or we need to connect if not. 
+                // Sidebar is usually included, so check if conn exists.
+                // Safest to just do a quick check if session id is set.
+                $fee_link = "fees.php"; // Default
+                if(isset($_SESSION['student_id'])) {
+                    // We need a DB connection here if not already open? 
+                    // Usually sidebar is included in pages that ALREADY have db config.
+                    // But to be safe, let's use the valid variable if it exists or generic check.
+                    // Ideally, the parent page sets a variable. 
+                    // Let's assume the parent page has $conn. If not, this might fail.
+                    // Better approach: User $_SESSION data if we stored 'added_by' or 'center_id' there.
+                    // We didn't store it in login. Let's rely on DB query if $conn exists.
+                    if(isset($conn)) {
+                        $sid = $_SESSION['student_id'];
+                        $chk = $conn->query("SELECT center_id FROM admissions WHERE id = $sid");
+                        if($chk && $chk->num_rows > 0) {
+                            $s_data = $chk->fetch_assoc();
+                            if(!empty($s_data['center_id'])) {
+                                $fee_link = "manage-fees.php";
+                            }
+                        }
+                    }
+                }
+                ?>
+                
                 <li>
-                    <a href="fees.php" class="s-nav-link">
+                    <a href="<?php echo $fee_link; ?>" class="s-nav-link">
                          <svg class="s-icon" viewBox="0 0 24 24"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                        My Fees
+                        <?php echo ($fee_link == 'manage-fees.php') ? 'Manage Fees' : 'My Fees'; ?>
                     </a>
                 </li>
                 <li>
