@@ -90,14 +90,14 @@ $t_res = $conn->query($t_sql);
                 <div class="row" style="gap:10px">
                     <?php if(!empty($bank['qr_1'])): ?>
                     <div class="qr-container" style="flex:1">
-                        <img src="../center/<?php echo $bank['qr_1']; ?>" class="qr-img" alt="QR Code 1">
+                        <img src="../<?php echo $bank['qr_1']; ?>" class="qr-img" alt="QR Code 1">
                         <div>Primary QR</div>
                     </div>
                     <?php endif; ?>
                     
                     <?php if(!empty($bank['qr_2'])): ?>
                     <div class="qr-container" style="flex:1">
-                        <img src="../center/<?php echo $bank['qr_2']; ?>" class="qr-img" alt="QR Code 2">
+                        <img src="../<?php echo $bank['qr_2']; ?>" class="qr-img" alt="QR Code 2">
                         <div>Secondary QR</div>
                     </div>
                     <?php endif; ?>
