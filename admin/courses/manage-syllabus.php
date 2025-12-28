@@ -282,30 +282,21 @@ include __DIR__ . "/../sidebar.php";
     <script>
         const modal = document.getElementById("syllabusModal");
         
-        // Config for TinyMCE
+        // Config for TinyMCE (Matched with add-course.php)
         const tinymceConfig = {
             selector: '#description',
             height: 300,
             plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
-            toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | removeformat',
-            menubar: false
+            toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help'
         };
 
-        function initTinyMCE(content = '') {
-            // Remove instance if exists to avoid conflicts/rendering issues
+        function initTinyMCE() {
+            // Remove instance if exists to avoid conflicts
             if (tinymce.get('description')) {
                 tinymce.remove('#description');
             }
-            // Init with content callback
-            const configWithSetup = {
-                ...tinymceConfig,
-                setup: function (editor) {
-                    editor.on('init', function () {
-                        editor.setContent(content);
-                    });
-                }
-            };
-            tinymce.init(configWithSetup);
+            // Init - it will automatically pick up content from the textarea
+            tinymce.init(tinymceConfig);
         }
 
         function openAddModal() {
@@ -313,6 +304,7 @@ include __DIR__ . "/../sidebar.php";
             document.getElementById('formAction').value = "add";
             document.getElementById('syllabusId').value = "";
             document.getElementById('unit_title').value = "";
+            document.getElementById('description').value = ""; // Clear textarea
             
             // Pre-select subject from filter
             const urlParams = new URLSearchParams(window.location.search);
@@ -324,7 +316,7 @@ include __DIR__ . "/../sidebar.php";
             modal.style.display = "block";
             
             // Init TinyMCE after modal is visible
-            initTinyMCE('');
+            initTinyMCE();
         }
 
         function openEditModal(data) {
@@ -334,11 +326,12 @@ include __DIR__ . "/../sidebar.php";
             
             document.getElementById('subject_id').value = data.subject_id;
             document.getElementById('unit_title').value = data.unit_title;
+            document.getElementById('description').value = data.description; // Set textarea value
             
             modal.style.display = "block";
 
             // Init TinyMCE after modal is visible
-            initTinyMCE(data.description);
+            initTinyMCE();
         }
 
         function closeModal() {
