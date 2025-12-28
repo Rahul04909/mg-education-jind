@@ -71,6 +71,27 @@ $subjects = [];
 while ($row = $subjects_result->fetch_assoc()) {
     $subjects[] = $row;
 }
+
+// Data for Edit Mode
+$edit_mode = false;
+$existing_paper = null;
+$existing_questions = [];
+
+if (isset($_GET['subject_id'])) {
+    $sub_id = intval($_GET['subject_id']);
+    $paper_result = $conn->query("SELECT * FROM question_papers WHERE subject_id = $sub_id LIMIT 1");
+    if ($paper_result->num_rows > 0) {
+        $edit_mode = true;
+        $existing_paper = $paper_result->fetch_assoc();
+        $paper_id = $existing_paper['id'];
+        
+        $qs_result = $conn->query("SELECT * FROM questions WHERE paper_id = $paper_id ORDER BY id ASC");
+        while($q = $qs_result->fetch_assoc()) {
+            $existing_questions[] = $q;
+        }
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -117,7 +138,10 @@ while ($row = $subjects_result->fetch_assoc()) {
                 <div style="font-size:14px;color:var(--muted);margin-bottom:10px">
                     <a href="../index.php" style="text-decoration:none;color:var(--indigo)">Dashboard</a> › Courses › Create Question Paper
                 </div>
-                <h1 class="page-title">Create Question Paper</h1>
+                <h1 class="page-title"><?php echo $edit_mode ? 'Edit Question Paper' : 'Create Question Paper'; ?></h1>
+            </div>
+             <div>
+                <a href="view-question-papers.php" class="btn btn-outline">View All Papers</a>
             </div>
         </div>
 
@@ -141,7 +165,10 @@ while ($row = $subjects_result->fetch_assoc()) {
                         <select name="subject_id" id="subject_id" class="form-select" onchange="fetchSubjectDetails()" required>
                             <option value="">-- Choose --</option>
                             <?php foreach($subjects as $s): ?>
-                                <option value="<?php echo $s['id']; ?>" data-theory="<?php echo $s['theory_marks']; ?>" data-assign="<?php echo $s['assignment_marks']; ?>">
+                                <option value="<?php echo $s['id']; ?>" 
+                                    data-theory="<?php echo $s['theory_marks']; ?>" 
+                                    data-assign="<?php echo $s['assignment_marks']; ?>"
+                                    <?php echo ($edit_mode && $existing_paper['subject_id'] == $s['id']) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($s['name']); ?> (<?php echo htmlspecialchars($s['course_name']); ?>)
                                 </option>
                             <?php endforeach; ?>
@@ -192,6 +219,37 @@ while ($row = $subjects_result->fetch_assoc()) {
         let theoryMarks = 0;
         let questionCount = 0;
         let maxQuestions = 0;
+
+        // Edit Mode Data
+        const editMode = <?php echo $edit_mode ? 'true' : 'false'; ?>;
+        const initialConfig = <?php echo $edit_mode ? json_encode($existing_paper) : 'null'; ?>;
+        const initialQuestions = <?php echo $edit_mode ? json_encode($existing_questions) : '[]'; ?>;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            if (editMode && initialConfig) {
+                // Trigger fetch to set theory marks
+                fetchSubjectDetails();
+                
+                // Set Config
+                document.getElementById('totalQuestions').value = initialConfig.total_questions;
+                document.getElementById('marksPerQuestion').value = initialConfig.marks_per_question;
+                
+                // Validate & Start
+                validateConfig();
+                startBuilding();
+
+                // Load Questions
+                // Note: startBuilding added an empty one, let's remove it if we have existing ones, or just populate
+                // Since startBuilding adds one if count is 0, we can clear the container first
+                if (initialQuestions.length > 0) {
+                     document.getElementById('questionsContainer').innerHTML = '';
+                     questionCount = 0;
+                     initialQuestions.forEach(q => {
+                         addQuestion(q);
+                     });
+                }
+            }
+        });
 
         function fetchSubjectDetails() {
             const select = document.getElementById('subject_id');
@@ -244,11 +302,11 @@ while ($row = $subjects_result->fetch_assoc()) {
             document.getElementById('marksPerQuestion').readOnly = true;
             document.getElementById('startBtn').style.display = 'none';
 
-            // Add first question automatically
-            if(questionCount === 0) addQuestion();
+            // Add first question automatically IF not edit mode (handled in DOMContentLoaded)
+            if(questionCount === 0 && !editMode) addQuestion();
         }
 
-        function addQuestion() {
+        function addQuestion(data = null) {
             if (questionCount >= maxQuestions) {
                 alert(`You have reached the limit of ${maxQuestions} questions.`);
                 return;
@@ -258,29 +316,41 @@ while ($row = $subjects_result->fetch_assoc()) {
             const container = document.getElementById('questionsContainer');
             const div = document.createElement('div');
             div.className = 'question-card';
+            
+            // Default empty values
+            let text = '', a='', b='', c='', d='', correct='';
+            if(data) {
+                text = data.question_text || '';
+                a = data.option_a || '';
+                b = data.option_b || '';
+                c = data.option_c || '';
+                d = data.option_d || '';
+                correct = data.correct_option || '';
+            }
+
             div.innerHTML = `
                 <div style="font-weight:700; margin-bottom:10px;">Question ${questionCount}</div>
                
                 <div class="form-group">
-                    <textarea name="questions[${questionCount}][text]" class="form-textarea" rows="2" placeholder="Enter Question Text" required></textarea>
+                    <textarea name="questions[${questionCount}][text]" class="form-textarea" rows="2" placeholder="Enter Question Text" required>${text}</textarea>
                 </div>
                 
                 <div class="q-opt-grid">
                     <div class="opt-row">
-                        <input type="radio" name="questions[${questionCount}][correct]" value="A" required>
-                        <input type="text" name="questions[${questionCount}][a]" class="form-input" placeholder="Option A" required>
+                        <input type="radio" name="questions[${questionCount}][correct]" value="A" required ${correct === 'A' ? 'checked' : ''}>
+                        <input type="text" name="questions[${questionCount}][a]" class="form-input" placeholder="Option A" value="${a}" required>
                     </div>
                     <div class="opt-row">
-                        <input type="radio" name="questions[${questionCount}][correct]" value="B">
-                        <input type="text" name="questions[${questionCount}][b]" class="form-input" placeholder="Option B" required>
+                        <input type="radio" name="questions[${questionCount}][correct]" value="B" ${correct === 'B' ? 'checked' : ''}>
+                        <input type="text" name="questions[${questionCount}][b]" class="form-input" placeholder="Option B" value="${b}" required>
                     </div>
                     <div class="opt-row">
-                        <input type="radio" name="questions[${questionCount}][correct]" value="C">
-                        <input type="text" name="questions[${questionCount}][c]" class="form-input" placeholder="Option C" required>
+                        <input type="radio" name="questions[${questionCount}][correct]" value="C" ${correct === 'C' ? 'checked' : ''}>
+                        <input type="text" name="questions[${questionCount}][c]" class="form-input" placeholder="Option C" value="${c}" required>
                     </div>
                     <div class="opt-row">
-                        <input type="radio" name="questions[${questionCount}][correct]" value="D">
-                        <input type="text" name="questions[${questionCount}][d]" class="form-input" placeholder="Option D" required>
+                        <input type="radio" name="questions[${questionCount}][correct]" value="D" ${correct === 'D' ? 'checked' : ''}>
+                        <input type="text" name="questions[${questionCount}][d]" class="form-input" placeholder="Option D" value="${d}" required>
                     </div>
                 </div>
             `;
