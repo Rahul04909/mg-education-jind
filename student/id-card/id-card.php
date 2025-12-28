@@ -36,7 +36,7 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My ID Card - MG Skills</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --primary: #a855f7;
@@ -46,19 +46,26 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
         .main-content { margin-left: 260px; padding: 40px; min-height: 100vh; }
         
         .page-header { margin-bottom: 40px; text-align: center; }
-        .page-title { font-size: 28px; font-weight: 700; color: #1e293b; margin-bottom: 10px; }
+        .page-title { font-size: 28px; font-weight: 700; color: #1e293b; margin-bottom: 20px; }
         
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
         .id-card-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 40px;
+            margin-top: 30px;
         }
 
         .id-card-wrapper {
             position: relative;
-            width: 600px; /* Assuming standard ID card width or image width */
-            /* height will be determined by image aspect ratio */
+            width: 600px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
             border-radius: 12px;
             overflow: hidden;
@@ -71,11 +78,11 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
             height: auto;
         }
 
-        /* Overlay Text Positioning - Tweaked based on visual reference */
+        /* Overlay Text Positioning */
         .card-content {
             position: absolute;
-            top: 175px; /* Moved down to be below the blue ribbon */
-            left: 240px; /* Adjusted to align with whitespace */
+            top: 175px; 
+            left: 240px; 
             width: 280px;
             color: #0f172a;
             font-size: 14px;
@@ -89,7 +96,7 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
             margin-bottom: 8px;
         }
         .data-label {
-            width: 70px; /* Fixed width for labels like NAME : */
+            width: 70px; 
             font-weight: 700;
             color: #334155;
             text-transform: uppercase;
@@ -107,14 +114,14 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
 
         .user-photo-box {
             position: absolute;
-            top: 115px; /* Aligned with top of blue box */
-            left: 0px; /* Aligned inside left blue box */
-            width: 213px; /* Filling the width of the blue box zone with padding */
-            height: 260px; /* Filling the height */
+            top: 115px; 
+            left: 0px; 
+            width: 213px;
+            height: 260px;
             background: #cbd5e1;
             border: 4px solid white;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            overflow: hidden; /* Ensure image doesn't overflow */
+            overflow: hidden;
         }
         .user-photo {
             width: 100%;
@@ -126,19 +133,21 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
             background: var(--primary);
             color: white;
             border: none;
-            padding: 12px 30px;
+            padding: 12px 25px;
             border-radius: 50px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             transition: all 0.2s;
             text-decoration: none;
         }
         .btn-download:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5); }
+        .btn-secondary { background: #64748b; box-shadow: 0 4px 15px rgba(100, 116, 139, 0.4); }
+        .btn-secondary:hover { box-shadow: 0 6px 20px rgba(100, 116, 139, 0.5); }
 
         @media print {
             .main-content { margin: 0; padding: 0; }
@@ -150,9 +159,7 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
         @media (max-width: 768px) {
             .main-content { margin-left: 0; padding: 20px; }
             .id-card-wrapper { width: 100%; max-width: 400px; }
-            /* Scaling logic for mobile would be needed for exact pixels, simple scaling here */
             .card-content { top: 40%; left: 60%; font-size: 2.5vw; } 
-            /* Note: Pixel perfection on responsive ID cards is tricky without fixed container */
         }
     </style>
 </head>
@@ -165,15 +172,21 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
 <main class="main-content">
     <div class="page-header no-print">
         <h1 class="page-title">Identity Card</h1>
-        <button onclick="window.print()" class="btn-download">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            Print / Download PDF
-        </button>
+        <div class="action-buttons">
+            <button onclick="downloadFront()" class="btn-download">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Download Front Side
+            </button>
+            <a href="id-card-back.png" download="ID_Card_Back_<?php echo $student['enrollment_no']; ?>.png" class="btn-download btn-secondary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Download Back Side
+            </a>
+        </div>
     </div>
 
     <div class="id-card-container">
         <!-- Front Side -->
-        <div class="id-card-wrapper">
+        <div class="id-card-wrapper" id="card-front">
             <img src="id-card-front-side.png" class="card-img" alt="ID Card Front">
             
             <!-- Photo (Optional/Placeholder based on design) -->
@@ -217,6 +230,39 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
         </div>
     </div>
 </main>
+
+<script>
+    function downloadFront() {
+        const frontCard = document.getElementById('card-front');
+        const btn = document.querySelector('.btn-download');
+        const originalText = btn.innerHTML;
+        
+        btn.innerHTML = 'Generating...';
+        btn.style.opacity = '0.7';
+
+        // Use html2canvas to capture the element
+        html2canvas(frontCard, {
+            scale: 2, // High resolution
+            useCORS: true, // Enable cross-origin images
+            backgroundColor: null, // Transparent bg if any
+            logging: false
+        }).then(canvas => {
+            // Convert to link and click it
+            const link = document.createElement('a');
+            link.download = 'ID_Card_Front_<?php echo $student['enrollment_no']; ?>.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            btn.innerHTML = originalText;
+            btn.style.opacity = '1';
+        }).catch(err => {
+            console.error(err);
+            alert('Error generating image');
+            btn.innerHTML = originalText;
+            btn.style.opacity = '1';
+        });
+    }
+</script>
 
 </body>
 </html>
