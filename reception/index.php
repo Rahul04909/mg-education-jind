@@ -27,6 +27,7 @@ $active_students = 450;
             --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
         }
         
+        * { box-sizing: border-box; }
         body { margin: 0; font-family: 'Outfit', sans-serif; background: var(--bg-body); color: var(--text-main); }
         .main-content { margin-left: var(--sidebar-w); padding: 30px; transition: all 0.3s; min-height: 100vh; }
         
@@ -91,20 +92,44 @@ $active_students = 450;
         .activity-details p { font-size: 13px; color: var(--text-light); margin: 0; }
         .activity-time { font-size: 12px; color: #94a3b8; white-space: nowrap; margin-left: auto; }
 
-        .btn-primary {
-            display: block; width: 100%; padding: 12px; margin-top: 10px;
-            background: #ec4899; color: white; border: none; border-radius: 12px;
-            font-weight: 600; cursor: pointer; text-align: center; text-decoration: none;
-            transition: background 0.2s;
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 16px;
+            margin-top: 12px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .btn-primary:hover { background: #db2777; }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.3), 0 2px 4px -1px rgba(236, 72, 153, 0.1);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.4);
+        }
         
         .btn-outline {
-            display: block; width: 100%; padding: 12px; margin-top: 10px;
-            background: transparent; color: #ec4899; border: 2px solid #ec4899;
-            border-radius: 12px; font-weight: 600; cursor: pointer; text-align: center; text-decoration: none;
+            background: white;
+            color: #ec4899;
+            border: 2px solid #fce7f3;
         }
-        .btn-outline:hover { background: #fce7f3; }
+        .btn-outline:hover {
+            border-color: #ec4899;
+            background: #fff1f2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
 
         @media (max-width: 768px) {
             .main-content { margin-left: 0; padding: 20px; }
@@ -210,13 +235,16 @@ $active_students = 450;
             <div class="card-header">
                 <div class="card-title">Quick Actions</div>
             </div>
-            <a href="#" class="btn-primary">
-                + Add New Enquiry
+            <a href="#" class="action-btn btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add New Enquiry
             </a>
-            <a href="#" class="btn-outline">
-                + Register Visitor
+            <a href="#" class="action-btn btn-outline">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                Register Visitor
             </a>
-            <a href="#" class="btn-outline">
+            <a href="#" class="action-btn btn-outline">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 Search Student
             </a>
             <div style="margin-top:20px; padding:15px; background:#fff1f2; border-radius:12px;">
