@@ -211,6 +211,7 @@
                     <li class="submenu-item"><a href="/admin/categories">Categories</a></li>
                     <li class="submenu-item"><a href="/admin/courses/manage-subjects.php">Manage Subjects</a></li>
                     <li class="submenu-item"><a href="/admin/courses/manage-syllabus.php">Manage Syllabus</a></li>
+                    <li class="submenu-item"><a href="/admin/courses/manage-exam-schedule.php">Exam Schedule</a></li>
                 </ul>
             </li>
 
