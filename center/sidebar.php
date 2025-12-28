@@ -411,42 +411,39 @@
                     <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </a>
                 <ul class="submenu">
-                    <li class="submenu-item"><a href="../../students/index.php">All Students</a></li>
-                    <li class="submenu-item"><a href="../../students/add-student.php">New Admission</a></li>
-                    <li class="submenu-item"><a href="#">Attendance</a></li>
-                    <li class="submenu-item"><a href="#">ID Cards</a></li>
+                    <li class="submenu-item"><a href="../../center/students/index.php">All Students</a></li>
+                    <li class="submenu-item"><a href="../../center/students/add-student.php">New Admission</a></li>
                 </ul>
             </li>
 
             <!-- Courses -->
             <li class="nav-item">
-                <a href="../../courses/index.php" class="nav-link">
+                <a href="../../center/courses/index.php" class="nav-link">
                     <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                     <span class="nav-text">Courses</span>
                 </a>
             </li>
-            
-            <div class="nav-label" style="margin-top: 24px;">Settings</div>
-        <ul class="nav-list">
+            <ul class="nav-list">
              <li class="nav-item">
-                <a href="wallet/wallet.php" class="nav-link">
+                <a href="../../center/wallet/wallet.php" class="nav-link">
                     <svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 12V8H6a2 2 0 0 1-2-2 2 2 0 0 1 2-2h12v4"></path><path d="M4 6v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2z"></path></svg>
                     <span class="nav-text">Wallet</span>
                 </a>
             </li>
              <li class="nav-item">
-                <a href="profile.php" class="nav-link">
+                <a href="../../center/profile.php" class="nav-link">
                     <svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     <span class="nav-text">My Profile</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="bank-details.php" class="nav-link">
+                <a href="../../center/bank-details.php" class="nav-link">
                     <svg class="nav-icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
                     <span class="nav-text">Bank Details</span>
                 </a>
             </li>
         </ul>
+            <!-- promo card sidebar -->
 
         <div class="promo-card">
             <div class="promo-content">
