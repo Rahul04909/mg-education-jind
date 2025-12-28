@@ -67,8 +67,10 @@ $txns = $conn->query("SELECT * FROM wallet_transactions WHERE center_id = $cente
         :root{--active:#22c55e;--indigo:#6f75ff;--line:#e6e8ee;--text:#0b1020;--muted:#6f7787;--error:#ef4444;--success:#22c55e}
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Outfit', sans-serif;background:#f8fafc;color:var(--text)}
-        .admin-content{margin-left:260px;min-height:100vh;padding:20px;transition:margin-left .25s ease}
-        body.sidebar-collapsed .admin-content{margin-left:88px}
+        
+        /* Adjusted margin to 280px to match sidebar width */
+        .admin-content{margin-left:280px;min-height:100vh;padding:30px;transition:margin-left .25s ease}
+        body.sidebar-collapsed .admin-content{margin-left:80px}
         
         .page-header{margin-bottom:30px}
         .page-title{font-size:28px;font-weight:700;color:var(--text);margin-bottom:5px}
@@ -122,87 +124,85 @@ $txns = $conn->query("SELECT * FROM wallet_transactions WHERE center_id = $cente
     </style>
 </head>
 <body>
-    <div style="display:flex">
-        <?php include '../sidebar.php'; ?>
-        
-        <main class="admin-content">
-            <div class="page-header">
-                <h1 class="page-title">Center Wallet</h1>
-                <div style="color:var(--muted)">Manage your wallet balance and recent transactions</div>
-            </div>
+    <?php include '../sidebar.php'; ?>
+    
+    <main class="admin-content">
+        <div class="page-header">
+            <h1 class="page-title">Center Wallet</h1>
+            <div style="color:var(--muted)">Manage your wallet balance and recent transactions</div>
+        </div>
 
-            <div class="grid-2">
-                <!-- Left: Balanace + Topup -->
-                <div>
-                    <!-- Balance Card -->
-                    <div class="wallet-card" style="margin-bottom: 20px;">
-                        <div class="balance-label">Current Balance</div>
-                        <div class="balance-amount">₹ <?php echo number_format($wallet_balance, 2); ?></div>
-                        <div class="royalty-badge">
-                            Royalty Fee: <?php echo $royalty_percent; ?>%
-                        </div>
-                    </div>
-
-                    <!-- Top-up Form -->
-                    <div class="card">
-                        <div class="card-title">Top-up Wallet</div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Enter Amount to Add to Wallet (INR)</label>
-                            <input type="number" id="add_amount" class="form-input" placeholder="e.g 1000" oninput="calculatePayable()">
-                        </div>
-
-                        <div id="calcBox" class="calc-box">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                                <span>Wallet Credit:</span>
-                                <b>₹ <span id="creditDisp">0</span></b>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:13px; opacity:0.8">
-                                <span>Royalty Fee (<?php echo $royalty_percent; ?>%):</span>
-                                <span>Using Royalty Rate</span>
-                            </div>
-                            <div style="border-top:1px solid rgba(0,0,0,0.1); padding-top:5px; margin-top:5px; display:flex; justify-content:space-between; font-size:18px;">
-                                <span>You Pay:</span>
-                                <b>₹ <span id="payDisp">0</span></b>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-primary" id="payBtn" onclick="initiatePayment()" disabled>Proceed to Pay</button>
+        <div class="grid-2">
+            <!-- Left: Balanace + Topup -->
+            <div>
+                <!-- Balance Card -->
+                <div class="wallet-card" style="margin-bottom: 20px;">
+                    <div class="balance-label">Current Balance</div>
+                    <div class="balance-amount">₹ <?php echo number_format($wallet_balance, 2); ?></div>
+                    <div class="royalty-badge">
+                        Royalty Fee: <?php echo $royalty_percent; ?>%
                     </div>
                 </div>
 
-                <!-- Right: History -->
-                <div class="card" style="height: fit-content;">
-                    <div class="card-title">Transaction History</div>
-                    <table class="table">
-                        <thead>
+                <!-- Top-up Form -->
+                <div class="card">
+                    <div class="card-title">Top-up Wallet</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Enter Amount to Add to Wallet (INR)</label>
+                        <input type="number" id="add_amount" class="form-input" placeholder="e.g 1000" oninput="calculatePayable()">
+                    </div>
+
+                    <div id="calcBox" class="calc-box">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                            <span>Wallet Credit:</span>
+                            <b>₹ <span id="creditDisp">0</span></b>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:13px; opacity:0.8">
+                            <span>Royalty Fee (<?php echo $royalty_percent; ?>%):</span>
+                            <span>Using Royalty Rate</span>
+                        </div>
+                        <div style="border-top:1px solid rgba(0,0,0,0.1); padding-top:5px; margin-top:5px; display:flex; justify-content:space-between; font-size:18px;">
+                            <span>You Pay:</span>
+                            <b>₹ <span id="payDisp">0</span></b>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" id="payBtn" onclick="initiatePayment()" disabled>Proceed to Pay</button>
+                </div>
+            </div>
+
+            <!-- Right: History -->
+            <div class="card" style="height: fit-content;">
+                <div class="card-title">Transaction History</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Wallet Added</th>
+                            <th>Paid Amt</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if($txns->num_rows > 0): ?>
+                            <?php while($row = $txns->fetch_assoc()): ?>
                             <tr>
-                                <th>Date</th>
-                                <th>Wallet Added</th>
-                                <th>Paid Amt</th>
-                                <th>Status</th>
+                                <td><?php echo date('d M, h:i A', strtotime($row['created_at'])); ?></td>
+                                <td style="color:var(--active)">+₹<?php echo number_format($row['credit_amount'], 2); ?></td>
+                                <td style="color:var(--muted)">₹<?php echo number_format($row['amount'], 2); ?></td>
+                                <td><span class="badge badge-success">Success</span></td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <?php if($txns->num_rows > 0): ?>
-                                <?php while($row = $txns->fetch_assoc()): ?>
-                                <tr>
-                                    <td><?php echo date('d M, h:i A', strtotime($row['created_at'])); ?></td>
-                                    <td style="color:var(--active)">+₹<?php echo number_format($row['credit_amount'], 2); ?></td>
-                                    <td style="color:var(--muted)">₹<?php echo number_format($row['amount'], 2); ?></td>
-                                    <td><span class="badge badge-success">Success</span></td>
-                                </tr>
-                                <?php endwhile; ?>
-                            <?php else: ?>
-                                <tr><td colspan="4" style="text-align:center; color:var(--muted); padding:30px;">No transactions yet.</td></tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr><td colspan="4" style="text-align:center; color:var(--muted); padding:30px;">No transactions yet.</td></tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-        </main>
-    </div>
+    </main>
 
     <script>
         const royaltyPercent = <?php echo $royalty_percent; ?>;
