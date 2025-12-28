@@ -74,9 +74,9 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
         /* Overlay Text Positioning - Tweaked based on visual reference */
         .card-content {
             position: absolute;
-            top: 240px; /* Approximate based on image */
-            left: 380px; /* Moving to the right white area */
-            width: 250px;
+            top: 275px; /* Moved down to be below the blue ribbon */
+            left: 360px; /* Adjusted to align with whitespace */
+            width: 280px;
             color: #0f172a;
             font-size: 14px;
             font-weight: 600;
