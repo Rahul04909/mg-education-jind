@@ -30,7 +30,7 @@ if ($check_table && $check_table->num_rows > 0) {
     ) ENGINE=InnoDB";
 
     if ($conn->query($sql_transactions) === TRUE) {
-        echo "Schema updated successfully. Wallet tables ready.";
+        echo "";
     } else {
         echo "Error creating table wallet_transactions: " . $conn->error;
     }
