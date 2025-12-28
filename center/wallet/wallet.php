@@ -216,9 +216,14 @@ $txns = $conn->query("SELECT * FROM wallet_transactions WHERE center_id = $cente
                     <tbody>
                         <?php if($txns->num_rows > 0): ?>
                             <?php while($row = $txns->fetch_assoc()): ?>
+                            <?php 
+                                $is_debit = $row['credit_amount'] < 0;
+                                $color = $is_debit ? 'var(--error)' : 'var(--active)';
+                                $sign = $is_debit ? '' : '+';
+                            ?>
                             <tr>
                                 <td><?php echo date('d M, h:i A', strtotime($row['created_at'])); ?></td>
-                                <td style="color:var(--active)">+₹<?php echo number_format($row['credit_amount'], 2); ?></td>
+                                <td style="color:<?php echo $color; ?>"><?php echo $sign; ?>₹<?php echo number_format($row['credit_amount'], 2); ?></td>
                                 <td style="color:var(--muted)">₹<?php echo number_format($row['amount'], 2); ?></td>
                                 <td><span class="badge badge-success">Success</span></td>
                             </tr>
