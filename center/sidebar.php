@@ -53,9 +53,9 @@
     }
     
     .brand img {
-        max-width: 100%;
+        max-width: 160px;
         height: auto;
-        max-height: 60px; /* Restrict height so it doesn't blow up */
+        max-height: 90px; /* Restrict height so it doesn't blow up */
         border-radius: 8px;
         transition: all 0.3s;
     }
