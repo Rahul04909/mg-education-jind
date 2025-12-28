@@ -107,7 +107,7 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
 
         .user-photo-box {
             position: absolute;
-            top: 80px; /* Aligned with top of blue box */
+            top: 110px; /* Aligned with top of blue box */
             left: 25px; /* Aligned inside left blue box */
             width: 170px; /* Filling the width of the blue box zone with padding */
             height: 220px; /* Filling the height */
@@ -177,9 +177,9 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
             <img src="id-card-front-side.png" class="card-img" alt="ID Card Front">
             
             <!-- Photo (Optional/Placeholder based on design) -->
-            <?php if (!empty($student['photo'])): ?>
+            <?php if (!empty($student['student_photo'])): ?>
                 <div class="user-photo-box">
-                    <img src="../../uploads/<?php echo htmlspecialchars($student['photo']); ?>" class="user-photo" alt="Student Object">
+                    <img src="../../<?php echo htmlspecialchars($student['student_photo']); ?>" class="user-photo" alt="Student Photo">
                 </div>
             <?php endif; ?>
 
