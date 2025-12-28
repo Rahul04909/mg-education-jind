@@ -111,36 +111,6 @@
         stroke-width: 2;
         fill: none;
     }
-
-    /* Friends Section */
-    .friends-list {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
-    .friend-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-    .friend-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        object-fit: cover;
-        background: #e2e8f0;
-    }
-    .friend-info { flex: 1; }
-    .friend-name {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--student-text);
-        display: block;
-    }
-    .friend-points {
-        font-size: 11px;
-        color: var(--student-text-light);
-    }
 </style>
 
 <aside class="s-sidebar">
@@ -153,7 +123,7 @@
             <div class="s-nav-label">Overview</div>
             <ul class="s-nav-list">
                 <li>
-                    <a href="index.php" class="s-nav-link active">
+                    <a href="../../student/index.php" class="s-nav-link active">
                         <svg class="s-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                         Dashboard
                     </a>
@@ -172,27 +142,14 @@
                 </li>
                 
                 <?php
-                // Fetch student origin to determine fee page
-                // Assuming $conn is available from index.php or we need to connect if not. 
-                // Sidebar is usually included, so check if conn exists.
-                // Safest to just do a quick check if session id is set.
-                $fee_link = "fees.php"; // Default
-                if(isset($_SESSION['student_id'])) {
-                    // We need a DB connection here if not already open? 
-                    // Usually sidebar is included in pages that ALREADY have db config.
-                    // But to be safe, let's use the valid variable if it exists or generic check.
-                    // Ideally, the parent page sets a variable. 
-                    // Let's assume the parent page has $conn. If not, this might fail.
-                    // Better approach: User $_SESSION data if we stored 'added_by' or 'center_id' there.
-                    // We didn't store it in login. Let's rely on DB query if $conn exists.
-                    if(isset($conn)) {
-                        $sid = $_SESSION['student_id'];
-                        $chk = $conn->query("SELECT center_id FROM admissions WHERE id = $sid");
-                        if($chk && $chk->num_rows > 0) {
-                            $s_data = $chk->fetch_assoc();
-                            if(!empty($s_data['center_id'])) {
-                                $fee_link = "manage-fees.php";
-                            }
+                $fee_link = "../../student/fees.php"; // Default
+                if(isset($_SESSION['student_id']) && isset($conn)) {
+                    $sid = $_SESSION['student_id'];
+                    $chk = $conn->query("SELECT center_id FROM admissions WHERE id = $sid");
+                    if($chk && $chk->num_rows > 0) {
+                        $s_data = $chk->fetch_assoc();
+                        if(!empty($s_data['center_id'])) {
+                            $fee_link = "../../student/manage-fees.php";
                         }
                     }
                 }
@@ -201,62 +158,16 @@
                 <li>
                     <a href="<?php echo $fee_link; ?>" class="s-nav-link">
                          <svg class="s-icon" viewBox="0 0 24 24"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                        <?php echo ($fee_link == 'manage-fees.php') ? 'Manage Fees' : 'My Fees'; ?>
+                        <?php echo (basename($fee_link) == 'manage-fees.php') ? 'Manage Fees' : 'My Fees'; ?>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="s-nav-link">
-                        <svg class="s-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                        Events
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="s-nav-link">
-                        <svg class="s-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
-                        Explore
-                    </a>
-                </li>
-                <li>
-                    <a href="idcard.php" class="s-nav-link">
+                    <a href="../../student/idcard.php" class="s-nav-link">
                         <svg class="s-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><path d="M7 7h10v10H7z"/><path d="M10 2v2"/><path d="M14 2v2"/><path d="M10 20v2"/><path d="M14 20v2"/></svg>
                         ID Card
                     </a>
                 </li>
             </ul>
-        </div>
-
-        <div style="margin-top:auto;">
-            <div class="s-nav-label">Friends</div>
-            <div class="friends-list">
-                <div class="friend-item">
-                    <img src="https://i.pravatar.cc/100?img=5" class="friend-avatar" alt="Ava">
-                    <div class="friend-info">
-                        <span class="friend-name">Ava Lee</span>
-                        <span class="friend-points">82 Points</span>
-                    </div>
-                </div>
-                <div class="friend-item">
-                    <img src="https://i.pravatar.cc/100?img=11" class="friend-avatar" alt="Noah">
-                    <div class="friend-info">
-                        <span class="friend-name">Noah Kim</span>
-                        <span class="friend-points">128 Points</span>
-                    </div>
-                </div>
-                <div class="friend-item">
-                    <img src="https://i.pravatar.cc/100?img=12" class="friend-avatar" alt="Ethan">
-                    <div class="friend-info">
-                        <span class="friend-name">Ethan Cruz</span>
-                        <span class="friend-points">56 Points</span>
-                    </div>
-                </div>
-                 <div class="friend-item">
-                    <img src="https://i.pravatar.cc/100?img=9" class="friend-avatar" alt="Maya">
-                    <div class="friend-info">
-                        <span class="friend-name">Maya Patel</span>
-                        <span class="friend-points">150 Points</span>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </aside>
