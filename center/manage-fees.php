@@ -11,17 +11,43 @@ $center_id = $_SESSION['center_id'];
 $conn = getDbConnection();
 
 // Handle Collection
+// Handle Collection
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['collect_fee'])) {
     $enrollment_no = $_POST['enrollment_no'];
     $amount = floatval($_POST['amount']);
     $mode = $_POST['mode'];
     $txn_id = "OFFLINE" . time() . rand(100,999);
-    
-    $sql = "INSERT INTO student_transactions (enrollment_no, transaction_id, payment_mode, amount, status) 
-            VALUES ('$enrollment_no', '$txn_id', '$mode', $amount, 'success')";
-    
-    if ($conn->query($sql) === TRUE) {
-        $success_message = "Fee collected successfully!";
+
+    // 1. Check Wallet Balance
+    $c_qm = "SELECT wallet_balance FROM centers WHERE id = $center_id";
+    $c_res = $conn->query($c_qm);
+    $c_row = $c_res->fetch_assoc();
+    $current_balance = floatval($c_row['wallet_balance']);
+
+    if ($current_balance < $amount) {
+        $error_message = "Insufficient Wallet Balance (₹" . number_format($current_balance, 2) . "). Please Top-up your wallet.";
+    } else {
+        // 2. Deduct from Wallet
+        $new_balance = $current_balance - $amount;
+        $up_sql = "UPDATE centers SET wallet_balance = $new_balance WHERE id = $center_id";
+        
+        if ($conn->query($up_sql) === TRUE) {
+            // 3. Log Wallet Transaction (Debit)
+            // amount = 0 (No Real money paid now), credit_amount = -$amount (Balance reduced), payment_id = local ref
+            $w_sql = "INSERT INTO wallet_transactions (center_id, amount, credit_amount, payment_id, status) 
+                      VALUES ($center_id, 0, -$amount, 'Fee_$enrollment_no', 'success')";
+            $conn->query($w_sql);
+
+            // 4. Log Student Transaction (Original Logic)
+            $sql = "INSERT INTO student_transactions (enrollment_no, transaction_id, payment_mode, amount, status) 
+                    VALUES ('$enrollment_no', '$txn_id', '$mode', $amount, 'success')";
+            
+            if ($conn->query($sql) === TRUE) {
+                $success_message = "Fee collected successfully! Wallet Deducted: ₹" . number_format($amount, 2);
+            }
+        } else {
+             $error_message = "Database Error: Warning - Wallet could not be updated.";
+        }
     }
 }
 
@@ -69,6 +95,19 @@ while ($row = $result->fetch_assoc()) {
     <?php include 'sidebar.php'; ?>
     <main class="admin-content">
         <h1>Fee Management</h1>
+        
+        <?php if(!empty($success_message)): ?>
+        <div style="background:#d1fae5;color:#065f46;padding:15px;border-radius:8px;margin-bottom:20px;border:1px solid #a7f3d0">
+            <?php echo $success_message; ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if(!empty($error_message)): ?>
+        <div style="background:#fee2e2;color:#991b1b;padding:15px;border-radius:8px;margin-bottom:20px;border:1px solid #fecaca">
+            <?php echo $error_message; ?>
+        </div>
+        <?php endif; ?>
+
         <table>
             <thead>
                 <tr>
