@@ -111,6 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
         }
         .logo-area { text-align: center; margin-bottom: 30px; }
+        .logo-area img { height: 100px; margin: 0 auto; display: block; }
     </style>
 </head>
 <body>
@@ -128,7 +129,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="login-form-container">
         <div class="login-card">
             <div class="logo-area">
-                <h2 style="color: #4f46e5; font-weight: 800; font-size: 28px;">MG Education</h2>
+                <img src="../../assets/images/sidebar-logo.jpg" alt="MG Skills Logo" onerror="this.style.display='none';">
                 <h3 class="text-2xl font-bold text-gray-800 mt-6">Student Login</h3>
                 <p class="text-gray-500 mt-2">Welcome! Enter your credentials.</p>
             </div>
