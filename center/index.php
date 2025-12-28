@@ -331,8 +331,8 @@ $wallet_balance = ($wal_res) ? floatval($wal_res->fetch_assoc()['wallet_balance'
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
-            padding: 24px 30px; 
-            min-height: 120px; 
+            padding: 20px 24px; 
+            min-height: 100px; 
             border-radius: 16px; 
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             border: none;
