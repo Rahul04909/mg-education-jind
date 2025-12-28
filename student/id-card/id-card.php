@@ -107,9 +107,9 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
 
         .user-photo-box {
             position: absolute;
-            top: 116px; /* Aligned with top of blue box */
+            top: 115px; /* Aligned with top of blue box */
             left: 0px; /* Aligned inside left blue box */
-            width: 206px; /* Filling the width of the blue box zone with padding */
+            width: 209px; /* Filling the width of the blue box zone with padding */
             height: 260px; /* Filling the height */
             background: #cbd5e1;
             border: 4px solid white;
