@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
         }
         .logo-area { text-align: center; margin-bottom: 30px; }
-        .logo-area img { height: 60px; }
+        .logo-area img { height: 100px; margin: 0 auto; display: block; }
     </style>
 </head>
 <body>
