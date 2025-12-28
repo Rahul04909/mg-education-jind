@@ -173,7 +173,7 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
     <div class="id-card-container">
         <!-- Front Side -->
         <div class="id-card-wrapper">
-            <img src="id-card-front.png" class="card-img" alt="ID Card Front">
+            <img src="id-card-front-side.png" class="card-img" alt="ID Card Front">
             
             <!-- Photo (Optional/Placeholder based on design) -->
             <?php if (!empty($student['photo'])): ?>
