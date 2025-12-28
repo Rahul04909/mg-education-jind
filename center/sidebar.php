@@ -46,50 +46,23 @@
     .brand {
         display: flex;
         align-items: center;
-        gap: 14px;
+        justify-content: center; /* Center the logo */
         margin-bottom: 30px;
-        padding: 10px 8px; /* More padding */
-        min-height: 60px; /* Increased height */
-        /* Removed overflow: hidden to prevent text cutoff */
+        padding: 10px 8px;
+        min-height: 60px;
     }
-    .brand-logo {
-        min-width: 44px;
-        width: 44px;
-        height: 44px;
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-        color: white;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 800;
-        font-size: 22px;
-        box-shadow: var(--shadow-glow);
-        flex-shrink: 0;
+    
+    .brand img {
+        max-width: 100%;
+        height: auto;
+        max-height: 60px; /* Restrict height so it doesn't blow up */
+        border-radius: 8px;
+        transition: all 0.3s;
     }
-    .brand-text {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        opacity: 1;
-        transition: opacity 0.2s;
+
+    .sidebar.collapsed .brand img {
+        max-width: 40px; /* Small icon size when collapsed */
     }
-    .brand-title {
-        font-size: 20px; /* Slightly larger */
-        font-weight: 800;
-        color: var(--text-main);
-        letter-spacing: -0.5px;
-        line-height: 1.2;
-        padding-top: 2px;
-    }
-    .brand-subtitle {
-        font-size: 11px;
-        color: var(--text-light);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: 600;
-    }
-    .sidebar.collapsed .brand-text { opacity: 0; pointer-events: none; display: none; } /* Hide completely to fix layout */
 
     /* Navigation */
     .nav-label {
@@ -383,11 +356,7 @@
     </div>
 
     <div class="brand">
-        <img src="/mg-skill/assets/images/logo.jpg" alt="MG Education" style="height: 45px; border-radius: 8px;">
-        <div class="brand-text">
-            <span class="brand-title">MG Education</span>
-            <span class="brand-subtitle" style="text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">Center Panel</span>
-        </div>
+        <img src="../../assets/images/logo.jpg" alt="MG Education">
     </div>
 
     <div class="sidebar-content">
