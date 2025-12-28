@@ -75,7 +75,7 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
         .card-content {
             position: absolute;
             top: 175px; /* Moved down to be below the blue ribbon */
-            left: 260px; /* Adjusted to align with whitespace */
+            left: 240px; /* Adjusted to align with whitespace */
             width: 280px;
             color: #0f172a;
             font-size: 14px;
