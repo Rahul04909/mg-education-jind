@@ -134,6 +134,8 @@ include __DIR__ . "/../sidebar.php";
         .modal-content {background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 700px; border-radius: 12px; position: relative;}
         .close {color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;}
         .close:hover {color: black;}
+        /* TinyMCE Z-Index Fix for Modals */
+        .tox-tinymce-aux { z-index: 10001 !important; }
     </style>
 </head>
 <body>
@@ -280,13 +282,31 @@ include __DIR__ . "/../sidebar.php";
     <script>
         const modal = document.getElementById("syllabusModal");
         
-        // Init TinyMCE
-        tinymce.init({
+        // Config for TinyMCE
+        const tinymceConfig = {
             selector: '#description',
             height: 300,
             plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
-            toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | removeformat'
-        });
+            toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | removeformat',
+            menubar: false
+        };
+
+        function initTinyMCE(content = '') {
+            // Remove instance if exists to avoid conflicts/rendering issues
+            if (tinymce.get('description')) {
+                tinymce.remove('#description');
+            }
+            // Init with content callback
+            const configWithSetup = {
+                ...tinymceConfig,
+                setup: function (editor) {
+                    editor.on('init', function () {
+                        editor.setContent(content);
+                    });
+                }
+            };
+            tinymce.init(configWithSetup);
+        }
 
         function openAddModal() {
             document.getElementById('modalTitle').innerText = "Add Syllabus Topic";
@@ -294,13 +314,6 @@ include __DIR__ . "/../sidebar.php";
             document.getElementById('syllabusId').value = "";
             document.getElementById('unit_title').value = "";
             
-            // Allow clearing TinyMCE safely
-            if (tinymce.get('description')) {
-                tinymce.get('description').setContent('');
-            } else {
-                document.getElementById('description').value = '';
-            }
-
             // Pre-select subject from filter
             const urlParams = new URLSearchParams(window.location.search);
             const subId = urlParams.get('subject_id');
@@ -309,6 +322,9 @@ include __DIR__ . "/../sidebar.php";
             }
             
             modal.style.display = "block";
+            
+            // Init TinyMCE after modal is visible
+            initTinyMCE('');
         }
 
         function openEditModal(data) {
@@ -319,17 +335,18 @@ include __DIR__ . "/../sidebar.php";
             document.getElementById('subject_id').value = data.subject_id;
             document.getElementById('unit_title').value = data.unit_title;
             
-            if (tinymce.get('description')) {
-                tinymce.get('description').setContent(data.description);
-            } else {
-                document.getElementById('description').value = data.description;
-            }
-
             modal.style.display = "block";
+
+            // Init TinyMCE after modal is visible
+            initTinyMCE(data.description);
         }
 
         function closeModal() {
             modal.style.display = "none";
+            // Clean up
+            if (tinymce.get('description')) {
+                tinymce.remove('#description');
+            }
         }
 
         window.onclick = function(event) {
