@@ -27,29 +27,18 @@
     .s-brand {
         display: flex;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 0px; /* Reduced margin */
-        padding: 24px 24px 10px 24px; /* Added padding here */
-        color: var(--student-text);
-        text-decoration: none;
-        flex-shrink: 0; /* Keep brand from shrinking */
-    }
-    .s-logo-box {
-        width: 36px;
-        height: 36px;
-        background: var(--student-primary);
-        color: white;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
         justify-content: center;
-        font-weight: 800;
-        font-size: 18px;
+        gap: 0;
+        margin-bottom: 20px;
+        padding: 24px 10px 10px 10px;
+        text-decoration: none;
+        flex-shrink: 0;
     }
-    .s-brand-name {
-        font-size: 20px;
-        font-weight: 700;
-        letter-spacing: -0.5px;
+    .s-brand img {
+        max-width: 180px;
+        height: auto;
+        max-height: 90px;
+        border-radius: 8px;
     }
 
     /* Scrollable Content */
@@ -155,9 +144,8 @@
 </style>
 
 <aside class="s-sidebar">
-    <a href="#" class="s-brand">
-        <div class="s-logo-box">S</div>
-        <div class="s-brand-name">Skillio</div>
+    <a href="index.php" class="s-brand">
+        <img src="../../assets/images/sidebar-logo.jpg" alt="Student Panel">
     </a>
     
     <div class="s-sidebar-content">
