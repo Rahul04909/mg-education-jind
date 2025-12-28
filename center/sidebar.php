@@ -383,10 +383,10 @@
     </div>
 
     <div class="brand">
-        <div class="brand-logo">MG</div>
+        <img src="/mg-skill/assets/images/logo.jpg" alt="MG Education" style="height: 45px; border-radius: 8px;">
         <div class="brand-text">
             <span class="brand-title">MG Education</span>
-            <span class="brand-subtitle">Center Panel</span>
+            <span class="brand-subtitle" style="text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">Center Panel</span>
         </div>
     </div>
 
@@ -394,7 +394,7 @@
         <div class="nav-label">Overview</div>
         <ul class="nav-list">
             <li class="nav-item active">
-                <a href="index.php" class="nav-link">
+                <a href="../../center/index.php" class="nav-link">
                     <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                     <span class="nav-text">Dashboard</span>
                 </a>
