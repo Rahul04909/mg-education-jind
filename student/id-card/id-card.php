@@ -109,7 +109,7 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
             position: absolute;
             top: 116px; /* Aligned with top of blue box */
             left: 10px; /* Aligned inside left blue box */
-            width: 220px; /* Filling the width of the blue box zone with padding */
+            width: 206px; /* Filling the width of the blue box zone with padding */
             height: 260px; /* Filling the height */
             background: #cbd5e1;
             border: 4px solid white;
