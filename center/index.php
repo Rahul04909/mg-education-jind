@@ -1,4 +1,7 @@
-<?php require_once 'auth_check.php'; ?>
+<?php 
+require_once 'auth_check.php'; 
+require_once __DIR__ . '/../database/db-config.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -265,12 +268,34 @@
 
 <?php include 'sidebar.php'; ?>
 
+<?php
+$center_id = $_SESSION['center_id'];
+$conn = getDbConnection();
+
+// 1. Total Students
+$st_sql = "SELECT COUNT(*) as count FROM admissions WHERE center_id = $center_id";
+$total_students = $conn->query($st_sql)->fetch_assoc()['count'];
+
+// 2. Assigned Courses (Active Courses)
+$co_sql = "SELECT COUNT(*) as count FROM courses WHERE status = 'active'";
+$total_courses = $conn->query($co_sql)->fetch_assoc()['count'];
+
+// 3. Fees Collected (Total Revenue)
+$rev_sql = "SELECT SUM(st.amount) as revenue 
+            FROM student_transactions st 
+            JOIN admissions a ON st.enrollment_no = a.enrollment_no 
+            WHERE a.center_id = $center_id AND st.status = 'success'";
+$rev_res = $conn->query($rev_sql);
+$total_fees = $rev_res ? floatval($rev_res->fetch_assoc()['revenue']) : 0;
+
+// 4. Wallet Balance
+$wal_sql = "SELECT wallet_balance FROM centers WHERE id = $center_id";
+$wallet_balance = floatval($conn->query($wal_sql)->fetch_assoc()['wallet_balance']);
+?>
 <main class="main-content">
     
     <div class="top-bar">
-        <div class="icon-btn position-relative has-dot">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-        </div>
+        <!-- User Pill -->
         <div class="user-pill" onclick="window.location.href='logout.php'" title="Click to Logout">
             <div style="text-align: right;">
                 <div style="font-size: 14px; font-weight: 700;"><?php echo htmlspecialchars($_SESSION['center_name']); ?></div>
@@ -291,72 +316,77 @@
         </div>
     </div>
 
+    <style>
+        .stat-card.blue { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+        .stat-card.green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .stat-card.teal { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); }
+        .stat-card.yellow { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+
+        .stat-card {
+            position: relative; 
+            overflow: hidden; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 24px 30px; 
+            min-height: 120px; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: none;
+            transition: transform 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-4px); }
+        
+        .stat-content { z-index: 2; position: relative; display: flex; flex-direction: column; justify-content: center; }
+        .stat-number { font-size: 42px; font-weight: 700; line-height: 1; margin-bottom: 4px; color:white; }
+        .stat-label { font-size: 16px; font-weight: 500; opacity: 0.9; color:white; font-style: italic; letter-spacing: 0.5px; }
+        
+        .stat-icon-bg { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); opacity: 0.25; width: 70px; height: 70px; }
+        .stat-icon-bg svg { width: 100%; height: 100%; fill: currentColor; color: white; }
+    </style>
+
     <div class="stats-grid">
-        <!-- Card 1 -->
-        <div class="stat-card">
-            <div class="card-top">
-                <div class="card-title">Student Retention</div>
-                <div class="card-arrow">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-                </div>
+        <!-- Card 1: Total Students (Blue) -->
+        <div class="stat-card blue">
+            <div class="stat-content">
+                <div class="stat-number"><?php echo number_format($total_students); ?></div>
+                <div class="stat-label">Total Students</div>
             </div>
-            <div>
-                <div class="card-value-row">
-                    <span class="stat-card-value">98%</span>
-                    <span class="impact-pill">High Impact</span>
-                </div>
-                <p class="card-desc">Percentage of students continuing to next semester</p>
+            <div class="stat-icon-bg">
+                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
             </div>
         </div>
 
-        <!-- Card 2 -->
-        <div class="stat-card">
-            <div class="card-top">
-                <div class="card-title">Fee Collection</div>
-                <div class="card-arrow">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-                </div>
+        <!-- Card 2: Total Courses (Green) -->
+        <div class="stat-card green">
+            <div class="stat-content">
+                <div class="stat-number"><?php echo number_format($total_courses); ?></div>
+                <div class="stat-label">Assigned Courses</div>
             </div>
-            <div>
-                <div class="card-value-row">
-                    <span class="stat-card-value">12%</span>
-                    <span class="impact-pill" style="background:#dbeafe; color:#1e40af">Stable</span>
-                </div>
-                <p class="card-desc">Increase in monthly revenue compared to last year</p>
+            <div class="stat-icon-bg">
+                <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
             </div>
         </div>
 
-        <!-- Card 3 -->
-        <div class="stat-card">
-            <div class="card-top">
-                <div class="card-title">Active Batches</div>
-                <div class="card-arrow">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-                </div>
+        <!-- Card 3: Fees Collected (Teal) -->
+        <div class="stat-card teal">
+            <div class="stat-content">
+                <div class="stat-number">₹<?php echo number_format($total_fees); ?></div> <!-- Removed .00 for cleaner look or keep K format? Layout shows simple number -->
+                <div class="stat-label">Fees Collected</div>
             </div>
-            <div>
-                <div class="card-value-row">
-                    <span class="stat-card-value">24</span>
-                    <span class="impact-pill">High Impact</span>
-                </div>
-                <p class="card-desc">Total number of batches running currently</p>
+            <div class="stat-icon-bg">
+                 <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
             </div>
         </div>
 
-        <!-- Card 4 -->
-        <div class="stat-card">
-            <div class="card-top">
-                <div class="card-title">Placement Rate</div>
-                <div class="card-arrow">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-                </div>
+        <!-- Card 4: Wallet Balance (Yellow) -->
+        <div class="stat-card yellow">
+            <div class="stat-content">
+                <div class="stat-number">₹<?php echo number_format($wallet_balance); ?></div>
+                <div class="stat-label">Wallet Balance</div>
             </div>
-            <div>
-                <div class="card-value-row">
-                    <span class="stat-card-value">85%</span>
-                    <span class="impact-pill" style="background:#fee2e2; color:#991b1b">Needs Focus</span>
-                </div>
-                <p class="card-desc">Students placed in jobs after course completion</p>
+            <div class="stat-icon-bg">
+                 <svg viewBox="0 0 24 24"><path d="M20 12V8H6a2 2 0 0 1-2-2 2 2 0 0 1 2-2h12v4"></path><path d="M4 6v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2z"></path></svg>
             </div>
         </div>
     </div>
