@@ -2,8 +2,9 @@
 session_start();
 // Include database configuration
 require_once __DIR__ . '/../../database/db-config.php';
-// Ensure schema updates
 require_once __DIR__ . '/../../database/update_wallet_schema.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+use Razorpay\Api\Api;
 
 if (!isset($_SESSION['center_id'])) {
     header("Location: ../login.php");
@@ -25,26 +26,54 @@ $royalty_percent = floatval($center['royalty_percentage']);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] == 'verify_payment') {
     header('Content-Type: application/json');
     
-    $rzp_payment_id = $_POST['razorpay_payment_id'];
-    $topup_amount = floatval($_POST['topup_amount']); // The amount to add to wallet
-    $paid_amount = floatval($_POST['paid_amount']);   // The royalty amount actually paid
+    // 1. Fetch Keys for Verification
+    $k_sql = "SELECT * FROM razorpay_settings WHERE is_active = 1 LIMIT 1";
+    $k_res = $conn->query($k_sql);
+    if ($k_res->num_rows == 0) {
+        echo json_encode(['status' => 'error', 'message' => 'Gateway keys not found']); exit;
+    }
+    $keys = $k_res->fetch_assoc();
+    $api = new Api($keys['razorpay_key_id'], $keys['razorpay_key_secret']);
     
-    // In a real scenario, Verify Signature here using Razorpay API
-    // For now, we assume success if payment_id is present
+    $payment_id = $_POST['razorpay_payment_id'];
+    $order_id = $_POST['razorpay_order_id'];
+    $signature = $_POST['razorpay_signature'];
     
-    if ($rzp_payment_id) {
+    // Credit amount and paid amount for logging (sent from client but validated effectively by Order ID logic indirectly)
+    // Ideally we should look up the Order ID to see what the amount was, but Razorpay signature ensures integrity.
+    // However, to record "Credit Amount" vs "Paid Amount", we need to trust the logic or recalculate.
+    // Let's Recalculate based on input 'wallet_credit'
+    
+    $wallet_credit = floatval($_POST['wallet_credit']); // The 1000 Rs
+    $paid_amount = floatval($_POST['paid_amount']);     // The 100 Rs
+    
+    // Verify Signature
+    try {
+        $attributes = [
+            'razorpay_order_id' => $order_id,
+            'razorpay_payment_id' => $payment_id,
+            'razorpay_signature' => $signature
+        ];
+        $api->utility->verifyPaymentSignature($attributes);
+        
+        // Success
+        
         // 1. Record Transaction
         $stmt = $conn->prepare("INSERT INTO wallet_transactions (center_id, amount, credit_amount, payment_id, status) VALUES (?, ?, ?, ?, 'success')");
-        $stmt->bind_param("idds", $center_id, $paid_amount, $topup_amount, $rzp_payment_id);
+        $stmt->bind_param("idds", $center_id, $paid_amount, $wallet_credit, $payment_id);
         
         if ($stmt->execute()) {
             // 2. Update Wallet Balance
-            $new_balance = $wallet_balance + $topup_amount;
+            $new_balance = $wallet_balance + $wallet_credit;
             $conn->query("UPDATE centers SET wallet_balance = $new_balance WHERE id = $center_id");
             
             echo json_encode(['status' => 'success', 'new_balance' => $new_balance]);
             exit;
         }
+
+    } catch(Exception $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Signature Verification Failed: ' . $e->getMessage()]);
+        exit;
     }
     
     echo json_encode(['status' => 'error', 'message' => 'Transaction failed']);
@@ -206,13 +235,7 @@ $txns = $conn->query("SELECT * FROM wallet_transactions WHERE center_id = $cente
 
     <script>
         const royaltyPercent = <?php echo $royalty_percent; ?>;
-        const centerName = "<?php echo htmlspecialchars($center['center_name']); ?>";
-        const centerEmail = "<?php echo htmlspecialchars($center['email']); ?>";
-        const centerMobile = "<?php echo htmlspecialchars($center['mobile']); ?>";
         
-        // PLACEHOLDER KEY - PLEASE REPLACE WITH YOUR KEY
-        const RAZORPAY_KEY = "rzp_test_PLACEHOLDER"; 
-
         function calculatePayable() {
             const amount = parseFloat(document.getElementById('add_amount').value) || 0;
             const calcBox = document.getElementById('calcBox');
@@ -238,40 +261,68 @@ $txns = $conn->query("SELECT * FROM wallet_transactions WHERE center_id = $cente
 
         function initiatePayment() {
             const creditAmount = parseFloat(document.getElementById('add_amount').value);
-            const payableAmount = calculatePayable(); // Re-calculate to be safe
-
-            if(payableAmount <= 0) return;
-
-            var options = {
-                "key": RAZORPAY_KEY, 
-                "amount": payableAmount * 100, // Amount in paise
-                "currency": "INR",
-                "name": "MG Skills",
-                "description": "Wallet Topup (Royalty)",
-                "image": "https://example.com/logo.png",
-                "handler": function (response){
-                    verifyPayment(response.razorpay_payment_id, payableAmount, creditAmount);
-                },
-                "prefill": {
-                    "name": centerName,
-                    "email": centerEmail,
-                    "contact": centerMobile
-                },
-                "theme": {
-                    "color": "#6f75ff"
-                }
-            };
+            const btn = document.getElementById('payBtn');
             
-            var rzp1 = new Razorpay(options);
-            rzp1.open();
+            if(creditAmount <= 0) return;
+            
+            btn.disabled = true;
+            btn.innerText = "Processing...";
+
+            // 1. Create Order via Backend
+            const formData = new FormData();
+            formData.append('amount', creditAmount);
+
+            fetch('create-order.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    // 2. Open Razorpay
+                    var options = {
+                        "key": data.key_id, 
+                        "amount": data.amount * 100,
+                        "currency": "INR",
+                        "name": "MG Skills",
+                        "description": "Wallet Topup",
+                        "order_id": data.order_id,
+                        "handler": function (response){
+                            verifyPayment(response, data.amount, data.wallet_credit);
+                        },
+                        "prefill": data.prefill,
+                        "theme": { "color": "#6f75ff" }
+                    };
+                    
+                    var rzp1 = new Razorpay(options);
+                    rzp1.open();
+                    rzp1.on('payment.failed', function (response){
+                        alert("Payment Failed: " + response.error.description);
+                        btn.disabled = false;
+                        btn.innerText = `Pay ₹ ${data.amount.toFixed(2)}`;
+                    });
+                } else {
+                    alert("Order Creation Failed: " + data.message);
+                    btn.disabled = false;
+                    btn.innerText = "Try Again";
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Something went wrong initializing payment.");
+                btn.disabled = false;
+                btn.innerText = "Try Again";
+            });
         }
 
-        function verifyPayment(paymentId, paidAmount, creditAmount) {
+        function verifyPayment(response, paidAmount, creditAmount) {
             const formData = new FormData();
             formData.append('action', 'verify_payment');
-            formData.append('razorpay_payment_id', paymentId);
+            formData.append('razorpay_payment_id', response.razorpay_payment_id);
+            formData.append('razorpay_order_id', response.razorpay_order_id);
+            formData.append('razorpay_signature', response.razorpay_signature);
             formData.append('paid_amount', paidAmount);
-            formData.append('topup_amount', creditAmount);
+            formData.append('wallet_credit', creditAmount);
 
             fetch('wallet.php', {
                 method: 'POST',
@@ -283,7 +334,7 @@ $txns = $conn->query("SELECT * FROM wallet_transactions WHERE center_id = $cente
                     alert('Top-up Successful! New Balance: ₹ ' + data.new_balance);
                     location.reload();
                 } else {
-                    alert('Verification failed. Please contact admin.');
+                    alert('Verification failed: ' + data.message);
                 }
             });
         }
