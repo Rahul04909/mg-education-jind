@@ -356,7 +356,7 @@
     </div>
 
     <div class="brand">
-        <img src="../../assets/images/logo.jpg" alt="MG Education">
+        <img src="../../assets/images/sidebar-logo.jpg" alt="MG Education">
     </div>
 
     <div class="sidebar-content">
