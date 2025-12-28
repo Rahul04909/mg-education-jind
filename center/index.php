@@ -274,11 +274,13 @@ $conn = getDbConnection();
 
 // 1. Total Students
 $st_sql = "SELECT COUNT(*) as count FROM admissions WHERE center_id = $center_id";
-$total_students = $conn->query($st_sql)->fetch_assoc()['count'];
+$st_res = $conn->query($st_sql);
+$total_students = ($st_res) ? $st_res->fetch_assoc()['count'] : 0;
 
-// 2. Assigned Courses (Active Courses)
-$co_sql = "SELECT COUNT(*) as count FROM courses WHERE status = 'active'";
-$total_courses = $conn->query($co_sql)->fetch_assoc()['count'];
+// 2. Assigned Courses (Active Courses) -- Fixed Column Name: is_active
+$co_sql = "SELECT COUNT(*) as count FROM courses WHERE is_active = 1";
+$co_res = $conn->query($co_sql);
+$total_courses = ($co_res) ? $co_res->fetch_assoc()['count'] : 0;
 
 // 3. Fees Collected (Total Revenue)
 $rev_sql = "SELECT SUM(st.amount) as revenue 
@@ -286,11 +288,12 @@ $rev_sql = "SELECT SUM(st.amount) as revenue
             JOIN admissions a ON st.enrollment_no = a.enrollment_no 
             WHERE a.center_id = $center_id AND st.status = 'success'";
 $rev_res = $conn->query($rev_sql);
-$total_fees = $rev_res ? floatval($rev_res->fetch_assoc()['revenue']) : 0;
+$total_fees = ($rev_res) ? floatval($rev_res->fetch_assoc()['revenue']) : 0;
 
 // 4. Wallet Balance
 $wal_sql = "SELECT wallet_balance FROM centers WHERE id = $center_id";
-$wallet_balance = floatval($conn->query($wal_sql)->fetch_assoc()['wallet_balance']);
+$wal_res = $conn->query($wal_sql);
+$wallet_balance = ($wal_res) ? floatval($wal_res->fetch_assoc()['wallet_balance']) : 0.00;
 ?>
 <main class="main-content">
     
