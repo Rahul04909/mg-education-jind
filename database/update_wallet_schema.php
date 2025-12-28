@@ -18,7 +18,7 @@ if ($check_table && $check_table->num_rows > 0) {
     }
 
     // 2. Create wallet_transactions table
-    // Ensure we use InnoDB for Foreign Keys
+    // Removing FK constraint to prevent 'Failed to open referenced table' error on some server configs
     $sql_transactions = "CREATE TABLE IF NOT EXISTS wallet_transactions (
         id INT AUTO_INCREMENT PRIMARY KEY,
         center_id INT NOT NULL,
@@ -26,8 +26,7 @@ if ($check_table && $check_table->num_rows > 0) {
         credit_amount DECIMAL(10,2) NOT NULL COMMENT 'Amount Added to Wallet',
         payment_id VARCHAR(255) NOT NULL,
         status ENUM('pending', 'success', 'failed') DEFAULT 'pending',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (center_id) REFERENCES centers(id) ON DELETE CASCADE
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB";
 
     if ($conn->query($sql_transactions) === TRUE) {
