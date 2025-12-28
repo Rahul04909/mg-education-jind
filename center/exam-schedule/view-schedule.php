@@ -48,9 +48,10 @@ include '../sidebar.php';
         .page-title{font-size:28px;font-weight:700;color:var(--text);}
         
         .card { background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .table { width: 100%; border-collapse: collapse; }
-        .table th { text-align: left; padding: 16px; background: #f8fafc; font-size: 13px; font-weight: 700; border-bottom: 1px solid var(--line); color: var(--muted); text-transform: uppercase; white-space:nowrap; }
-        .table td { padding: 16px; border-bottom: 1px solid var(--line); font-size: 14px; font-weight: 500; vertical-align:middle; }
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .table { width: 100%; border-collapse: collapse; min-width: 900px; /* Ensure it doesn't crush */ }
+        .table th { text-align: left; padding: 12px; background: #f8fafc; font-size: 13px; font-weight: 700; border-bottom: 1px solid var(--line); color: var(--muted); text-transform: uppercase; white-space:nowrap; }
+        .table td { padding: 12px; border-bottom: 1px solid var(--line); font-size: 14px; font-weight: 500; vertical-align:middle; }
         
         /* Specific Column Widths */
         .w-50 { width: 50px; }
@@ -67,7 +68,8 @@ include '../sidebar.php';
         </div>
 
         <div class="card">
-            <table class="table">
+            <div class="table-responsive">
+                <table class="table">
                 <thead>
                     <tr>
                         <th class="w-50">Sr No.</th>
@@ -112,6 +114,7 @@ include '../sidebar.php';
                     <?php endif; ?>
                 </tbody>
             </table>
+            </div>
         </div>
     </main>
 </body>
