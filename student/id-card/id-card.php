@@ -60,8 +60,8 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 40px;
-            margin-top: 30px;
+            gap: 80px;
+            margin-top: 50px;
         }
 
         .id-card-wrapper {
