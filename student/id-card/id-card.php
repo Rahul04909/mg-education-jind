@@ -232,7 +232,6 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
                  <!-- Placeholder for Sign if needed, or just text -->
                 <div style="font-size: 11px; font-weight: 700; color: #0f172a; text-transform: uppercase;">Authorized Signatory</div>
             </div>
-            </div>
         </div>
 
         <!-- Back Side -->
