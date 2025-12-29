@@ -67,6 +67,7 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
         .id-card-wrapper {
             position: relative;
             width: 600px;
+            height: 378px; /* Standard ID Card Aspect Ratio */
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
             border-radius: 12px;
             overflow: hidden;
@@ -76,7 +77,8 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
         .card-img {
             display: block;
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: fill;
         }
 
         /* Overlay Text Positioning */
