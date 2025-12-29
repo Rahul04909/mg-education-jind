@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../database/db-config.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 if (!isset($_SESSION['student_id'])) {
     header("Location: ../login.php");
@@ -221,6 +222,22 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
                     <div class="data-label">MOBILE :</div>
                     <div class="data-value"><?php echo htmlspecialchars($student['mobile']); ?></div>
                 </div>
+
+                <!-- Barcode -->
+                <div class="barcode-area" style="margin-top: 15px;">
+                    <?php
+                        $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
+                        echo '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($student['enrollment_no'], $generator::TYPE_CODE_128, 2, 30)) . '">';
+                    ?>
+                </div>
+            </div>
+            
+            <!-- Authorized Signatory -->
+            <div class="signatory" style="position: absolute; bottom: 30px; right: 30px; text-align: center;">
+                <!-- <img src="../../assets/images/sign.png" style="width: 80px; display: block; margin: 0 auto 5px;"> -->
+                 <!-- Placeholder for Sign if needed, or just text -->
+                <div style="font-size: 11px; font-weight: 700; color: #0f172a; text-transform: uppercase;">Authorized Signatory</div>
+            </div>
             </div>
         </div>
 
