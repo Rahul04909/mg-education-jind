@@ -178,10 +178,10 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 Download Front Side
             </button>
-            <a href="id-card-back.png" download="ID_Card_Back_<?php echo $student['enrollment_no']; ?>.png" class="btn-download btn-secondary">
+            <button onclick="downloadBack()" class="btn-download btn-secondary">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 Download Back Side
-            </a>
+            </button>
         </div>
     </div>
 
@@ -222,14 +222,6 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
                     <div class="data-label">MOBILE :</div>
                     <div class="data-value"><?php echo htmlspecialchars($student['mobile']); ?></div>
                 </div>
-
-                <!-- Barcode -->
-                <div class="barcode-area" style="margin-top: 15px;">
-                    <?php
-                        $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
-                        echo '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($student['enrollment_no'], $generator::TYPE_CODE_128, 2, 30)) . '">';
-                    ?>
-                </div>
             </div>
             
             <!-- Authorized Signatory -->
@@ -242,11 +234,20 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
         </div>
 
         <!-- Back Side -->
-        <div class="id-card-wrapper">
+        <div class="id-card-wrapper" id="card-back">
             <img src="id-card-back.png" class="card-img" alt="ID Card Back">
+            
+            <!-- Barcode on Back Bottom Middle -->
+            <div class="barcode-area" style="position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); background: white; padding: 5px; border-radius: 4px;">
+                <?php
+                    $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
+                    echo '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($student['enrollment_no'], $generator::TYPE_CODE_128, 2, 30)) . '">';
+                ?>
+            </div>
         </div>
     </div>
 </main>
+
 
 <script>
     function downloadFront() {
@@ -267,6 +268,35 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
             // Convert to link and click it
             const link = document.createElement('a');
             link.download = 'ID_Card_Front_<?php echo $student['enrollment_no']; ?>.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            btn.innerHTML = originalText;
+            btn.style.opacity = '1';
+        }).catch(err => {
+            console.error(err);
+            alert('Error generating image');
+            btn.innerHTML = originalText;
+            btn.style.opacity = '1';
+        });
+    }
+
+    function downloadBack() {
+        const backCard = document.getElementById('card-back');
+        const btn = document.querySelector('.btn-secondary');
+        const originalText = btn.innerHTML;
+        
+        btn.innerHTML = 'Generating...';
+        btn.style.opacity = '0.7';
+
+        html2canvas(backCard, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: null,
+            logging: false
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'ID_Card_Back_<?php echo $student['enrollment_no']; ?>.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
             
