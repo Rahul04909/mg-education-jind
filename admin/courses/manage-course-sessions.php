@@ -4,6 +4,9 @@ require_once __DIR__ . '/../../database/db-config.php';
 // Ensure schema is updated
 require_once __DIR__ . '/../../database/update_session_schema.php';
 
+// Initialize database connection
+$conn = getDbConnection();
+
 $success_message = '';
 $error_message = '';
 
