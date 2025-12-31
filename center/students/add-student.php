@@ -25,13 +25,8 @@ $c_sql = "SELECT id, title FROM courses WHERE is_active = 1";
 $c_res = $conn->query($c_sql);
 while($row = $c_res->fetch_assoc()) $courses[] = $row;
 
-// Fetch Sessions
-$sessions = [];
-$s_sql = "SELECT id, course_id, session_name FROM course_sessions WHERE is_active = 1 ORDER BY id DESC";
-$s_res = $conn->query($s_sql);
-while($row = $s_res->fetch_assoc()) {
-    $sessions[$row['course_id']][] = $row;
-}
+// Fetch Sessions - Now handled via AJAX
+// $sessions array removed to reduce page size and fix live server issues
 
 $success_message = "";
 $error_message = "";
@@ -307,60 +302,59 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
         });
 
-        // Dynamic Sessions
-        // Debug Information
-        window.allSessions = <?php echo json_encode($sessions); ?>;
-        console.log("Initializing Sessions...", window.allSessions);
-
-        // Create debug element
+        // Dynamic Sessions (AJAX Version)
+        const courseSelect = document.querySelector('select[name="course_id"]');
+        const sessionSelect = document.getElementById('session_id');
+        
+        // Debug Element
         const sessionDebugMsg = document.createElement('div');
         sessionDebugMsg.style.fontSize = '12px';
         sessionDebugMsg.style.marginTop = '5px';
-        
-        const sessionSelect = document.getElementById('session_id');
-        if(sessionSelect) {
-            sessionSelect.parentNode.appendChild(sessionDebugMsg);
-        }
-
-        const courseSelect = document.querySelector('select[name="course_id"]');
+        if(sessionSelect) sessionSelect.parentNode.appendChild(sessionDebugMsg);
 
         function updateSessions() {
             if(!courseSelect || !sessionSelect) return;
             
             const cId = courseSelect.value;
-            console.log("Selected Course ID:", cId);
-            
             // Clear existing
             sessionSelect.innerHTML = '<option value="">Select Session</option>';
-            sessionDebugMsg.textContent = '';
+            sessionDebugMsg.textContent = 'Loading sessions...';
+            sessionDebugMsg.style.color = 'blue';
             
-            if (!cId) return;
-
-            if (window.allSessions && window.allSessions[cId]) {
-                console.log("Found sessions:", window.allSessions[cId]);
-                window.allSessions[cId].forEach(sess => {
-                    const opt = document.createElement('option');
-                    opt.value = sess.id;
-                    opt.textContent = sess.session_name;
-                    sessionSelect.appendChild(opt);
-                });
-                
-                // Success message
-                sessionDebugMsg.style.color = 'green';
-                sessionDebugMsg.textContent = 'Loaded ' + window.allSessions[cId].length + ' active sessions.';
-            } else {
-                console.warn("No sessions found for Course ID: " + cId);
-                // Error message
-                sessionDebugMsg.style.color = 'red';
-                sessionDebugMsg.textContent = 'No sessions found for this course. Please contact Admin.';
+            if (!cId) {
+                sessionDebugMsg.textContent = '';
+                return;
             }
+
+            // AJAX Call
+            fetch('../get-sessions.php?course_id=' + cId)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Sessions Loaded:", data);
+                    if(data.status === 'success' && data.data.length > 0) {
+                        data.data.forEach(sess => {
+                            const opt = document.createElement('option');
+                            opt.value = sess.id;
+                            opt.textContent = sess.session_name;
+                            sessionSelect.appendChild(opt);
+                        });
+                        sessionDebugMsg.textContent = ''; // Clear message on success
+                    } else {
+                        sessionDebugMsg.style.color = 'red';
+                        sessionDebugMsg.textContent = 'No active sessions found for this course.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    sessionDebugMsg.style.color = 'red';
+                    sessionDebugMsg.textContent = 'Error loading sessions. code: ' + error;
+                });
         }
 
         if (courseSelect) {
             courseSelect.addEventListener('change', updateSessions);
-            
             // Run immediately in case of auto-fill
-            setTimeout(updateSessions, 500); 
+            if(courseSelect.value) updateSessions();
         }
     </script>
 </body>
