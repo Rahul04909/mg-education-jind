@@ -22,16 +22,11 @@ while($row = $c_res->fetch_assoc()) $courses[] = $row;
 
 // Fetch Sessions
 $sessions = [];
-// Removed is_active check to ensure all sessions show up for now
-$s_sql = "SELECT id, course_id, session_name FROM course_sessions ORDER BY id DESC";
+$s_sql = "SELECT id, course_id, session_name FROM course_sessions WHERE is_active = 1 ORDER BY id DESC";
 $s_res = $conn->query($s_sql);
-if ($s_res) {
-    while($row = $s_res->fetch_assoc()) {
-        $sessions[$row['course_id']][] = $row;
-    }
+while($row = $s_res->fetch_assoc()) {
+    $sessions[$row['course_id']][] = $row;
 }
-// Debug payload
-$sessions_json = json_encode($sessions);
 
 $success_message = "";
 $error_message = "";
@@ -308,9 +303,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         });
 
         // Dynamic Sessions
-        const allSessions = <?php echo $sessions_json ?: '{}'; ?>;
-        console.log("Loaded Sessions Data:", allSessions); // Debug for live site
-
+        const allSessions = <?php echo json_encode($sessions); ?>;
         const courseSelect = document.querySelector('select[name="course_id"]');
         const sessionSelect = document.getElementById('session_id');
 
