@@ -304,21 +304,38 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Dynamic Sessions
         const allSessions = <?php echo json_encode($sessions); ?>;
-        const courseSelect = document.querySelector('select[name="course_id"]');
-        const sessionSelect = document.getElementById('session_id');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const courseSelect = document.querySelector('select[name="course_id"]');
+            const sessionSelect = document.getElementById('session_id');
 
-        courseSelect.addEventListener('change', function() {
-            const cId = this.value;
-            // Clear existing
-            sessionSelect.innerHTML = '<option value="">Select Session</option>';
+            console.log("Sessions Data Loaded:", allSessions);
+
+            function updateSessions() {
+                const cId = courseSelect.value;
+                console.log("Selected Course ID:", cId);
+                
+                // Clear existing
+                sessionSelect.innerHTML = '<option value="">Select Session</option>';
+                
+                if (cId && allSessions[cId]) {
+                    console.log("Found sessions for course:", allSessions[cId]);
+                    allSessions[cId].forEach(sess => {
+                        const opt = document.createElement('option');
+                        opt.value = sess.id;
+                        opt.textContent = sess.session_name;
+                        sessionSelect.appendChild(opt);
+                    });
+                } else {
+                    console.log("No sessions found for this course ID.");
+                }
+            }
+
+            courseSelect.addEventListener('change', updateSessions);
             
-            if (cId && allSessions[cId]) {
-                allSessions[cId].forEach(sess => {
-                    const opt = document.createElement('option');
-                    opt.value = sess.id;
-                    opt.textContent = sess.session_name;
-                    sessionSelect.appendChild(opt);
-                });
+            // Trigger on load if value exists
+            if(courseSelect.value) {
+                updateSessions();
             }
         });
     </script>
