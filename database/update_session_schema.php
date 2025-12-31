@@ -21,14 +21,24 @@ function updateSessionSchema() {
         )";
         
         if ($conn->query($sql) === TRUE) {
-             // echo "Table created successfully";
+             if (basename($_SERVER['PHP_SELF']) == basename(__FILE__)) {
+                 echo "Success: 'course_sessions' table created successfully.<br>";
+             }
         } else {
-            echo "Error creating table: " . $conn->error;
+            echo "Error creating table: " . $conn->error . "<br>";
+        }
+    } else {
+        if (basename($_SERVER['PHP_SELF']) == basename(__FILE__)) {
+            echo "Info: 'course_sessions' table already exists.<br>";
         }
     }
     
     $conn->close();
 }
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 updateSessionSchema();
 ?>
