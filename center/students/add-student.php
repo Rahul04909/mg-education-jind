@@ -12,11 +12,6 @@ if (!isset($_SESSION['center_id'])) {
 }
 
 $center_id = $_SESSION['center_id'];
-
-// Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 $conn = getDbConnection();
 
 // Fetch Courses
@@ -305,75 +300,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Dynamic Sessions (AJAX Version)
         const courseSelect = document.querySelector('select[name="course_id"]');
         const sessionSelect = document.getElementById('session_id');
-        
-        // Debug Element
-        const sessionDebugMsg = document.createElement('div');
-        sessionDebugMsg.style.fontSize = '12px';
-        sessionDebugMsg.style.marginTop = '5px';
-        if(sessionSelect) sessionSelect.parentNode.appendChild(sessionDebugMsg);
 
         function updateSessions() {
             if(!courseSelect || !sessionSelect) return;
             
             const cId = courseSelect.value;
             
-            // Debug Link & Status
-            const apiUrl = '../get-sessions.php?course_id=' + cId;
-            sessionDebugMsg.innerHTML = '<b>Status:</b> Fetching...<br><b>URL:</b> ' + apiUrl;
-            sessionDebugMsg.style.color = 'blue';
-            sessionDebugMsg.style.border = '1px solid #ccc';
-            sessionDebugMsg.style.padding = '5px';
-            sessionDebugMsg.style.background = '#f0f0f0';
+            // Clear existing
+            sessionSelect.innerHTML = '<option value="">Select Session</option>';
             
-            if (!cId) {
-                sessionDebugMsg.textContent = '';
-                return;
-            }
+            if (!cId) return;
 
             // AJAX Call
-            fetch(apiUrl)
-                .then(response => {
-                    return response.text().then(text => {
-                        console.log("Raw Response:", text);
-                        try {
-                            return {
-                                css: response.ok ? 'green' : 'red',
-                                status: response.status,
-                                json: JSON.parse(text),
-                                raw: text
-                            };
-                        } catch (e) {
-                            return {
-                                css: 'red',
-                                status: response.status,
-                                error: "JSON Parse Error",
-                                raw: text
-                            };
-                        }
-                    });
-                })
-                .then(res => {
-                    // Show raw response snippet
-                    const snippet = res.raw.substring(0, 100).replace(/</g, "&lt;");
-                    sessionDebugMsg.innerHTML += '<br><b>Result:</b> ' + snippet + '...';
-                    
-                    if(res.json && res.json.status === 'success' && res.json.data.length > 0) {
-                        res.json.data.forEach(sess => {
+            fetch('../get-sessions.php?course_id=' + cId)
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status === 'success' && data.data.length > 0) {
+                        data.data.forEach(sess => {
                             const opt = document.createElement('option');
                             opt.value = sess.id;
                             opt.textContent = sess.session_name;
                             sessionSelect.appendChild(opt);
                         });
-                        sessionDebugMsg.innerHTML += '<br><b style="color:green">SUCCESS! Loaded ' + res.json.data.length + ' sessions.</b>';
-                    } else if (res.error) {
-                         sessionDebugMsg.innerHTML += '<br><b style="color:red">ERROR: ' + res.error + '</b>';
                     } else {
-                         sessionDebugMsg.innerHTML += '<br><b style="color:orange">No active sessions found (Empty Data).</b>';
+                        console.log('No sessions found');
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    sessionDebugMsg.innerHTML += '<br><b style="color:red">Fetch Error: ' + error + '</b>';
+                    console.error('Error loading sessions:', error);
                 });
         }
 
