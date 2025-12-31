@@ -316,9 +316,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if(!courseSelect || !sessionSelect) return;
             
             const cId = courseSelect.value;
-            // Clear existing
-            sessionSelect.innerHTML = '<option value="">Select Session</option>';
-            sessionDebugMsg.textContent = 'Loading sessions...';
+            
+            // Debug Link
+            const apiUrl = '../get-sessions.php?course_id=' + cId;
+            sessionDebugMsg.innerHTML = 'Loading sessions... <a href="' + apiUrl + '" target="_blank">[Check API]</a>';
             sessionDebugMsg.style.color = 'blue';
             
             if (!cId) {
@@ -327,8 +328,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
 
             // AJAX Call
-            fetch('../get-sessions.php?course_id=' + cId)
-                .then(response => response.json())
+            fetch(apiUrl)
+                .then(response => {
+                    if(!response.ok) throw new Error("HTTP " + response.status);
+                    return response.text().then(text => {
+                        try {
+                            return JSON.parse(text);
+                        } catch (e) {
+                            console.error("Invalid JSON:", text);
+                            throw new Error("Invalid JSON response");
+                        }
+                    });
+                })
                 .then(data => {
                     console.log("Sessions Loaded:", data);
                     if(data.status === 'success' && data.data.length > 0) {
