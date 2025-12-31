@@ -45,7 +45,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     // Logic similar to process-admission but simplified for admin
     $course_id = intval($_POST['course_id']);
-    $session_id = isset($_POST['session_id']) && !empty($_POST['session_id']) ? intval($_POST['session_id']) : 'NULL';
+    $session_id = isset($_POST['session_id']) && !empty($_POST['session_id']) ? intval($_POST['session_id']) : 0;
+
+    if($session_id == 0) {
+        $error_message = "Please select a valid academic session.";
+    } elseif ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     // Generate Enrollment
     $year = date("Y");
@@ -115,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $course_fee, 'success'
     )";
     
-    if ($conn->query($sql) === TRUE) {
+    if (empty($error_message) && $conn->query($sql) === TRUE) {
         $success_message = "Student added successfully!<br>Enrollment No: <strong>$enrollment_no</strong><br>Password: <strong>$raw_password</strong><br><small>(Please copy these credentials, email might not work locally)</small>";
 
         // Fetch SMTP Settings and Send Email
@@ -170,6 +174,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $error_message = "Error: " . $conn->error;
     }
 }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -223,9 +228,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Session</label>
-                            <select name="session_id" id="session_id">
-                                <option value="">Select Session (Optional)</option>
+                            <label>Session *</label>
+                            <select name="session_id" id="session_id" required>
+                                <option value="">Select Session</option>
                                 <!-- Populated by JS -->
                             </select>
                         </div>
@@ -330,7 +335,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         courseSelect.addEventListener('change', function() {
             const cId = this.value;
             // Clear existing
-            sessionSelect.innerHTML = '<option value="">Select Session (Optional)</option>';
+            sessionSelect.innerHTML = '<option value="">Select Session</option>';
             
             if (cId && allSessions[cId]) {
                 allSessions[cId].forEach(sess => {
