@@ -2,6 +2,9 @@
 // Include database and PHPMailer
 require_once __DIR__ . '/../../database/db-config.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../database/update_course_schema.php';
+// Ensure admissions schema has session_id
+require_once __DIR__ . '/../../database/update_admissions_schema.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -13,6 +16,14 @@ $courses = [];
 $c_sql = "SELECT id, title FROM courses WHERE is_active = 1";
 $c_res = $conn->query($c_sql);
 while($row = $c_res->fetch_assoc()) $courses[] = $row;
+
+// Fetch Sessions
+$sessions = [];
+$s_sql = "SELECT id, course_id, session_name FROM course_sessions WHERE is_active = 1 ORDER BY id DESC";
+$s_res = $conn->query($s_sql);
+while($row = $s_res->fetch_assoc()) {
+    $sessions[$row['course_id']][] = $row;
+}
 
 $success_message = "";
 $error_message = "";
@@ -34,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     // Logic similar to process-admission but simplified for admin
     $course_id = intval($_POST['course_id']);
+    $session_id = isset($_POST['session_id']) && !empty($_POST['session_id']) ? intval($_POST['session_id']) : 'NULL';
     
     // Generate Enrollment
     $year = date("Y");
@@ -86,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $course_fee = 0; // Fetch from DB if needed, but admin entry usually overrides
     
     $sql = "INSERT INTO admissions (
-        enrollment_no, password, course_id, full_name, father_name, mother_name, dob, category, admission_mode,
+        enrollment_no, password, course_id, session_id, full_name, father_name, mother_name, dob, category, admission_mode,
         student_photo, student_sign, mobile, alt_mobile, email,
         pincode, country, state, city, address,
         highest_qual, school_name, board_university, passing_year, percentage,
@@ -94,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         aadhar_no, aadhar_file, edu_cert_file,
         course_fee, payment_status
     ) VALUES (
-        '$enrollment_no', '$hashed_password', $course_id, '$full_name', '$father_name', '$mother_name', '$dob', '$category', '$admission_mode',
+        '$enrollment_no', '$hashed_password', $course_id, $session_id, '$full_name', '$father_name', '$mother_name', '$dob', '$category', '$admission_mode',
         '$photo', '$sign', '$mobile', '$alt_mobile', '$email',
         '$pincode', '$country', '$state', '$city', '$address',
         '$highest_qual', '$school_name', '$board', $passing_year, '$percentage',
@@ -210,6 +222,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 <option value="Offline">Offline</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label>Session</label>
+                            <select name="session_id" id="session_id">
+                                <option value="">Select Session (Optional)</option>
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -299,6 +318,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     }
                 }).catch(err => {
                     msgSpan.textContent = 'Error fetching details';
+                });
+            }
+        });
+
+        // Dynamic Sessions
+        const allSessions = <?php echo json_encode($sessions); ?>;
+        const courseSelect = document.querySelector('select[name="course_id"]');
+        const sessionSelect = document.getElementById('session_id');
+
+        courseSelect.addEventListener('change', function() {
+            const cId = this.value;
+            // Clear existing
+            sessionSelect.innerHTML = '<option value="">Select Session (Optional)</option>';
+            
+            if (cId && allSessions[cId]) {
+                allSessions[cId].forEach(sess => {
+                    const opt = document.createElement('option');
+                    opt.value = sess.id;
+                    opt.textContent = sess.session_name;
+                    sessionSelect.appendChild(opt);
                 });
             }
         });
