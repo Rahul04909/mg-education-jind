@@ -12,6 +12,11 @@ if (!isset($_SESSION['center_id'])) {
 }
 
 $center_id = $_SESSION['center_id'];
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 $conn = getDbConnection();
 
 // Fetch Courses
@@ -303,41 +308,60 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         });
 
         // Dynamic Sessions
-        const allSessions = <?php echo json_encode($sessions); ?>;
+        // Debug Information
+        window.allSessions = <?php echo json_encode($sessions); ?>;
+        console.log("Initializing Sessions...", window.allSessions);
+
+        // Create debug element
+        const sessionDebugMsg = document.createElement('div');
+        sessionDebugMsg.style.fontSize = '12px';
+        sessionDebugMsg.style.marginTop = '5px';
         
-        document.addEventListener('DOMContentLoaded', function() {
-            const courseSelect = document.querySelector('select[name="course_id"]');
-            const sessionSelect = document.getElementById('session_id');
+        const sessionSelect = document.getElementById('session_id');
+        if(sessionSelect) {
+            sessionSelect.parentNode.appendChild(sessionDebugMsg);
+        }
 
-            console.log("Sessions Data Loaded:", allSessions);
+        const courseSelect = document.querySelector('select[name="course_id"]');
 
-            function updateSessions() {
-                const cId = courseSelect.value;
-                console.log("Selected Course ID:", cId);
+        function updateSessions() {
+            if(!courseSelect || !sessionSelect) return;
+            
+            const cId = courseSelect.value;
+            console.log("Selected Course ID:", cId);
+            
+            // Clear existing
+            sessionSelect.innerHTML = '<option value="">Select Session</option>';
+            sessionDebugMsg.textContent = '';
+            
+            if (!cId) return;
+
+            if (window.allSessions && window.allSessions[cId]) {
+                console.log("Found sessions:", window.allSessions[cId]);
+                window.allSessions[cId].forEach(sess => {
+                    const opt = document.createElement('option');
+                    opt.value = sess.id;
+                    opt.textContent = sess.session_name;
+                    sessionSelect.appendChild(opt);
+                });
                 
-                // Clear existing
-                sessionSelect.innerHTML = '<option value="">Select Session</option>';
-                
-                if (cId && allSessions[cId]) {
-                    console.log("Found sessions for course:", allSessions[cId]);
-                    allSessions[cId].forEach(sess => {
-                        const opt = document.createElement('option');
-                        opt.value = sess.id;
-                        opt.textContent = sess.session_name;
-                        sessionSelect.appendChild(opt);
-                    });
-                } else {
-                    console.log("No sessions found for this course ID.");
-                }
+                // Success message
+                sessionDebugMsg.style.color = 'green';
+                sessionDebugMsg.textContent = 'Loaded ' + window.allSessions[cId].length + ' active sessions.';
+            } else {
+                console.warn("No sessions found for Course ID: " + cId);
+                // Error message
+                sessionDebugMsg.style.color = 'red';
+                sessionDebugMsg.textContent = 'No sessions found for this course. Please contact Admin.';
             }
+        }
 
+        if (courseSelect) {
             courseSelect.addEventListener('change', updateSessions);
             
-            // Trigger on load if value exists
-            if(courseSelect.value) {
-                updateSessions();
-            }
-        });
+            // Run immediately in case of auto-fill
+            setTimeout(updateSessions, 500); 
+        }
     </script>
 </body>
 </html>
