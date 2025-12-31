@@ -317,10 +317,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             
             const cId = courseSelect.value;
             
-            // Debug Link
+            // Debug Link & Status
             const apiUrl = '../get-sessions.php?course_id=' + cId;
-            sessionDebugMsg.innerHTML = 'Loading sessions... <a href="' + apiUrl + '" target="_blank">[Check API]</a>';
+            sessionDebugMsg.innerHTML = '<b>Status:</b> Fetching...<br><b>URL:</b> ' + apiUrl;
             sessionDebugMsg.style.color = 'blue';
+            sessionDebugMsg.style.border = '1px solid #ccc';
+            sessionDebugMsg.style.padding = '5px';
+            sessionDebugMsg.style.background = '#f0f0f0';
             
             if (!cId) {
                 sessionDebugMsg.textContent = '';
@@ -330,35 +333,47 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // AJAX Call
             fetch(apiUrl)
                 .then(response => {
-                    if(!response.ok) throw new Error("HTTP " + response.status);
                     return response.text().then(text => {
+                        console.log("Raw Response:", text);
                         try {
-                            return JSON.parse(text);
+                            return {
+                                css: response.ok ? 'green' : 'red',
+                                status: response.status,
+                                json: JSON.parse(text),
+                                raw: text
+                            };
                         } catch (e) {
-                            console.error("Invalid JSON:", text);
-                            throw new Error("Invalid JSON response");
+                            return {
+                                css: 'red',
+                                status: response.status,
+                                error: "JSON Parse Error",
+                                raw: text
+                            };
                         }
                     });
                 })
-                .then(data => {
-                    console.log("Sessions Loaded:", data);
-                    if(data.status === 'success' && data.data.length > 0) {
-                        data.data.forEach(sess => {
+                .then(res => {
+                    // Show raw response snippet
+                    const snippet = res.raw.substring(0, 100).replace(/</g, "&lt;");
+                    sessionDebugMsg.innerHTML += '<br><b>Result:</b> ' + snippet + '...';
+                    
+                    if(res.json && res.json.status === 'success' && res.json.data.length > 0) {
+                        res.json.data.forEach(sess => {
                             const opt = document.createElement('option');
                             opt.value = sess.id;
                             opt.textContent = sess.session_name;
                             sessionSelect.appendChild(opt);
                         });
-                        sessionDebugMsg.textContent = ''; // Clear message on success
+                        sessionDebugMsg.innerHTML += '<br><b style="color:green">SUCCESS! Loaded ' + res.json.data.length + ' sessions.</b>';
+                    } else if (res.error) {
+                         sessionDebugMsg.innerHTML += '<br><b style="color:red">ERROR: ' + res.error + '</b>';
                     } else {
-                        sessionDebugMsg.style.color = 'red';
-                        sessionDebugMsg.textContent = 'No active sessions found for this course.';
+                         sessionDebugMsg.innerHTML += '<br><b style="color:orange">No active sessions found (Empty Data).</b>';
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    sessionDebugMsg.style.color = 'red';
-                    sessionDebugMsg.textContent = 'Error loading sessions. code: ' + error;
+                    sessionDebugMsg.innerHTML += '<br><b style="color:red">Fetch Error: ' + error + '</b>';
                 });
         }
 
