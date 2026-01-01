@@ -82,6 +82,17 @@ $bg_src = get_image_base64($bg_image);
 $photo_src = get_image_base64($photo_path);
 $sign_src = get_image_base64($sign_path);
 
+// Prepare Photo HTML
+$photo_html = '<br>No Photo<br>';
+if (!empty($photo_src)) {
+    $photo_html = '<img src="' . $photo_src . '" class="photo-img">';
+}
+
+// Prepare Signature HTML
+$sign_html = 'Sign';
+if (!empty($sign_src)) {
+    $sign_html = '<img src="' . $sign_src . '" class="sign-img">';
+}
 
 // 5. Generate HTML
 $html = '
@@ -120,8 +131,11 @@ $html = '
         .photo-box {
             width: 120px; height: 150px; border: 2px solid #000;
             margin-left: auto; text-align: center; position: relative;
+            overflow: hidden; /* Ensure image does not overflow */
         }
-        .photo-img { width: 100%; height: 120px; object-fit: cover; display: block; }
+        /* DOMPDF does not support object-fit. We use width/height constraints. */
+        .photo-img { width: 100%; height: 120px; display: block; } 
+        
         .sign-box { height: 30px; border-top: 1px solid #000; }
         .sign-img { max-height: 25px; max-width: 100%; margin-top: 2px; }
 
@@ -159,18 +173,9 @@ $html = '
                     </td>
                     <td style="width: 30%; vertical-align: top; padding-left: 10px;">
                         <div class="photo-box">
-                            <?php if ($photo_src): ?>
-                                <img src="<?php echo $photo_src; ?>" class="photo-img">
-                            <?php else: ?>
-                                <br>No Photo<br>
-                            <?php endif; ?>
-                            
+                            ' . $photo_html . '
                             <div class="sign-box">
-                                <?php if ($sign_src): ?>
-                                    <img src="<?php echo $sign_src; ?>" class="sign-img">
-                                <?php else: ?>
-                                    Sign
-                                <?php endif; ?>
+                                ' . $sign_html . '
                             </div>
                         </div>
                     </td>
