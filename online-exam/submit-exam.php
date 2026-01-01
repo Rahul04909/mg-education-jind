@@ -3,20 +3,28 @@
 ob_start(); // Start output buffering immediately
 session_start();
 require_once __DIR__ . '/../database/db-config.php';
-define('SILENT_UPDATE', true);
-require_once __DIR__ . '/../database/update_exam_results_schema.php';
-date_default_timezone_set('Asia/Kolkata');
-ini_set('display_errors', 0);
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-header('Content-Type: application/json');
-
 // Helper to send JSON and exit cleanly
 function sendJson($data, $code = 200) {
-    ob_clean(); // Discard any prior output (whitespace, warnings, etc.)
+    // Clear buffer if active
+    if (ob_get_length()) ob_clean(); 
+    
     http_response_code($code);
     echo json_encode($data);
     exit;
 }
+
+// Catch Fatal Errors (500s)
+function fatalErrorHandler() {
+    $error = error_get_last();
+    if ($error !== NULL && ($error['type'] === E_ERROR || $error['type'] === E_PARSE || $error['type'] === E_CORE_ERROR || $error['type'] === E_COMPILE_ERROR)) {
+        sendJson(['status' => 'error', 'message' => 'Fatal Error: ' . $error['message'] . ' in ' . $error['file'] . ':' . $error['line']], 500);
+    }
+}
+register_shutdown_function('fatalErrorHandler');
+
+// Ensure schema exists on live server (Disabled for stability - Run manually if needed)
+// define('SILENT_UPDATE', true);
+// require_once __DIR__ . '/../database/update_exam_results_schema.php';
 
 try {
 
