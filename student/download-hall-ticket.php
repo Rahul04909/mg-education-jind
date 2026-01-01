@@ -55,8 +55,12 @@ if ($session_id > 0) {
 $base_dir = str_replace('\\', '/', __DIR__); 
 
 $bg_image = $base_dir . '/hall-ticket/background-hall-ticket.png';
-$photo_path = $base_dir . '/../uploads/' . $student['photo']; 
-$sign_path = $base_dir . '/../uploads/' . $student['signature'];
+// DB stores "assets/uploads/..." -> So we just need Root + DB Value
+// Base dir is ".../student", so Root is ".../student/../" which is ".../"
+// Actually better: dirname($base_dir) gives root
+$root_dir = dirname($base_dir);
+$photo_path = $root_dir . '/' . $student['photo']; 
+$sign_path = $root_dir . '/' . $student['signature'];
 
 // Helper to encode image to Base64 (Most reliable for DOMPDF)
 function get_image_base64($path) {
@@ -155,9 +159,18 @@ $html = '
                     </td>
                     <td style="width: 30%; vertical-align: top; padding-left: 10px;">
                         <div class="photo-box">
-                            '.($photo_src ? '<img src="'.$photo_src.'" class="photo-img">' : '<br>No Photo').'
+                            <?php if ($photo_src): ?>
+                                <img src="<?php echo $photo_src; ?>" class="photo-img">
+                            <?php else: ?>
+                                <br>No Photo<br>
+                            <?php endif; ?>
+                            
                             <div class="sign-box">
-                                '.($sign_src ? '<img src="'.$sign_src.'" class="sign-img">' : 'Sign').'
+                                <?php if ($sign_src): ?>
+                                    <img src="<?php echo $sign_src; ?>" class="sign-img">
+                                <?php else: ?>
+                                    Sign
+                                <?php endif; ?>
                             </div>
                         </div>
                     </td>

@@ -294,15 +294,15 @@ if ($session_id > 0) {
                     </div>
                     <div>
                          <div class="photo-box">
-                             <?php if(!empty($student['photo'])): ?>
-                                <img src="../../uploads/<?php echo $student['photo']; ?>" class="student-photo" alt="Photo">
+                            <?php if(!empty($student['photo'])): ?>
+                                <img src="../<?php echo $student['photo']; ?>" class="student-photo" alt="Photo">
                              <?php else: ?>
                                 <div style="display:flex;align-items:center;justify-content:center;height:100%;color:#ccc;">No Photo</div>
                              <?php endif; ?>
                              
                              <div class="sign-box">
                                  <?php if(!empty($student['signature'])): ?>
-                                    <img src="../../uploads/<?php echo $student['signature']; ?>" class="sign-img" alt="Sign">
+                                    <img src="../<?php echo $student['signature']; ?>" class="sign-img" alt="Sign">
                                  <?php else: ?>
                                     <span style="font-size:10px; color:#ccc;">Sign</span>
                                  <?php endif; ?>
