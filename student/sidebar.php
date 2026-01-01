@@ -173,6 +173,12 @@
                         Date Sheet
                     </a>
                 </li>
+                <li>
+                    <a href="../../student/hall-ticket.php" class="s-nav-link">
+                        <svg class="s-icon" viewBox="0 0 24 24"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        Hall Ticket
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
