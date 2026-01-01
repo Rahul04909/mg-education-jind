@@ -4,7 +4,14 @@ session_start();
 require_once __DIR__ . '/../database/db-config.php';
 date_default_timezone_set('Asia/Kolkata');
 
+// Prevent HTML errors from breaking JSON
+ini_set('display_errors', 0);
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 header('Content-Type: application/json');
+
+try {
+
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['status' => 'error', 'message' => 'Invalid Request Method']);
@@ -99,5 +106,10 @@ if ($ins_res->execute()) {
     echo json_encode(['status' => 'success', 'message' => 'Result Saved', 'redirect' => 'result.php?exam_id='.$exam_id]);
 } else {
     echo json_encode(['status' => 'error', 'message' => 'DB Error: ' . $conn->error]);
+}
+
+} catch (Exception $e) {
+    http_response_code(500); // Internal Server Error
+    echo json_encode(['status' => 'error', 'message' => 'Server Error: ' . $e->getMessage()]);
 }
 ?>

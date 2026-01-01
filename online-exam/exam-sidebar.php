@@ -43,7 +43,10 @@
     <div class="question-palette-section">
         <h4 style="font-size:13px; margin-bottom:10px; color:#334155;">Question Palette:</h4>
         <div class="palette-grid">
-            <?php for($i=1; $i<=$paper['total_questions']; $i++): ?>
+            <?php 
+            $real_total = isset($questions) ? count($questions) : $paper['total_questions'];
+            for($i=1; $i<=$real_total; $i++): 
+            ?>
                 <button class="palette-btn not-visited" data-q="<?php echo $i; ?>" onclick="jumpToQuestion(<?php echo $i; ?>)">
                     <?php echo $i; ?>
                 </button>
