@@ -109,9 +109,6 @@ if ($ins_res->execute()) {
         if (isset($ans_data['selected']) && $ans_data['selected'] !== null) {
             $selected = $ans_data['selected'];
             $is_correct = (isset($correct_answers_map[$q_id]) && $correct_answers_map[$q_id] === $selected) ? 1 : 0;
-            $ins_ans->bind_param("iISI", $result_id, $q_id, $selected, $is_correct); // iisi -> i = int, s = string, i = int (bool)
-            // Wait, bind_param types: i (int), d (double), s (string), b (blob)
-            // 'i', 'i', 's', 'i'
             $ins_ans->bind_param("iisi", $result_id, $q_id, $selected, $is_correct);
             $ins_ans->execute();
         }
