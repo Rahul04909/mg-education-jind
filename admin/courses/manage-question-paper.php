@@ -66,7 +66,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'delete_paper') {
 $subjects_result = $conn->query("SELECT s.id, s.name, s.code, s.theory_marks, s.assignment_marks, c.title as course_name 
                                  FROM subjects s 
                                  JOIN courses c ON s.course_id = c.id 
-                                 JOIN courses c ON s.course_id = c.id 
                                  ORDER BY c.title ASC, s.name ASC");
 $subjects = [];
 while ($row = $subjects_result->fetch_assoc()) {
@@ -279,8 +278,7 @@ if (isset($_GET['subject_id'])) {
             }
         });
 
-            }
-        });
+
 
         // Dynamic Sessions Data
         const allSessions = <?php echo json_encode($sessions); ?>;
