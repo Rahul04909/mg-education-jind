@@ -77,7 +77,7 @@ if ($session_id > 0) {
             background-size: cover; /* or 100% 100% to force fit */
             background-position: center;
             background-repeat: no-repeat;
-            margin-top: 120px;
+            /* margin-top: 120px; Removed as it moves the background too. We need to move content inside. */
         }
 
         /* If background is meant to be a border/frame, we might need padding inside */
@@ -90,7 +90,7 @@ if ($session_id > 0) {
         .ht-header {
             text-align: center;
             margin-bottom: 30px;
-            margin-top: 100px; /* Adjust based on logo space in background */
+            margin-top: 220px; /* Increased from 100px to push content down below logo */
         }
         .ht-header h1 {
             font-size: 28px;

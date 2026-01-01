@@ -89,7 +89,7 @@ $html = '
         }
         .content { padding: 40px; }
         
-        .header { text-align: center; margin-top: 100px; margin-bottom: 20px; }
+        .header { text-align: center; margin-top: 220px; margin-bottom: 20px; }
         .header h1 { color: #b91c1c; font-size: 24px; text-transform: uppercase; margin: 0; }
         .header h2 { font-size: 14px; margin: 5px 0 0 0; color: #333; }
 
