@@ -51,10 +51,20 @@ if ($session_id > 0) {
 }
 
 // 4. Prepare Images (Absolute Paths for DOMPDF)
-$base_path = 'd:/wamp/www/mg-skill';
-$bg_image = $base_path . '/student/hall-ticket/background-hall-ticket.png';
-$photo_path = $base_path . '/uploads/' . $student['photo'];
-$sign_path = $base_path . '/uploads/' . $student['signature'];
+// Use __DIR__ to get the directory of the current script (student/)
+// Image is in student/hall-ticket/
+$bg_image = __DIR__ . '/hall-ticket/background-hall-ticket.png';
+$photo_path = __DIR__ . '/../uploads/' . $student['photo']; // uploads is in root, student is one level deep? 
+// Wait, wamp structure:
+// d:\wamp\www\mg-skill\student\download-hall-ticket.php
+// d:\wamp\www\mg-skill\uploads
+// So uploads is ../uploads
+
+// Let's verify root using __DIR__
+// __DIR__ = d:\wamp\www\mg-skill\student
+$bg_image = __DIR__ . '/hall-ticket/background-hall-ticket.png';
+$photo_path = __DIR__ . '/../uploads/' . $student['photo']; 
+$sign_path = __DIR__ . '/../uploads/' . $student['signature'];
 
 // Helper for image src
 function get_image_src($path) {
@@ -81,15 +91,14 @@ $html = '
         body { margin: 0px; font-family: sans-serif; }
         
         .bg-image {
-            position: absolute; /* Changed from fixed to absolute for single page reliability */
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            /* z-index removed, relying on source order (img first) */
         }
 
-        .content { padding: 40px; } /* Removed z-index and relative position */
+        .content { padding: 40px; }
         
         .header { text-align: center; margin-top: 250px; margin-bottom: 20px; }
         .header h1 { color: #b91c1c; font-size: 24px; text-transform: uppercase; margin: 0; }
@@ -121,13 +130,17 @@ $html = '
         .auth-sign p { border-top: 1px solid #000; display: inline-block; padding-top: 5px; font-weight: bold; font-size: 12px; }
     </style>
 </head>
-<body>
-    <?php if (empty($bg_src)): ?>
-        <div style="color:red; font-weight:bold; position:absolute; top:0; left:0; z-index:9999;">
-            DEBUG: Background image not found at: <?php echo $bg_image; ?>
-        </div>
-    <?php endif; ?>
-    <img src="<?php echo $bg_src; ?>" class="bg-image">
+<body>';
+
+if (empty($bg_src)) {
+    $html .= '<div style="color:red; font-weight:bold; position:absolute; top:0; left:0; z-index:9999;">
+            DEBUG: Background image not found at: ' . $bg_image . ' <br>
+            Current Dir: ' . __DIR__ . '
+        </div>';
+}
+
+$html .= '
+    <img src="'.$bg_src.'" class="bg-image">
     
     <div class="content">
         <div class="header">
