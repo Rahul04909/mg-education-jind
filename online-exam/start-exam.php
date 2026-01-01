@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../database/db-config.php';
+date_default_timezone_set('Asia/Kolkata');
 
 if (!isset($_SESSION['student_id']) || !isset($_GET['exam_id'])) {
     header("Location: index.php");
