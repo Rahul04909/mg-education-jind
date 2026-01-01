@@ -15,12 +15,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($action === 'add') {
         $subject_id = intval($_POST['subject_id']);
+        $session_id = intval($_POST['session_id']);
         $exam_date = mysqli_real_escape_string($conn, $_POST['exam_date']);
         $start_time = mysqli_real_escape_string($conn, $_POST['start_time']);
         $duration_minutes = intval($_POST['duration_minutes']);
         
-        $sql = "INSERT INTO exam_schedules (subject_id, exam_date, start_time, duration_minutes) 
-                VALUES ($subject_id, '$exam_date', '$start_time', $duration_minutes)";
+        $sql = "INSERT INTO exam_schedules (subject_id, session_id, exam_date, start_time, duration_minutes) 
+                VALUES ($subject_id, $session_id, '$exam_date', '$start_time', $duration_minutes)";
         
         if ($conn->query($sql) === TRUE) {
             $success_message = "Exam schedule added successfully!";
@@ -29,18 +30,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
     } elseif ($action === 'edit') {
-        $id = intval($_POST['schedule_id']);
+        $schedule_id = intval($_POST['schedule_id']);
         $subject_id = intval($_POST['subject_id']);
+        $session_id = intval($_POST['session_id']);
         $exam_date = mysqli_real_escape_string($conn, $_POST['exam_date']);
         $start_time = mysqli_real_escape_string($conn, $_POST['start_time']);
         $duration_minutes = intval($_POST['duration_minutes']);
 
         $sql = "UPDATE exam_schedules SET 
                 subject_id=$subject_id, 
+                session_id=$session_id,
                 exam_date='$exam_date', 
                 start_time='$start_time', 
                 duration_minutes=$duration_minutes 
-                WHERE id=$id";
+                WHERE id=$schedule_id";
 
         if ($conn->query($sql) === TRUE) {
             $success_message = "Schedule updated successfully!";
@@ -71,14 +74,23 @@ while ($row = $subjects_result->fetch_assoc()) {
     $courses_filter[$row['course_id']] = $row['course_name'];
 }
 
+// Fetch Sessions
+$sessions = [];
+$s_sql = "SELECT id, course_id, session_name FROM course_sessions WHERE is_active = 1 ORDER BY id DESC";
+$s_res = $conn->query($s_sql);
+while($row = $s_res->fetch_assoc()) {
+    $sessions[$row['course_id']][] = $row;
+}
+
 // Filter Logic
 $selected_course_id = isset($_GET['course_id']) ? intval($_GET['course_id']) : 0;
 
 // Fetch Schedules
-$sql_schedules = "SELECT es.*, s.name as subject_name, s.code, c.title as course_name 
+$sql_schedules = "SELECT es.*, s.name as subject_name, s.code, c.title as course_name, cs.session_name 
                   FROM exam_schedules es 
                   JOIN subjects s ON es.subject_id = s.id 
-                  JOIN courses c ON s.course_id = c.id";
+                  JOIN courses c ON s.course_id = c.id
+                  LEFT JOIN course_sessions cs ON es.session_id = cs.id";
 
 if ($selected_course_id > 0) {
     $sql_schedules .= " WHERE c.id = $selected_course_id";
@@ -178,7 +190,7 @@ include __DIR__ . "/../sidebar.php";
                 <thead>
                     <tr>
                         <th>Subject</th>
-                        <th>Course</th>
+                        <th>Course / Session</th>
                         <th>Exam Date</th>
                         <th>Exam Timing</th>
                         <th>Duration</th>
@@ -197,7 +209,10 @@ include __DIR__ . "/../sidebar.php";
                                 <div style="font-weight:700"><?php echo htmlspecialchars($row['subject_name']); ?></div>
                                 <div style="font-size:12px;color:var(--muted)"><?php echo htmlspecialchars($row['code']); ?></div>
                             </td>
-                            <td><?php echo htmlspecialchars($row['course_name']); ?></td>
+                            <td>
+                                <div><?php echo htmlspecialchars($row['course_name']); ?></div>
+                                <div style="font-size:12px;color:var(--muted)"><?php echo htmlspecialchars($row['session_name'] ?? 'N/A'); ?></div>
+                            </td>
                             <td><?php echo date('M d, Y', strtotime($row['exam_date'])); ?></td>
                             <td>
                                 <div style="font-weight:600; color:var(--text)">
@@ -241,6 +256,13 @@ include __DIR__ . "/../sidebar.php";
                                 <?php echo htmlspecialchars($s['name']); ?> (<?php echo htmlspecialchars($s['course_name']); ?>)
                             </option>
                         <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Select Session *</label>
+                    <select name="session_id" id="session_id" class="form-select" required>
+                        <option value="">-- Select Session --</option>
                     </select>
                 </div>
 
@@ -303,6 +325,27 @@ include __DIR__ . "/../sidebar.php";
             preview.innerText = `${startFormatted} - ${endFormatted}`;
         }
 
+        const allSessions = <?php echo json_encode($sessions); ?>;
+        const subjects = <?php echo json_encode($subjects); ?>;
+
+        document.getElementById('subject_id').addEventListener('change', function() {
+            const subjectId = this.value;
+            const sessionSelect = document.getElementById('session_id');
+            sessionSelect.innerHTML = '<option value="">-- Select Session --</option>';
+
+            if(subjectId) {
+                const selectedSubject = subjects.find(s => s.id == subjectId);
+                if(selectedSubject && allSessions[selectedSubject.course_id]) {
+                    allSessions[selectedSubject.course_id].forEach(sess => {
+                        const opt = document.createElement('option');
+                        opt.value = sess.id;
+                        opt.textContent = sess.session_name;
+                        sessionSelect.appendChild(opt);
+                    });
+                }
+            }
+        });
+
         function openAddModal() {
             document.getElementById('modalTitle').innerText = "Add Exam Schedule";
             document.getElementById('formAction').value = "add";
@@ -319,6 +362,16 @@ include __DIR__ . "/../sidebar.php";
             document.getElementById('scheduleId').value = data.id;
             
             document.getElementById('subject_id').value = data.subject_id;
+            
+            // Trigger change to populate sessions, then select the correct one
+            const event = new Event('change');
+            document.getElementById('subject_id').dispatchEvent(event);
+            
+            // Wait a tick for population (though synchronous here)
+            setTimeout(() => {
+                document.getElementById('session_id').value = data.session_id;
+            }, 0);
+
             document.getElementById('exam_date').value = data.exam_date;
             document.getElementById('start_time').value = data.start_time; // Time input expects HH:MM format
             document.getElementById('duration_minutes').value = data.duration_minutes;
