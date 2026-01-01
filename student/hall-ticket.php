@@ -159,6 +159,7 @@ if ($session_id > 0) {
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-top: 10px;
         }
         .sign-img {
             max-height: 35px;
