@@ -2,6 +2,8 @@
 // online-exam/submit-exam.php
 session_start();
 require_once __DIR__ . '/../database/db-config.php';
+// Ensure schema exists on live server
+require_once __DIR__ . '/../database/update_exam_results_schema.php';
 date_default_timezone_set('Asia/Kolkata');
 
 // Prevent HTML errors from breaking JSON
