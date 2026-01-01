@@ -96,10 +96,10 @@ $html = '
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -999;
+            z-index: 0;
         }
 
-        .content { padding: 40px; position: relative; z-index: 1; }
+        .content { padding: 40px; position: relative; z-index: 10; }
         
         .header { text-align: center; margin-top: 250px; margin-bottom: 20px; }
         .header h1 { color: #b91c1c; font-size: 24px; text-transform: uppercase; margin: 0; }
