@@ -77,6 +77,7 @@ if ($session_id > 0) {
             background-size: cover; /* or 100% 100% to force fit */
             background-position: center;
             background-repeat: no-repeat;
+            margin-top: 120px;
         }
 
         /* If background is meant to be a border/frame, we might need padding inside */
