@@ -71,9 +71,9 @@ if ($session_id > 0) {
         .profile-id { color: #64748b; font-size: 14px; margin-bottom: 20px; display: inline-block; background: #f1f5f9; padding: 4px 12px; border-radius: 20px; }
         
         .profile-meta { text-align: left; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px; }
-        .meta-item { margin-bottom: 12px; display: flex; justify-content: space-between; font-size: 14px; }
-        .meta-label { color: #64748b; font-weight: 500; }
-        .meta-val { font-weight: 600; }
+        .meta-item { margin-bottom: 12px; display: flex; justify-content: space-between; font-size: 14px; gap: 20px; }
+        .meta-label { color: #64748b; font-weight: 500; flex-shrink: 0; }
+        .meta-val { font-weight: 600; text-align: right; flex: 1; }
 
         .sign-box { margin-top: 20px; border: 1px dashed var(--border); padding: 10px; border-radius: 8px; }
         .sign-box img { height: 40px; max-width: 100%; object-fit: contain; }
@@ -123,7 +123,7 @@ if ($session_id > 0) {
     <!-- Header -->
     <nav class="navbar">
         <div class="logo">
-            <img src="../../assets/images/logo.jpg" alt="Logo">
+            <img src="../../assets/images/sidebar-logo.jpg" alt="Logo">
             <span>MG Skills Exam Portal</span>
         </div>
         <div class="user-menu">
