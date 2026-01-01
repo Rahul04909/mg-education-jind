@@ -15,21 +15,23 @@ $sql_papers = "CREATE TABLE IF NOT EXISTS question_papers (
     FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
 )";
 
+$show_output = (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]));
+
 if ($conn->query($sql_papers) === TRUE) {
-    echo "Table question_papers created successfully or already exists.<br>";
+    if ($show_output) echo "Table question_papers created successfully or already exists.<br>";
     
     // Check if session_id column exists
     $check_col = $conn->query("SHOW COLUMNS FROM question_papers LIKE 'session_id'");
     if ($check_col->num_rows == 0) {
         if($conn->query("ALTER TABLE question_papers ADD COLUMN session_id INT NOT NULL DEFAULT 0 AFTER subject_id")){
-            echo "Column session_id added to question_papers.<br>";
+            if ($show_output) echo "Column session_id added to question_papers.<br>";
         } else {
-            echo "Error adding column session_id: " . $conn->error . "<br>";
+            if ($show_output) echo "Error adding column session_id: " . $conn->error . "<br>";
         }
     }
 
 } else {
-    echo "Error creating table question_papers: " . $conn->error . "<br>";
+    if ($show_output) echo "Error creating table question_papers: " . $conn->error . "<br>";
 }
 
 // Create questions table
@@ -47,8 +49,8 @@ $sql_questions = "CREATE TABLE IF NOT EXISTS questions (
 )";
 
 if ($conn->query($sql_questions) === TRUE) {
-    echo "Table questions created successfully or already exists.<br>";
+    if ($show_output) echo "Table questions created successfully or already exists.<br>";
 } else {
-    echo "Error creating table questions: " . $conn->error . "<br>";
+    if ($show_output) echo "Error creating table questions: " . $conn->error . "<br>";
 }
 ?>
