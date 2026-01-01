@@ -63,7 +63,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'delete_paper') {
 }
 
 // Fetch Subjects
-$subjects_result = $conn->query("SELECT s.id, s.name, s.code, s.theory_marks, s.assignment_marks, c.title as course_name 
+$subjects_result = $conn->query("SELECT s.id, s.name, s.code, s.theory_marks, s.assignment_marks, s.course_id, c.title as course_name 
                                  FROM subjects s 
                                  JOIN courses c ON s.course_id = c.id 
                                  ORDER BY c.title ASC, s.name ASC");
@@ -259,21 +259,22 @@ if (isset($_GET['subject_id'])) {
         const initialQuestions = <?php echo $edit_mode ? json_encode($existing_questions) : '[]'; ?>;
 
         document.addEventListener("DOMContentLoaded", function() {
-            if (editMode && initialConfig) {
-                // Trigger fetch to set theory marks
-                // fetchSubjectDetails(); // Called manually below to wait for session population logic
+            if (editMode && initialConfig && initialConfig.subject_id) {
+                // 1. First, Populate Sessions immediately (since we have the data)
+                 populateSessions(initialConfig.subject_id, initialConfig.session_id);
 
-                // Set Config
+                // 2. Fetch Subject Details to set Theory Marks (Critical for validation)
+                fetchSubjectDetails(); 
+
+                // 3. Set Config Values
                 document.getElementById('totalQuestions').value = initialConfig.total_questions;
                 document.getElementById('marksPerQuestion').value = initialConfig.marks_per_question;
                 
-                // Validate & Start
+                // 4. Validate & Start
                 validateConfig();
                 startBuilding();
 
-                // Load Questions
-                // Note: startBuilding added an empty one, let's remove it if we have existing ones, or just populate
-                // Since startBuilding adds one if count is 0, we can clear the container first
+                // 5. Load Questions
                 if (initialQuestions.length > 0) {
                      document.getElementById('questionsContainer').innerHTML = '';
                      questionCount = 0;
@@ -292,14 +293,14 @@ if (isset($_GET['subject_id'])) {
         const subjectSelect = document.getElementById('subject_id');
         const sessionSelect = document.getElementById('session_id');
 
-        // Initial Logic for Edit Mode
-        if (editMode && initialConfig && initialConfig.subject_id) {
-            // Wait for DOM to be ready implicitly or just force populate
-            setTimeout(() => {
-                populateSessions(initialConfig.subject_id, initialConfig.session_id);
-                fetchSubjectDetails(); // Now fetch details
-            }, 0);
-        }
+        // Initial Logic for Edit Mode - Handled in DOMContentLoaded now
+        // if (editMode && initialConfig && initialConfig.subject_id) {
+        //     // Wait for DOM to be ready implicitly or just force populate
+        //     setTimeout(() => {
+        //         populateSessions(initialConfig.subject_id, initialConfig.session_id);
+        //         fetchSubjectDetails(); // Now fetch details
+        //     }, 0);
+        // }
 
         subjectSelect.addEventListener('change', function() {
             populateSessions(this.value);
