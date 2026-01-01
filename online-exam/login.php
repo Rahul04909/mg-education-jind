@@ -30,10 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Generate OTP
             $otp = rand(100000, 999999);
-            $expiry = date('Y-m-d H:i:s', strtotime('+10 minutes'));
-
-            // Update DB
-            $upd = "UPDATE admissions SET otp = '$otp', otp_expiry = '$expiry' WHERE id = " . $student['id'];
+            // Use DB time for expiry to avoid timezone mismatches
+            $upd = "UPDATE admissions SET otp = '$otp', otp_expiry = (NOW() + INTERVAL 10 MINUTE) WHERE id = " . $student['id'];
             $conn->query($upd);
 
             // Send Email
@@ -100,25 +98,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: index.php");
             exit;
         } else {
-            // DEBUG LOGGING
-            $debug  = "Time: " . date("Y-m-d H:i:s") . "\n";
-            $debug .= "Input Identifier: $identifier\n";
-            $debug .= "Input OTP: $otp_input\n";
-            
-            // Query DB to see what is actually there
-            $chk = $conn->query("SELECT id, otp, otp_expiry, NOW() as db_now FROM admissions WHERE email = '$identifier' OR enrollment_no = '$identifier' OR mobile = '$identifier'");
-            if($chk && $chk->num_rows > 0) {
-                $row = $chk->fetch_assoc();
-                $debug .= "DB ID: " . $row['id'] . "\n";
-                $debug .= "DB OTP: " . $row['otp'] . "\n";
-                $debug .= "DB Expiry: " . $row['otp_expiry'] . "\n";
-                $debug .= "DB NOW(): " . $row['db_now'] . "\n";
-                $debug .= "Expired?: " . (($row['otp_expiry'] > $row['db_now']) ? "NO" : "YES") . "\n";
-            } else {
-                $debug .= "User not found in DB lookup.\n";
-            }
-            file_put_contents(__DIR__ . '/debug_otp.txt', $debug, FILE_APPEND);
-
             $error = "Invalid or Expired OTP.";
         }
     }
