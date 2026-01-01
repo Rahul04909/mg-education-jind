@@ -14,7 +14,7 @@ $exam_schedule_id = intval($_GET['exam_id']);
 
 // 1. Fetch Exam Schedule & Paper Details
 $sql = "SELECT es.*, qp.id as paper_id, qp.total_questions, qp.total_marks, qp.marks_per_question, 
-               s.name as subject_name 
+               s.name as subject_name, s.passing_marks 
         FROM exam_schedules es
         JOIN question_papers qp ON es.session_id = qp.session_id AND es.subject_id = qp.subject_id
         JOIN subjects s ON es.subject_id = s.id

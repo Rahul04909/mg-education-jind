@@ -37,6 +37,10 @@
             <span>Marks:</span> 
             <strong><?php echo $paper['total_marks']; ?></strong>
         </div>
+        <div class="info-row">
+            <span>Passing Marks:</span> 
+            <strong><?php echo $paper['passing_marks']; ?></strong>
+        </div>
     </div>
 
     <!-- 3. Palette -->

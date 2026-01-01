@@ -35,9 +35,10 @@ $exam_id = intval($input['exam_id']);
 $user_answers = $input['answers'] ?? []; // { qId: { selected: 'A', status: '...' } }
 
 // 1. Fetch Exam & Paper Details to Validation
-$sql = "SELECT es.*, qp.id as paper_id, qp.total_questions, qp.total_marks, qp.marks_per_question 
+$sql = "SELECT es.*, qp.id as paper_id, qp.total_questions, qp.total_marks, qp.marks_per_question, s.passing_marks 
         FROM exam_schedules es
         JOIN question_papers qp ON es.session_id = qp.session_id AND es.subject_id = qp.subject_id
+        JOIN subjects s ON es.subject_id = s.id
         WHERE es.id = $exam_id";
 
 $res = $conn->query($sql);
@@ -79,7 +80,8 @@ foreach ($user_answers as $q_id => $ans_data) {
 $obtained_marks = $correct_count * $marks_per_q;
 $total_marks = $exam['total_marks'];
 $percentage = ($total_marks > 0) ? ($obtained_marks / $total_marks) * 100 : 0;
-$status = ($percentage >= 33) ? 'PASS' : 'FAIL'; // 33% passing criteria
+// Use dynamic passing marks
+$status = ($obtained_marks >= $exam['passing_marks']) ? 'PASS' : 'FAIL';
 
 // 4. Save to `exam_results`
 $ins_res = $conn->prepare("INSERT INTO exam_results (exam_schedule_id, student_id, total_questions, correct_answers, wrong_answers, total_marks, obtained_marks, percentage, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
