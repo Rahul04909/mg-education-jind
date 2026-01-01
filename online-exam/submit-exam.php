@@ -71,7 +71,7 @@ while ($row = $q_res->fetch_assoc()) {
 }
 
 // 3. Calculate Score
-$total_q = $exam['total_questions'];
+$total_q = count($correct_answers_map); // Use actual question count
 $correct_count = 0;
 $wrong_count = 0;
 $attempted_count = 0;
@@ -90,7 +90,7 @@ foreach ($user_answers as $q_id => $ans_data) {
 }
 
 $obtained_marks = $correct_count * $marks_per_q;
-$total_marks = $exam['total_marks'];
+$total_marks = $total_q * $marks_per_q; // Recalculate based on actual questions
 $percentage = ($total_marks > 0) ? ($obtained_marks / $total_marks) * 100 : 0;
 // Use dynamic passing marks
 $status = ($obtained_marks >= $exam['passing_marks']) ? 'PASS' : 'FAIL';
