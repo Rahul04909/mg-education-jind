@@ -90,7 +90,7 @@ if ($session_id > 0) {
         .ht-header {
             text-align: center;
             margin-bottom: 30px;
-            margin-top: 220px; /* Increased from 100px to push content down below logo */
+            margin-top: 250px; /* Increased from 100px to push content down below logo */
         }
         .ht-header h1 {
             font-size: 28px;
