@@ -11,18 +11,18 @@ $error_message = '';
 // Handle Save
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['action'] == 'save_paper') {
     $subject_id = intval($_POST['subject_id']);
+    $session_id = intval($_POST['session_id']);
     $total_questions = intval($_POST['total_questions']);
     $marks_per_question = intval($_POST['marks_per_question']);
     $total_marks = $total_questions * $marks_per_question;
     
-    // Check if paper already exists for this subject, delete old one to replace or update? 
-    // For simplicity, let's assume we are creating a new one or replacing the old one.
-    // Let's delete existing paper for this subject to ensure 1-to-1 mapping for now (simplest for "Manage Paper")
-    $conn->query("DELETE FROM question_papers WHERE subject_id = $subject_id");
+    // Check if paper already exists for this subject/session combination, delete old one to replace
+    $del_sql = "DELETE FROM question_papers WHERE subject_id = $subject_id AND session_id = $session_id";
+    $conn->query($del_sql);
 
     // Insert Paper
-    $sql_paper = "INSERT INTO question_papers (subject_id, total_questions, marks_per_question, total_marks) 
-                  VALUES ($subject_id, $total_questions, $marks_per_question, $total_marks)";
+    $sql_paper = "INSERT INTO question_papers (subject_id, session_id, total_questions, marks_per_question, total_marks) 
+                  VALUES ($subject_id, $session_id, $total_questions, $marks_per_question, $total_marks)";
     
     if ($conn->query($sql_paper) === TRUE) {
         $paper_id = $conn->insert_id;
@@ -66,10 +66,19 @@ if (isset($_POST['action']) && $_POST['action'] == 'delete_paper') {
 $subjects_result = $conn->query("SELECT s.id, s.name, s.code, s.theory_marks, s.assignment_marks, c.title as course_name 
                                  FROM subjects s 
                                  JOIN courses c ON s.course_id = c.id 
+                                 JOIN courses c ON s.course_id = c.id 
                                  ORDER BY c.title ASC, s.name ASC");
 $subjects = [];
 while ($row = $subjects_result->fetch_assoc()) {
     $subjects[] = $row;
+}
+
+// Fetch Sessions
+$sessions = [];
+$s_sql = "SELECT id, course_id, session_name FROM course_sessions WHERE is_active = 1 ORDER BY id DESC";
+$s_res = $conn->query($s_sql);
+while($row = $s_res->fetch_assoc()) {
+    $sessions[$row['course_id']][] = $row;
 }
 
 // Data for Edit Mode
@@ -79,7 +88,18 @@ $existing_questions = [];
 
 if (isset($_GET['subject_id'])) {
     $sub_id = intval($_GET['subject_id']);
-    $paper_result = $conn->query("SELECT * FROM question_papers WHERE subject_id = $sub_id LIMIT 1");
+    // For edit mode, we might need more specific targeting if multiple sessions exist, 
+    // but usually edit comes from a list where we have the specific ID. 
+    // If we only have subject_id, we might pick the latest or require session_id in GET.
+    // Assuming for now if coming from a "Subject View" we pick the latest, 
+    // otherwise if session_id is provided use that.
+    $sess_filter = "";
+    if (isset($_GET['session_id'])) {
+        $sess_id = intval($_GET['session_id']);
+        $sess_filter = " AND session_id = $sess_id";
+    }
+    
+    $paper_result = $conn->query("SELECT * FROM question_papers WHERE subject_id = $sub_id $sess_filter ORDER BY id DESC LIMIT 1");
     if ($paper_result->num_rows > 0) {
         $edit_mode = true;
         $existing_paper = $paper_result->fetch_assoc();
@@ -166,12 +186,20 @@ if (isset($_GET['subject_id'])) {
                             <option value="">-- Choose --</option>
                             <?php foreach($subjects as $s): ?>
                                 <option value="<?php echo $s['id']; ?>" 
+                                    data-course="<?php echo $s['course_id']; ?>"
                                     data-theory="<?php echo $s['theory_marks']; ?>" 
                                     data-assign="<?php echo $s['assignment_marks']; ?>"
                                     <?php echo ($edit_mode && $existing_paper['subject_id'] == $s['id']) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($s['name']); ?> (<?php echo htmlspecialchars($s['course_name']); ?>)
                                 </option>
                             <?php endforeach; ?>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Select Session *</label>
+                        <select name="session_id" id="session_id" class="form-select" required>
+                            <option value="">-- Choose --</option>
                         </select>
                     </div>
                 </div>
@@ -228,8 +256,8 @@ if (isset($_GET['subject_id'])) {
         document.addEventListener("DOMContentLoaded", function() {
             if (editMode && initialConfig) {
                 // Trigger fetch to set theory marks
-                fetchSubjectDetails();
-                
+                // fetchSubjectDetails(); // Called manually below to wait for session population logic
+
                 // Set Config
                 document.getElementById('totalQuestions').value = initialConfig.total_questions;
                 document.getElementById('marksPerQuestion').value = initialConfig.marks_per_question;
@@ -250,6 +278,49 @@ if (isset($_GET['subject_id'])) {
                 }
             }
         });
+
+            }
+        });
+
+        // Dynamic Sessions Data
+        const allSessions = <?php echo json_encode($sessions); ?>;
+        const subjectSelect = document.getElementById('subject_id');
+        const sessionSelect = document.getElementById('session_id');
+
+        // Initial Logic for Edit Mode
+        if (editMode && initialConfig && initialConfig.subject_id) {
+            // Wait for DOM to be ready implicitly or just force populate
+            setTimeout(() => {
+                populateSessions(initialConfig.subject_id, initialConfig.session_id);
+                fetchSubjectDetails(); // Now fetch details
+            }, 0);
+        }
+
+        subjectSelect.addEventListener('change', function() {
+            populateSessions(this.value);
+            fetchSubjectDetails();
+        });
+
+        function populateSessions(subjectId, selectedSessionId = null) {
+            sessionSelect.innerHTML = '<option value="">-- Choose --</option>';
+            if (!subjectId) return;
+
+            const selectedOption = subjectSelect.querySelector(`option[value="${subjectId}"]`);
+            if (selectedOption) {
+                const courseId = selectedOption.getAttribute('data-course');
+                if (courseId && allSessions[courseId]) {
+                    allSessions[courseId].forEach(sess => {
+                        const opt = document.createElement('option');
+                        opt.value = sess.id;
+                        opt.textContent = sess.session_name;
+                        if (selectedSessionId && sess.id == selectedSessionId) {
+                            opt.selected = true;
+                        }
+                        sessionSelect.appendChild(opt);
+                    });
+                }
+            }
+        }
 
         function fetchSubjectDetails() {
             const select = document.getElementById('subject_id');

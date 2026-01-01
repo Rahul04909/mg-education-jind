@@ -7,6 +7,7 @@ $conn = getDbConnection();
 $sql_papers = "CREATE TABLE IF NOT EXISTS question_papers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     subject_id INT NOT NULL,
+    session_id INT NOT NULL DEFAULT 0,
     total_questions INT NOT NULL,
     marks_per_question INT NOT NULL,
     total_marks INT NOT NULL,
@@ -16,6 +17,13 @@ $sql_papers = "CREATE TABLE IF NOT EXISTS question_papers (
 
 if ($conn->query($sql_papers) === TRUE) {
     // echo "Table question_papers created successfully or already exists.<br>";
+    
+    // Check if session_id column exists
+    $check_col = $conn->query("SHOW COLUMNS FROM question_papers LIKE 'session_id'");
+    if ($check_col->num_rows == 0) {
+        $conn->query("ALTER TABLE question_papers ADD COLUMN session_id INT NOT NULL DEFAULT 0 AFTER subject_id");
+    }
+
 } else {
     error_log("Error creating table question_papers: " . $conn->error);
 }
