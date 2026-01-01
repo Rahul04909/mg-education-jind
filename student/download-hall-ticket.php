@@ -81,15 +81,15 @@ $html = '
         body { margin: 0px; font-family: sans-serif; }
         
         .bg-image {
-            position: fixed;
+            position: absolute; /* Changed from fixed to absolute for single page reliability */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            /* z-index removed, relying on source order (img first) */
         }
 
-        .content { padding: 40px; position: relative; z-index: 1; }
+        .content { padding: 40px; } /* Removed z-index and relative position */
         
         .header { text-align: center; margin-top: 250px; margin-bottom: 20px; }
         .header h1 { color: #b91c1c; font-size: 24px; text-transform: uppercase; margin: 0; }
@@ -122,6 +122,11 @@ $html = '
     </style>
 </head>
 <body>
+    <?php if (empty($bg_src)): ?>
+        <div style="color:red; font-weight:bold; position:absolute; top:0; left:0; z-index:9999;">
+            DEBUG: Background image not found at: <?php echo $bg_image; ?>
+        </div>
+    <?php endif; ?>
     <img src="<?php echo $bg_src; ?>" class="bg-image">
     
     <div class="content">
