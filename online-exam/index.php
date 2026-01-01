@@ -123,7 +123,7 @@ if ($session_id > 0) {
     <!-- Header -->
     <nav class="navbar">
         <div class="logo">
-            <img src="../../assets/images/logo.png" alt="Logo">
+            <img src="../../assets/images/logo.jpg" alt="Logo">
             <span>MG Skills Exam Portal</span>
         </div>
         <div class="user-menu">
