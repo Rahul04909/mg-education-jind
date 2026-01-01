@@ -125,7 +125,7 @@ $html = '
     </style>
 </head>
 <body>
-    <img src="<?php echo $bg_src; ?>" class="bg-image">
+    <img src="' . $bg_src . '" class="bg-image">
     
     <div class="content">
         <div class="header">
