@@ -268,7 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Right Side -->
         <div class="login-form-wrap">
             <div class="brand">
-                <img src="../assets/images/logo.png" alt="Logo"> <!-- Placeholder logo path -->
+                <img src="../assets/images/sidebar-logo.jpg" alt="Logo"> <!-- Placeholder logo path -->
                 <span>MG Skills</span>
             </div>
 
