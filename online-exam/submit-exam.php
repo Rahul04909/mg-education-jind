@@ -1,35 +1,37 @@
 <?php
 // online-exam/submit-exam.php
+ob_start(); // Start output buffering immediately
 session_start();
 require_once __DIR__ . '/../database/db-config.php';
-// Ensure schema exists on live server
 define('SILENT_UPDATE', true);
 require_once __DIR__ . '/../database/update_exam_results_schema.php';
 date_default_timezone_set('Asia/Kolkata');
-
-// Prevent HTML errors from breaking JSON
 ini_set('display_errors', 0);
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
 header('Content-Type: application/json');
+
+// Helper to send JSON and exit cleanly
+function sendJson($data, $code = 200) {
+    ob_clean(); // Discard any prior output (whitespace, warnings, etc.)
+    http_response_code($code);
+    echo json_encode($data);
+    exit;
+}
 
 try {
 
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['status' => 'error', 'message' => 'Invalid Request Method']);
-    exit;
+    sendJson(['status' => 'error', 'message' => 'Invalid Request Method']);
 }
 
 if (!isset($_SESSION['student_id'])) {
-    echo json_encode(['status' => 'error', 'message' => 'Session Expired']);
-    exit;
+    sendJson(['status' => 'error', 'message' => 'Session Expired']);
 }
 
 $input = json_decode(file_get_contents('php://input'), true);
 if (!$input || !isset($input['exam_id'])) {
-    echo json_encode(['status' => 'error', 'message' => 'Invalid Data']);
-    exit;
+    sendJson(['status' => 'error', 'message' => 'Invalid Data']);
 }
 
 $conn = getDbConnection();
@@ -46,8 +48,7 @@ $sql = "SELECT es.*, qp.id as paper_id, qp.total_questions, qp.total_marks, qp.m
 
 $res = $conn->query($sql);
 if ($res->num_rows == 0) {
-    echo json_encode(['status' => 'error', 'message' => 'Exam Not Found']);
-    exit;
+    sendJson(['status' => 'error', 'message' => 'Exam Not Found']);
 }
 $exam = $res->fetch_assoc();
 $paper_id = $exam['paper_id'];
@@ -108,13 +109,12 @@ if ($ins_res->execute()) {
         }
     }
     
-    echo json_encode(['status' => 'success', 'message' => 'Result Saved', 'redirect' => 'result.php?exam_id='.$exam_id]);
+    sendJson(['status' => 'success', 'message' => 'Result Saved', 'redirect' => 'result.php?exam_id='.$exam_id]);
 } else {
-    echo json_encode(['status' => 'error', 'message' => 'DB Error: ' . $conn->error]);
+    sendJson(['status' => 'error', 'message' => 'DB Error: ' . $conn->error]);
 }
 
 } catch (Exception $e) {
-    http_response_code(500); // Internal Server Error
-    echo json_encode(['status' => 'error', 'message' => 'Server Error: ' . $e->getMessage()]);
+    sendJson(['status' => 'error', 'message' => 'Server Error: ' . $e->getMessage()], 500);
 }
-?>
+// END OF FILE - No closing tag to avoid whitespace
