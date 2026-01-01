@@ -51,27 +51,32 @@ if ($session_id > 0) {
 }
 
 // 4. Prepare Images (Absolute Paths for DOMPDF)
-// Use __DIR__ to get the directory of the current script (student/)
-// Image is in student/hall-ticket/
-$bg_image = __DIR__ . '/hall-ticket/background-hall-ticket.png';
-$photo_path = __DIR__ . '/../uploads/' . $student['photo']; // uploads is in root, student is one level deep? 
-// Wait, wamp structure:
-// d:\wamp\www\mg-skill\student\download-hall-ticket.php
-// d:\wamp\www\mg-skill\uploads
-// So uploads is ../uploads
+// Use __DIR__ to get the exact path, replacing backslashes for consistency
+$base_dir = str_replace('\\', '/', __DIR__); 
 
-// Let's verify root using __DIR__
-// __DIR__ = d:\wamp\www\mg-skill\student
-$bg_image = __DIR__ . '/hall-ticket/background-hall-ticket.png';
-$photo_path = __DIR__ . '/../uploads/' . $student['photo']; 
-$sign_path = __DIR__ . '/../uploads/' . $student['signature'];
+$bg_image = $base_dir . '/hall-ticket/background-hall-ticket.png';
+$photo_path = $base_dir . '/../uploads/' . $student['photo']; 
+$sign_path = $base_dir . '/../uploads/' . $student['signature'];
 
-// Helper for image src - Removed, we will use paths directly
-// DOMPDF handles local paths if we configure it right.
+// Helper to encode image to Base64 (Most reliable for DOMPDF)
+function get_image_base64($path) {
+    if (!file_exists($path)) {
+        return ''; // File missing
+    }
+    
+    $type = pathinfo($path, PATHINFO_EXTENSION);
+    $data = file_get_contents($path);
+    
+    if ($data === false) {
+        return ''; // Read failed
+    }
 
-$bg_src = $bg_image;
-$photo_src = file_exists($photo_path) ? $photo_path : '';
-$sign_src = file_exists($sign_path) ? $sign_path : '';
+    return 'data:image/' . $type . ';base64,' . base64_encode($data);
+}
+
+$bg_src = get_image_base64($bg_image);
+$photo_src = get_image_base64($photo_path);
+$sign_src = get_image_base64($sign_path);
 
 
 // 5. Generate HTML
