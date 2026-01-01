@@ -18,9 +18,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $code = mysqli_real_escape_string($conn, $_POST['code']);
         $theory_marks = intval($_POST['theory_marks']);
         $assignment_marks = intval($_POST['assignment_marks']);
+        $passing_marks = intval($_POST['passing_marks']);
 
-        $sql = "INSERT INTO subjects (course_id, name, code, theory_marks, assignment_marks) 
-                VALUES ($course_id, '$name', '$code', $theory_marks, $assignment_marks)";
+        $sql = "INSERT INTO subjects (course_id, name, code, theory_marks, assignment_marks, passing_marks) 
+                VALUES ($course_id, '$name', '$code', $theory_marks, $assignment_marks, $passing_marks)";
         
         if ($conn->query($sql) === TRUE) {
             $success_message = "Subject added successfully!";
@@ -35,13 +36,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $code = mysqli_real_escape_string($conn, $_POST['code']);
         $theory_marks = intval($_POST['theory_marks']);
         $assignment_marks = intval($_POST['assignment_marks']);
+        $passing_marks = intval($_POST['passing_marks']);
 
         $sql = "UPDATE subjects SET 
                 course_id=$course_id, 
                 name='$name', 
                 code='$code', 
                 theory_marks=$theory_marks, 
-                assignment_marks=$assignment_marks 
+                assignment_marks=$assignment_marks,
+                passing_marks=$passing_marks 
                 WHERE id=$id";
 
         if ($conn->query($sql) === TRUE) {
@@ -194,12 +197,12 @@ include __DIR__ . "/../sidebar.php";
                             <td><?php echo htmlspecialchars($row['course_name']); ?></td>
                             <td>
                                 <div style="font-size:12px; color:var(--muted)">
-                                    Theory: <b><?php echo $row['theory_marks']; ?></b> | Assgn: <b><?php echo $row['assignment_marks']; ?></b>
+                                    Theory: <b><?php echo $row['theory_marks']; ?></b> | Assgn: <b><?php echo $row['assignment_marks']; ?></b> | Pass: <b><?php echo $row['passing_marks']; ?></b>
                                 </div>
                             </td>
                             <td><span style="font-weight:700; color:var(--active)"><?php echo $total_marks; ?></span></td>
                             <td style="text-align:right">
-                                <button class="btn btn-sm btn-primary" style="background:none; color:var(--indigo); border:1px solid var(--line)" onclick='openEditModal(<?php echo json_encode($row); ?>)'>Edit</button>
+                                <button class="btn btn-sm btn-primary" style="background:none; color:var(--indigo); border:1px solid var(--line)" onclick='openEditModal(<?php echo htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8'); ?>)'>Edit</button>
                                 <form method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this subject?');">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="subject_id" value="<?php echo $row['id']; ?>">
@@ -257,6 +260,11 @@ include __DIR__ . "/../sidebar.php";
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="form-label">Passing Marks</label>
+                    <input type="number" name="passing_marks" id="passing_marks" class="form-input" value="33" required>
+                </div>
+
                 <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Save Subject</button>
             </form>
         </div>
@@ -291,6 +299,7 @@ include __DIR__ . "/../sidebar.php";
             document.getElementById('code').value = data.code;
             document.getElementById('theory_marks').value = data.theory_marks;
             document.getElementById('assignment_marks').value = data.assignment_marks;
+            document.getElementById('passing_marks').value = data.passing_marks || 33;
 
             modal.style.display = "block";
         }
