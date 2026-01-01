@@ -16,16 +16,20 @@ $sql_papers = "CREATE TABLE IF NOT EXISTS question_papers (
 )";
 
 if ($conn->query($sql_papers) === TRUE) {
-    // echo "Table question_papers created successfully or already exists.<br>";
+    echo "Table question_papers created successfully or already exists.<br>";
     
     // Check if session_id column exists
     $check_col = $conn->query("SHOW COLUMNS FROM question_papers LIKE 'session_id'");
     if ($check_col->num_rows == 0) {
-        $conn->query("ALTER TABLE question_papers ADD COLUMN session_id INT NOT NULL DEFAULT 0 AFTER subject_id");
+        if($conn->query("ALTER TABLE question_papers ADD COLUMN session_id INT NOT NULL DEFAULT 0 AFTER subject_id")){
+            echo "Column session_id added to question_papers.<br>";
+        } else {
+            echo "Error adding column session_id: " . $conn->error . "<br>";
+        }
     }
 
 } else {
-    error_log("Error creating table question_papers: " . $conn->error);
+    echo "Error creating table question_papers: " . $conn->error . "<br>";
 }
 
 // Create questions table
@@ -43,8 +47,8 @@ $sql_questions = "CREATE TABLE IF NOT EXISTS questions (
 )";
 
 if ($conn->query($sql_questions) === TRUE) {
-    // echo "Table questions created successfully or already exists.<br>";
+    echo "Table questions created successfully or already exists.<br>";
 } else {
-    error_log("Error creating table questions: " . $conn->error);
+    echo "Error creating table questions: " . $conn->error . "<br>";
 }
 ?>
