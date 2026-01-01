@@ -175,9 +175,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             justify-content: center;
         }
         
-        .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
-        .brand img { height: 40px; border-radius: 8px; }
-        .brand span { font-size: 18px; font-weight: 700; color: var(--primary); }
+        .brand { display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
+        .brand img { height: 80px; border-radius: 8px; }
+        /* .brand span { font-size: 18px; font-weight: 700; color: var(--primary); } */
 
         .auth-tabs {
             display: flex;
@@ -206,7 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 8px; }
         .inp-group { position: relative; }
-        .inp-group i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; width: 18px; }
+        .inp-group svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; width: 18px; height: 18px; }
         .inp-group input { 
             width: 100%; padding: 12px 12px 12px 40px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; transition: 0.2s;
             font-family: inherit;
@@ -268,8 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Right Side -->
         <div class="login-form-wrap">
             <div class="brand">
-                <img src="../assets/images/sidebar-logo.jpg" alt="Logo"> <!-- Placeholder logo path -->
-                <span>MG Skills</span>
+                <img src="../assets/images/sidebar-logo.jpg" alt="Logo">
             </div>
 
             <?php if ($error): ?>
