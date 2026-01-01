@@ -325,7 +325,14 @@ if ($remaining_seconds <= 0) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             })
-            .then(res => res.json())
+            .then(async res => {
+                const text = await res.text();
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    throw new Error("Invalid Server Response: " + text);
+                }
+            })
             .then(data => {
                 if(data.status === 'success') {
                     alert("Exam Submitted Successfully!");
@@ -337,7 +344,7 @@ if ($remaining_seconds <= 0) {
             })
             .catch(err => {
                 console.error(err);
-                alert("Network Error during submission.");
+                alert("Error: " + err.message);
                 document.getElementById('loader').style.display = 'none';
             });
         }

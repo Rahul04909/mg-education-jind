@@ -129,8 +129,5 @@ function getDbConnection() {
     return $conn;
 }
 
-// Uncomment the following lines to initialize the database and tables
 // createDatabaseIfNotExists();
 // createTablesIfNotExists();
-
-?>
