@@ -77,19 +77,21 @@ $html = '
 <html>
 <head>
     <style>
-        body { font-family: sans-serif; margin: 0; padding: 0; }
-        .hall-ticket-container {
+        @page { margin: 0px; }
+        body { margin: 0px; font-family: sans-serif; }
+        
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            position: absolute;
-            top: 0; left: 0;
-            background-image: url("'.$bg_src.'");
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
+            z-index: -1;
         }
-        .content { padding: 40px; }
+
+        .content { padding: 40px; position: relative; z-index: 1; }
         
-        .header { text-align: center; margin-top: 220px; margin-bottom: 20px; }
+        .header { text-align: center; margin-top: 250px; margin-bottom: 20px; }
         .header h1 { color: #b91c1c; font-size: 24px; text-transform: uppercase; margin: 0; }
         .header h2 { font-size: 14px; margin: 5px 0 0 0; color: #333; }
 
@@ -120,10 +122,11 @@ $html = '
     </style>
 </head>
 <body>
-    <div class="hall-ticket-container">
-        <div class="content">
-            <div class="header">
-                <h1>'.$center_name.'</h1>
+    <img src="<?php echo $bg_src; ?>" class="bg-image">
+    
+    <div class="content">
+        <div class="header">
+            <h1>'.$center_name.'</h1>
                 <h2>(An ISO 9001:2015 Certified Organization)</h2>
             </div>
             
@@ -191,7 +194,6 @@ $html .= '      </tbody>
                     <p>Authorized Signatory</p>
                 </div>
             </div>
-        </div>
     </div>
 </body>
 </html>';
