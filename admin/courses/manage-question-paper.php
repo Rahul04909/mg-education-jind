@@ -68,16 +68,22 @@ $subjects_result = $conn->query("SELECT s.id, s.name, s.code, s.theory_marks, s.
                                  JOIN courses c ON s.course_id = c.id 
                                  ORDER BY c.title ASC, s.name ASC");
 $subjects = [];
-while ($row = $subjects_result->fetch_assoc()) {
-    $subjects[] = $row;
+if ($subjects_result) {
+    while ($row = $subjects_result->fetch_assoc()) {
+        $subjects[] = $row;
+    }
+} else {
+    $error_message = "Error fetching subjects: " . $conn->error;
 }
 
 // Fetch Sessions
 $sessions = [];
 $s_sql = "SELECT id, course_id, session_name FROM course_sessions WHERE is_active = 1 ORDER BY id DESC";
 $s_res = $conn->query($s_sql);
-while($row = $s_res->fetch_assoc()) {
-    $sessions[$row['course_id']][] = $row;
+if ($s_res) {
+    while($row = $s_res->fetch_assoc()) {
+        $sessions[$row['course_id']][] = $row;
+    }
 }
 
 // Data for Edit Mode
@@ -282,6 +288,7 @@ if (isset($_GET['subject_id'])) {
 
         // Dynamic Sessions Data
         const allSessions = <?php echo json_encode($sessions); ?>;
+        const subjectsData = <?php echo json_encode($subjects); ?>; // Renamed to avoid conflict if any, though scope is safe
         const subjectSelect = document.getElementById('subject_id');
         const sessionSelect = document.getElementById('session_id');
 
@@ -303,20 +310,19 @@ if (isset($_GET['subject_id'])) {
             sessionSelect.innerHTML = '<option value="">-- Choose --</option>';
             if (!subjectId) return;
 
-            const selectedOption = subjectSelect.querySelector(`option[value="${subjectId}"]`);
-            if (selectedOption) {
-                const courseId = selectedOption.getAttribute('data-course');
-                if (courseId && allSessions[courseId]) {
-                    allSessions[courseId].forEach(sess => {
-                        const opt = document.createElement('option');
-                        opt.value = sess.id;
-                        opt.textContent = sess.session_name;
-                        if (selectedSessionId && sess.id == selectedSessionId) {
-                            opt.selected = true;
-                        }
-                        sessionSelect.appendChild(opt);
-                    });
-                }
+            // Use array lookup instead of DOM attribute
+            const selectedSubject = subjectsData.find(s => s.id == subjectId);
+            
+            if (selectedSubject && allSessions[selectedSubject.course_id]) {
+                allSessions[selectedSubject.course_id].forEach(sess => {
+                    const opt = document.createElement('option');
+                    opt.value = sess.id;
+                    opt.textContent = sess.session_name;
+                    if (selectedSessionId && sess.id == selectedSessionId) {
+                        opt.selected = true;
+                    }
+                    sessionSelect.appendChild(opt);
+                });
             }
         }
 
