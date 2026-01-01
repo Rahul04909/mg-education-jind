@@ -66,19 +66,12 @@ $bg_image = __DIR__ . '/hall-ticket/background-hall-ticket.png';
 $photo_path = __DIR__ . '/../uploads/' . $student['photo']; 
 $sign_path = __DIR__ . '/../uploads/' . $student['signature'];
 
-// Helper for image src
-function get_image_src($path) {
-    if (file_exists($path)) {
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $data = file_get_contents($path);
-        return 'data:image/' . $type . ';base64,' . base64_encode($data);
-    }
-    return ''; // Or a placeholder
-}
+// Helper for image src - Removed, we will use paths directly
+// DOMPDF handles local paths if we configure it right.
 
-$bg_src = get_image_src($bg_image);
-$photo_src = get_image_src($photo_path);
-$sign_src = get_image_src($sign_path);
+$bg_src = $bg_image;
+$photo_src = file_exists($photo_path) ? $photo_path : '';
+$sign_src = file_exists($sign_path) ? $sign_path : '';
 
 
 // 5. Generate HTML
