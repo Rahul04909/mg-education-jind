@@ -62,6 +62,16 @@ $root_dir = dirname($base_dir);
 $photo_path = $root_dir . '/' . $student['photo']; 
 $sign_path = $root_dir . '/' . $student['signature'];
 
+// DEBUG LOGGING
+$logUtil = "Student ID: " . $student['id'] . "\n";
+$logUtil .= "Photo DB: " . $student['photo'] . "\n";
+$logUtil .= "Photo Path: " . $photo_path . "\n";
+$logUtil .= "Photo Exists: " . (file_exists($photo_path) ? 'YES' : 'NO') . "\n";
+$logUtil .= "Sign DB: " . $student['signature'] . "\n";
+$logUtil .= "Sign Path: " . $sign_path . "\n";
+$logUtil .= "Sign Exists: " . (file_exists($sign_path) ? 'YES' : 'NO') . "\n";
+file_put_contents(__DIR__ . '/debug_img_log.txt', $logUtil);
+
 // Helper to encode image to Base64 (Most reliable for DOMPDF)
 function get_image_base64($path) {
     if (!file_exists($path)) {
