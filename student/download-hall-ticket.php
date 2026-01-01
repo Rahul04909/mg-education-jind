@@ -91,14 +91,15 @@ $html = '
         body { margin: 0px; font-family: sans-serif; }
         
         .bg-image {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: -999;
         }
 
-        .content { padding: 40px; }
+        .content { padding: 40px; position: relative; z-index: 1; }
         
         .header { text-align: center; margin-top: 250px; margin-bottom: 20px; }
         .header h1 { color: #b91c1c; font-size: 24px; text-transform: uppercase; margin: 0; }
@@ -130,17 +131,8 @@ $html = '
         .auth-sign p { border-top: 1px solid #000; display: inline-block; padding-top: 5px; font-weight: bold; font-size: 12px; }
     </style>
 </head>
-<body>';
-
-if (empty($bg_src)) {
-    $html .= '<div style="color:red; font-weight:bold; position:absolute; top:0; left:0; z-index:9999;">
-            DEBUG: Background image not found at: ' . $bg_image . ' <br>
-            Current Dir: ' . __DIR__ . '
-        </div>';
-}
-
-$html .= '
-    <img src="'.$bg_src.'" class="bg-image">
+<body>
+    <img src="<?php echo $bg_src; ?>" class="bg-image">
     
     <div class="content">
         <div class="header">
