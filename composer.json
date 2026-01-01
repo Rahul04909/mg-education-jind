@@ -4,6 +4,7 @@
         "razorpay/razorpay": "^2.9",
         "summernote/summernote": "^0.8.8",
         "ckeditor/ckeditor": "^4.25",
-        "picqer/php-barcode-generator": "^3.2"
+        "picqer/php-barcode-generator": "^3.2",
+        "dompdf/dompdf": "^3.1"
     }
 }
