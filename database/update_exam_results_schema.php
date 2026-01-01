@@ -20,9 +20,10 @@ $sql_results = "CREATE TABLE IF NOT EXISTS exam_results (
 )";
 
 if ($conn->query($sql_results) === TRUE) {
-    echo "Table 'exam_results' created/checked.\n";
+    if (!defined('SILENT_UPDATE')) echo "Table 'exam_results' created/checked.\n";
 } else {
-    echo "Error creating 'exam_results': " . $conn->error . "\n";
+    error_log("Error creating 'exam_results': " . $conn->error);
+    if (!defined('SILENT_UPDATE')) echo "Error creating 'exam_results': " . $conn->error . "\n";
 }
 
 // 2. Create student_answers table
@@ -38,9 +39,10 @@ $sql_answers = "CREATE TABLE IF NOT EXISTS student_answers (
 )";
 
 if ($conn->query($sql_answers) === TRUE) {
-    echo "Table 'student_answers' created/checked.\n";
+    if (!defined('SILENT_UPDATE')) echo "Table 'student_answers' created/checked.\n";
 } else {
-    echo "Error creating 'student_answers': " . $conn->error . "\n";
+    error_log("Error creating 'student_answers': " . $conn->error);
+    if (!defined('SILENT_UPDATE')) echo "Error creating 'student_answers': " . $conn->error . "\n";
 }
 
 $conn->close();
