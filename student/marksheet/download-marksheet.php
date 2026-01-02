@@ -115,7 +115,7 @@ $html = '
 
         .header-spacer { height: 300px; } /* Increased height to move content down */
         
-        .student-info { width: 800px; margin-left: 40px; margin-bottom: 20px; }
+        .student-info { width: 680px; margin-left: 40px; margin-bottom: 20px; }
         .info-table { border-collapse: collapse; width: 680px; font-size: 14px; font-weight: bold; }
         .info-table td { padding: 4px 0; vertical-align: top; }
         .info-label { width: 130px; color: #334155; }
