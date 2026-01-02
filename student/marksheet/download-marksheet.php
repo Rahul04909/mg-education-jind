@@ -107,13 +107,13 @@ $html = '
 
         .content {
             padding: 0mm 20mm 15mm -20mm; /* Increased side padding */
-            width: 75%;
+            width: 100%;
             box-sizing: border-box;
             position: relative; 
             z-index: 10;
         }
 
-        .header-spacer { height: 280px; } /* Increased height to move content down */
+        .header-spacer { height: 300px; } /* Increased height to move content down */
         
         .student-info { width: 100%; margin-bottom: 20px; }
         .info-table { border-collapse: collapse; width: 100%; font-size: 14px; font-weight: bold; }
@@ -130,7 +130,7 @@ $html = '
         }
         .photo-img { width: 100%; height: 100%; display: block; }
 
-        .marks-table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 2px solid #000; }
+        .marks-table { width: 400px; border-collapse: collapse; margin-top: 10px; border: 2px solid #000; }
         .marks-table th, .marks-table td { border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px; }
         .marks-table th { background-color: #fef9c3; font-weight: bold; }
         .marks-table td { font-weight: bold; }
