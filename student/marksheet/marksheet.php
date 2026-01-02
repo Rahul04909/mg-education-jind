@@ -242,7 +242,7 @@ $total_words = strtoupper($f->format($data['obtained_marks']));
 
     </div>
 
-    <button class="print-btn" onclick="window.print()">Download Marksheet</button>
+    <a href="download-marksheet.php?exam_id=<?php echo $exam_id; ?>" class="print-btn">Download Marksheet PDF</a>
 
 </body>
 </html>
