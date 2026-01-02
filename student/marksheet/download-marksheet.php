@@ -117,14 +117,14 @@ $html = '
         
         /* Unified Container for Aligned Content */
         .aligned-container {
-            margin-left: 20px; /* Adjust this to push content right/left */
-            width: 95%;
+            margin-left: 20px; 
+            width: 88%; /* Reduced from 95% to prevent cutoff */
         }
 
         .student-info-table { border-collapse: collapse; width: 100%; font-size: 14px; font-weight: bold; }
         .student-info-table td { padding: 4px 0; vertical-align: top; }
         .info-label { width: 140px; color: #334155; }
-        .info-colon { width: 20px; text-align: center; } /* Added colon column for alignment */
+        .info-colon { width: 20px; text-align: center; } 
         .info-val { color: #000; text-transform: uppercase; }
 
         .photo-box {
@@ -132,7 +132,7 @@ $html = '
             height: 130px;
             border: 2px solid #000;
             padding: 3px;
-            margin-left: auto; /* Push to right */
+            margin-left: auto; 
         }
         .photo-img { width: 100%; height: 100%; display: block; object-fit: cover; }
 
@@ -143,7 +143,7 @@ $html = '
             border: 2px solid #000; 
         }
         .marks-table th, .marks-table td { border: 1px solid #000; padding: 10px 5px; text-align: center; font-size: 13px; }
-        .marks-table th { background-color: #fff9c4; font-weight: bold; } /* Slightly more yellow */
+        .marks-table th { background-color: #fff9c4; font-weight: bold; }
         .marks-table td { font-weight: bold; }
 
         .summary { margin-top: 15px; font-size: 12px; font-weight: bold; }
@@ -257,7 +257,7 @@ $html .= '       <tr style="background-color: #f0f9ff;">
 
         <div class="footer">
             <div style="text-align: center; display: inline-block;">
-                <img src="<?php echo $sign_src; ?>" style="height: 50px; display: block; margin: 0 auto;">
+                <img src="' . $sign_src . '" style="height: 50px; display: block; margin: 0 auto;">
                 <div style="border-top: 1px solid #000; margin-top: 5px; font-weight: bold; font-size: 12px; padding-top: 2px;">AUTHORIZED SIGNATORY</div>
             </div>
         </div>
