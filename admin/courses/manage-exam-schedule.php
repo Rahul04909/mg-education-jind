@@ -221,7 +221,7 @@ include __DIR__ . "/../sidebar.php";
                             </td>
                             <td><?php echo $duration_mins; ?> Min</td>
                             <td style="text-align:right">
-                                <button class="btn btn-sm btn-primary" style="background:none; color:var(--indigo); border:1px solid var(--line)" onclick='openEditModal(<?php echo json_encode($row); ?>)'>Edit</button>
+                                <button class="btn btn-sm btn-primary" style="background:none; color:var(--indigo); border:1px solid var(--line)" onclick='openEditModal(<?php echo htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8'); ?>)'>Edit</button>
                                 <form method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this schedule?');">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="schedule_id" value="<?php echo $row['id']; ?>">
