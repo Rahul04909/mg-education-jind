@@ -137,7 +137,7 @@ $total_words = strtoupper($f->format($data['obtained_marks']));
     <div class="page-container">
         <!-- Assuming background image has header, adjusting spacing -->
         <!-- If strict overlay needed on blank background, un-comment header -->
-        <div class="header" style="margin-top: 100px;"> <!-- Spacer for pre-printed header in bg -->
+        <div class="header" style="margin-top: 140px;"> <!-- Spacer for pre-printed header in bg -->
             <!-- 
             <div class="school-name">MG Education & Skill Development</div>
             <div class="address">Navjeevan Colony, Behind Chhola Dussehra Ground<br>Bhopal (462010), M.P.</div>
