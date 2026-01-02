@@ -130,7 +130,7 @@ $html = '
         }
         .photo-img { width: 100%; height: 100%; display: block; }
 
-        .marks-table { width: 800px; border-collapse: collapse; margin-left: 40px; margin-top: 10px; border: 2px solid #000; }
+        .marks-table { width: 650px; border-collapse: collapse; margin-left: 40px; margin-top: 10px; border: 2px solid #000; }
         .marks-table th, .marks-table td { border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px; }
         .marks-table th { background-color: #fef9c3; font-weight: bold; }
         .marks-table td { font-weight: bold; }
