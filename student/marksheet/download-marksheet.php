@@ -106,14 +106,14 @@ $html = '
         }
 
         .content {
-            padding: 0mm 20mm 15mm 20mm; /* Increased side padding */
+            padding: 0mm 20mm 15mm -20mm; /* Increased side padding */
             width: 100%;
             box-sizing: border-box;
             position: relative; 
             z-index: 10;
         }
 
-        .header-spacer { height: 220px; } /* Increased height to move content down */
+        .header-spacer { height: 180px; } /* Increased height to move content down */
         
         .student-info { width: 100%; margin-bottom: 20px; }
         .info-table { border-collapse: collapse; width: 100%; font-size: 14px; font-weight: bold; }
