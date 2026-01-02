@@ -34,6 +34,14 @@ if ($session_id > 0) {
         $exams[] = $row;
     }
 }
+
+// 3. Fetch Attempted Exams
+$attempted_map = [];
+$att_sql = "SELECT exam_schedule_id, status, obtained_marks, total_marks FROM exam_results WHERE student_id = $student_id";
+$att_res = $conn->query($att_sql);
+while($row = $att_res->fetch_assoc()) {
+    $attempted_map[$row['exam_schedule_id']] = $row;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -203,6 +211,13 @@ if ($session_id > 0) {
                             $status_label = 'Completed';
                         }
 
+                        // Check if already attempted/submitted
+                        $is_attempted = isset($attempted_map[$ex['id']]);
+                        if ($is_attempted) {
+                            $status = 'completed';
+                            $status_label = 'Submitted';
+                        }
+
                         // Determine Button State
                         $btn_class = "btn-exam btn-disabled";
                         $btn_text = "Start Exam";
@@ -215,7 +230,16 @@ if ($session_id > 0) {
                             $btn_class = "btn-exam";
                             $btn_text = "View Result";
                             $btn_href = "result.php?exam_id=" . $ex['id'];
-                            // Optional: Could check if result is actually declared
+                            
+                            // If just completed but not attempted (time over), maybe shouldn't view result?
+                            // But requirement says "When user successfully submitted... show View Result"
+                            // So if is_attempted is true, show View Result.
+                            if (!$is_attempted && $now_ts > $end_ts) {
+                                // Time over, but not submitted? Treat as Missed?
+                                $btn_text = "Expired";
+                                $btn_class = "btn-exam btn-disabled";
+                                $btn_href = "#";
+                            }
                         }
                     ?>
                     <div class="exam-card">

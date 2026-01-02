@@ -12,6 +12,13 @@ $conn = getDbConnection();
 $student_id = $_SESSION['student_id'];
 $exam_schedule_id = intval($_GET['exam_id']);
 
+// 0. Check if already attempted
+$chk_sql = "SELECT id FROM exam_results WHERE exam_schedule_id = $exam_schedule_id AND student_id = $student_id";
+if ($conn->query($chk_sql)->num_rows > 0) {
+    header("Location: result.php?exam_id=" . $exam_schedule_id);
+    exit;
+}
+
 // 1. Fetch Exam Schedule & Paper Details
 $sql = "SELECT es.*, qp.id as paper_id, qp.total_questions, qp.total_marks, qp.marks_per_question, 
                s.name as subject_name, s.passing_marks 
