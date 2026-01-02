@@ -118,7 +118,7 @@ $html = '
         /* Unified Container for Aligned Content */
         .aligned-container {
             margin-left: 20px; 
-            width: 88%; /* Reduced from 95% to prevent cutoff */
+            width: 86%; /* Reduced from 95% to prevent cutoff */
         }
 
         .student-info-table { border-collapse: collapse; width: 100%; font-size: 14px; font-weight: bold; }
