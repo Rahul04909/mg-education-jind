@@ -106,33 +106,44 @@ $html = '
         }
 
         .content {
-            padding: 0mm 20mm 15mm -20mm; /* Increased side padding */
+            padding: 0px 40px; /* Standardize padding */
             width: 100%;
             box-sizing: border-box;
             position: relative; 
             z-index: 10;
         }
 
-        .header-spacer { height: 300px; } /* Increased height to move content down */
+        .header-spacer { height: 290px; } /* Fine-tuned based on 300px feedback */
         
-        .student-info { width: 680px; margin-left: 40px; margin-bottom: 20px; }
-        .info-table { border-collapse: collapse; width: 680px; font-size: 14px; font-weight: bold; }
-        .info-table td { padding: 4px 0; vertical-align: top; }
-        .info-label { width: 130px; color: #334155; }
+        /* Unified Container for Aligned Content */
+        .aligned-container {
+            margin-left: 20px; /* Adjust this to push content right/left */
+            width: 95%;
+        }
+
+        .student-info-table { border-collapse: collapse; width: 100%; font-size: 14px; font-weight: bold; }
+        .student-info-table td { padding: 4px 0; vertical-align: top; }
+        .info-label { width: 140px; color: #334155; }
+        .info-colon { width: 20px; text-align: center; } /* Added colon column for alignment */
         .info-val { color: #000; text-transform: uppercase; }
 
         .photo-box {
-            width: 100px;
-            height: 120px;
+            width: 110px;
+            height: 130px;
             border: 2px solid #000;
             padding: 3px;
-            float: right;
+            margin-left: auto; /* Push to right */
         }
-        .photo-img { width: 100%; height: 100%; display: block; }
+        .photo-img { width: 100%; height: 100%; display: block; object-fit: cover; }
 
-        .marks-table { width: 650px; border-collapse: collapse; margin-left: 40px; margin-top: 10px; border: 2px solid #000; }
-        .marks-table th, .marks-table td { border: 1px solid #000; padding: 8px; text-align: center; font-size: 12px; }
-        .marks-table th { background-color: #fef9c3; font-weight: bold; }
+        .marks-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 15px; 
+            border: 2px solid #000; 
+        }
+        .marks-table th, .marks-table td { border: 1px solid #000; padding: 10px 5px; text-align: center; font-size: 13px; }
+        .marks-table th { background-color: #fff9c4; font-weight: bold; } /* Slightly more yellow */
         .marks-table td { font-weight: bold; }
 
         .summary { margin-top: 15px; font-size: 12px; font-weight: bold; }
@@ -146,28 +157,57 @@ $html = '
     <div class="content">
         <div class="header-spacer"></div>
 
-        <table style="width: 100%;">
-            <tr>
-                <td style="width: 75%;">
-                    <table class="info-table">
-                        <tr><td class="info-label">Student\'s Name</td><td>: <span class="info-val">'.htmlspecialchars($data['full_name']).'</span></td></tr>
-                        <tr><td class="info-label">Father\'s Name</td><td>: <span class="info-val">'.htmlspecialchars($data['father_name']).'</span></td></tr>
-                        <tr><td class="info-label">Mother\'s Name</td><td>: <span class="info-val">'.htmlspecialchars($data['mother_name']).'</span></td></tr>
-                        <tr><td class="info-label">Class/Course</td><td>: <span class="info-val">'.htmlspecialchars($data['course_name']).'</span></td></tr>
-                        <tr><td class="info-label">Session</td><td>: <span class="info-val">'.htmlspecialchars($data['session_name']).'</span></td></tr>
-                        <tr><td class="info-label">Enrollment No.</td><td>: <span class="info-val">'.htmlspecialchars($data['enrollment_no']).'</span></td></tr>
-                        <tr><td class="info-label">DOB</td><td>: <span class="info-val">'.$dob_formatted.'</span></td></tr>
-                    </table>
-                </td>
-                <td style="width: 25%; vertical-align: top;">
-                    <div class="photo-box">
-                        <img src="'.$photo_src.'" class="photo-img">
-                    </div>
-                </td>
-            </tr>
-        </table>
+        <div class="aligned-container">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 75%; vertical-align: top;">
+                        <table class="student-info-table">
+                            <tr>
+                                <td class="info-label">Student\'s Name</td>
+                                <td class="info-colon">:</td>
+                                <td class="info-val">' . htmlspecialchars($data['full_name']) . '</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">Father\'s Name</td>
+                                <td class="info-colon">:</td>
+                                <td class="info-val">' . htmlspecialchars($data['father_name']) . '</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">Mother\'s Name</td>
+                                <td class="info-colon">:</td>
+                                <td class="info-val">' . htmlspecialchars($data['mother_name']) . '</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">Class/Course</td>
+                                <td class="info-colon">:</td>
+                                <td class="info-val">' . htmlspecialchars($data['course_name']) . '</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">Session</td>
+                                <td class="info-colon">:</td>
+                                <td class="info-val">' . htmlspecialchars($data['session_name']) . '</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">Enrollment No.</td>
+                                <td class="info-colon">:</td>
+                                <td class="info-val">' . htmlspecialchars($data['enrollment_no']) . '</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">DOB</td>
+                                <td class="info-colon">:</td>
+                                <td class="info-val">' . $dob_formatted . '</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 25%; vertical-align: top;">
+                        <div class="photo-box">
+                            <img src="' . $photo_src . '" class="photo-img">
+                        </div>
+                    </td>
+                </tr>
+            </table>
 
-        <table class="marks-table">
+            <table class="marks-table">
             <thead>
                 <tr>
                     <th rowspan="2" style="width: 40%;">SUBJECT</th>
@@ -217,11 +257,12 @@ $html .= '       <tr style="background-color: #f0f9ff;">
 
         <div class="footer">
             <div style="text-align: center; display: inline-block;">
-                <img src="'.$sign_src.'" style="height: 50px; display: block; margin: 0 auto;">
+                <img src="<?php echo $sign_src; ?>" style="height: 50px; display: block; margin: 0 auto;">
                 <div style="border-top: 1px solid #000; margin-top: 5px; font-weight: bold; font-size: 12px; padding-top: 2px;">AUTHORIZED SIGNATORY</div>
             </div>
         </div>
 
+        </div> <!-- End aligned-container -->
     </div>
 </body>
 </html>';
