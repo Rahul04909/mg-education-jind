@@ -26,11 +26,12 @@ if ($exam_id == 0) {
 // Fetch Student & Result Details
 $sql = "SELECT er.*, 
                s.full_name, s.father_name, s.mother_name, s.enrollment_no, s.dob, s.student_photo,
-               sub.name as subject_name, c.title as course_name,
+               sub.name as subject_name, c.title as course_name, cs.session_name,
                es.exam_date
         FROM exam_results er
         JOIN admissions s ON er.student_id = s.id
         LEFT JOIN courses c ON s.course_id = c.id
+        LEFT JOIN course_sessions cs ON s.session_id = cs.id
         JOIN exam_schedules es ON er.exam_schedule_id = es.id
         JOIN subjects sub ON es.subject_id = sub.id
         WHERE er.student_id = $student_id AND er.exam_schedule_id = $exam_id";
@@ -161,6 +162,10 @@ $total_words = strtoupper($f->format($data['obtained_marks']));
                 <tr>
                     <td class="info-label">Class/Course</td>
                     <td>: <span class="info-val"><?php echo htmlspecialchars($data['course_name']); ?></span></td>
+                </tr>
+                <tr>
+                    <td class="info-label">Session</td>
+                    <td>: <span class="info-val"><?php echo htmlspecialchars($data['session_name']); ?></span></td>
                 </tr>
                 <tr>
                     <td class="info-label">Enrollment No.</td>
