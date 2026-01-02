@@ -88,7 +88,7 @@ $total_words = strtoupper($f->format($data['obtained_marks']));
         .header { text-align: center; margin-bottom: 30px; }
         .school-name { font-size: 32px; font-weight: 700; color: #dc2626; text-transform: uppercase; margin-bottom: 5px; }
         .address { font-size: 14px; color: #1e293b; margin-bottom: 20px; line-height: 1.4; }
-        .session-title { color: #dc2626; font-size: 20px; font-weight: 700; margin-bottom: 20px; text-align: center; }
+        .address { font-size: 14px; color: #1e293b; margin-bottom: 20px; line-height: 1.4; }
 
         .student-info { display: flex; justify-content: space-between; margin-bottom: 20px; }
         .info-table { border-collapse: collapse; width: 70%; font-size: 16px; font-weight: 700; }
@@ -142,7 +142,6 @@ $total_words = strtoupper($f->format($data['obtained_marks']));
             <div class="school-name">MG Education & Skill Development</div>
             <div class="address">Navjeevan Colony, Behind Chhola Dussehra Ground<br>Bhopal (462010), M.P.</div>
             -->
-            <div class="session-title">Annual Result Report</div>
         </div>
 
         <div class="student-info">
