@@ -210,7 +210,8 @@ $html = '
             <table class="marks-table">
             <thead>
                 <tr>
-                    <th rowspan="2" style="width: 40%;">SUBJECT</th>
+                    <th rowspan="2" style="width: 10%;">SR. NO.</th>
+                    <th rowspan="2" style="width: 35%;">SUBJECT</th>
                     <th colspan="3">ASSESSMENT OF ACADEMIC AREAS</th>
                     <th rowspan="2">ANNUAL RESULT</th>
                 </tr>
@@ -222,6 +223,7 @@ $html = '
             </thead>
             <tbody>
                 <tr>
+                    <td>1</td>
                     <td style="text-align: left; padding-left: 10px;">'.htmlspecialchars($data['subject_name']).'</td>
                     <td>'.$data['total_marks'].'</td>
                     <td>'.$data['obtained_marks'].'</td>
@@ -232,6 +234,7 @@ $html = '
                 // Filler rows
                 for($i=0; $i<4; $i++) {
                     $html .= '<tr>
+                        <td>'.($i+2).'</td>
                         <td style="height: 25px;">-</td>
                         <td>-</td>
                         <td>-</td>
@@ -241,7 +244,7 @@ $html = '
                 }
 
 $html .= '       <tr style="background-color: #f0f9ff;">
-                    <td style="text-align: right; padding-right: 10px; font-weight: bold;">GRAND TOTAL</td>
+                    <td colspan="2" style="text-align: right; padding-right: 10px; font-weight: bold;">GRAND TOTAL</td>
                     <td>'.$data['total_marks'].'</td>
                     <td>'.$data['obtained_marks'].'</td>
                     <td>-</td>
