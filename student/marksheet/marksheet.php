@@ -229,16 +229,10 @@ $total_words = strtoupper($f->format($data['obtained_marks']));
             RESULT: <span><?php echo $data['status']; ?></span>
         </div>
 
-        <div class="footer">
+        <div class="footer" style="justify-content: flex-end; padding-right: 50px;">
             <div class="sign-box">
-                <div style="height: 50px;"></div> <!-- Space for class teacher sign -->
-                <div class="sign-label">CLASS TEACHER</div>
-            </div>
-            
-            <div class="sign-box">
-                <!-- Authorized Signatory Logic -->
-                <img src="../../assets/images/signature.png" alt="Sign" style="opacity: 0.8;"> 
-                <div class="sign-label">PRINCIPAL</div>
+                <img src="mg-sign.png" alt="Authorized Signatory" style="height: 60px; display: block; margin: 0 auto;"> 
+                <div class="sign-label">AUTHORIZED SIGNATORY</div>
             </div>
         </div>
 
