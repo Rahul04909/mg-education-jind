@@ -43,7 +43,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     unlink($target_file); // Remove file if db insert fails
                 }
             } else {
-                $error_message = "Error uploading file.";
+                $upload_error = $_FILES["pdf_file"]["error"];
+                $error_message = "Error uploading file. Code: $upload_error. Path: $target_file. Tmp: " . $_FILES["pdf_file"]["tmp_name"];
+                // Check if directory exists and is writable
+                if (!is_dir($target_dir)) {
+                    $error_message .= " Directory does not exist.";
+                } elseif (!is_writable($target_dir)) {
+                    $error_message .= " Directory is not writable.";
+                }
             }
         }
 
