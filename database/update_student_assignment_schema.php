@@ -21,4 +21,3 @@ if ($conn->query($sql_student_assignments) === TRUE) {
 } else {
     error_log("Error creating table student_assignments: " . $conn->error);
 }
-?>
