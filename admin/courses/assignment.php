@@ -15,9 +15,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($action === 'add') {
         $course_id = intval($_POST['course_id']);
         $session_id = intval($_POST['session_id']);
+        $subject_id = intval($_POST['subject_id']);
         $title = mysqli_real_escape_string($conn, $_POST['title']);
         $start_date = mysqli_real_escape_string($conn, $_POST['start_date']);
         $last_date = mysqli_real_escape_string($conn, $_POST['last_date']);
+        $total_marks = intval($_POST['total_marks']);
         
         // Handle File Upload
         $target_dir = "../../uploads/assignments/";
@@ -33,8 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $error_message = "Only PDF files are allowed.";
         } else {
             if (move_uploaded_file($_FILES["pdf_file"]["tmp_name"], $target_file)) {
-                $sql = "INSERT INTO assignments (course_id, session_id, title, start_date, last_date, pdf_file) 
-                        VALUES ($course_id, $session_id, '$title', '$start_date', '$last_date', '$file_name')";
+                $sql = "INSERT INTO assignments (course_id, session_id, subject_id, title, start_date, last_date, pdf_file, total_marks) 
+                        VALUES ($course_id, $session_id, $subject_id, '$title', '$start_date', '$last_date', '$file_name', $total_marks)";
                 
                 if ($conn->query($sql) === TRUE) {
                     $success_message = "Assignment created successfully!";
@@ -95,14 +97,23 @@ while($row = $s_res->fetch_assoc()) {
     $sessions[$row['course_id']][] = $row;
 }
 
+// Fetch Subjects with assignment marks > 0
+$subjects = [];
+$sub_sql = "SELECT id, course_id, name, assignment_marks FROM subjects WHERE assignment_marks > 0 ORDER BY name ASC";
+$sub_res = $conn->query($sub_sql);
+while($row = $sub_res->fetch_assoc()) {
+    $subjects[$row['course_id']][] = $row;
+}
+
 // Filter Logic
 $selected_course_id = isset($_GET['course_id']) ? intval($_GET['course_id']) : 0;
 
 // Fetch Assignments
-$sql_assignments = "SELECT a.*, c.title as course_name, cs.session_name 
+$sql_assignments = "SELECT a.*, c.title as course_name, cs.session_name, s.name as subject_name 
                     FROM assignments a 
                     JOIN courses c ON a.course_id = c.id 
-                    LEFT JOIN course_sessions cs ON a.session_id = cs.id";
+                    LEFT JOIN course_sessions cs ON a.session_id = cs.id
+                    LEFT JOIN subjects s ON a.subject_id = s.id";
 
 if ($selected_course_id > 0) {
     $sql_assignments .= " WHERE c.id = $selected_course_id";
@@ -202,9 +213,10 @@ include __DIR__ . "/../sidebar.php";
                 <thead>
                     <tr>
                         <th>Title</th>
+                        <th>Subject</th>
                         <th>Course / Session</th>
-                        <th>Start Date</th>
-                        <th>Last Date</th>
+                        <th>Dates</th>
+                        <th>Marks</th>
                         <th>PDF</th>
                         <th style="text-align:right">Actions</th>
                     </tr>
@@ -217,13 +229,21 @@ include __DIR__ . "/../sidebar.php";
                                 <div style="font-weight:700"><?php echo htmlspecialchars($row['title']); ?></div>
                             </td>
                             <td>
+                                <div style="font-weight:600"><?php echo htmlspecialchars($row['subject_name'] ?? 'N/A'); ?></div>
+                            </td>
+                            <td>
                                 <div><?php echo htmlspecialchars($row['course_name']); ?></div>
                                 <div style="font-size:12px;color:var(--muted)"><?php echo htmlspecialchars($row['session_name'] ?? 'N/A'); ?></div>
                             </td>
-                            <td><?php echo date('M d, Y', strtotime($row['start_date'])); ?></td>
-                            <td><?php echo date('M d, Y', strtotime($row['last_date'])); ?></td>
                             <td>
-                                <a href="../../uploads/assignments/<?php echo $row['pdf_file']; ?>" target="_blank" style="color:var(--indigo); text-decoration:none;">Download PDF</a>
+                                <div style="font-size:13px">Start: <?php echo date('M d, Y', strtotime($row['start_date'])); ?></div>
+                                <div style="font-size:13px">Last: <?php echo date('M d, Y', strtotime($row['last_date'])); ?></div>
+                            </td>
+                            <td>
+                                <div style="font-weight:700; color:var(--indigo)"><?php echo $row['total_marks']; ?></div>
+                            </td>
+                            <td>
+                                <a href="../../uploads/assignments/<?php echo $row['pdf_file']; ?>" target="_blank" style="color:var(--indigo); text-decoration:none;">Download</a>
                             </td>
                             <td style="text-align:right">
                                 <form method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this assignment?');">
@@ -235,7 +255,7 @@ include __DIR__ . "/../sidebar.php";
                         </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">No assignments found. Create an assignment.</td></tr>
+                        <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">No assignments found. Create an assignment.</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -270,8 +290,28 @@ include __DIR__ . "/../sidebar.php";
                 </div>
 
                 <div class="form-group">
+                    <label class="form-label">Select Subject * (Subjects with Marks > 0 only)</label>
+                    <select name="subject_id" id="subject_id" class="form-select" required>
+                        <option value="">-- Select Subject --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Select Session *</label>
+                    <select name="session_id" id="session_id" class="form-select" required>
+                        <option value="">-- Select Session --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label class="form-label">Assignment Title *</label>
                     <input type="text" name="title" class="form-input" required placeholder="Enter assignment title">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Total Marks *</label>
+                    <input type="number" name="total_marks" id="total_marks" class="form-input" required readonly style="background:#f1f5f9">
+                    <small style="color:var(--muted)">Auto-populated from subject syllabus configuration</small>
                 </div>
 
                 <div class="grid-2">
@@ -299,19 +339,48 @@ include __DIR__ . "/../sidebar.php";
     <script>
         const modal = document.getElementById("assignmentModal");
         const allSessions = <?php echo json_encode($sessions); ?>;
+        const allSubjects = <?php echo json_encode($subjects); ?>;
 
         document.getElementById('course_id').addEventListener('change', function() {
             const courseId = this.value;
             const sessionSelect = document.getElementById('session_id');
+            const subjectSelect = document.getElementById('subject_id');
+            
             sessionSelect.innerHTML = '<option value="">-- Select Session --</option>';
+            subjectSelect.innerHTML = '<option value="">-- Select Subject --</option>';
 
-            if(courseId && allSessions[courseId]) {
-                allSessions[courseId].forEach(sess => {
-                    const opt = document.createElement('option');
-                    opt.value = sess.id;
-                    opt.textContent = sess.session_name;
-                    sessionSelect.appendChild(opt);
-                });
+            if(courseId) {
+                // Populate Sessions
+                if(allSessions[courseId]) {
+                    allSessions[courseId].forEach(sess => {
+                        const opt = document.createElement('option');
+                        opt.value = sess.id;
+                        opt.textContent = sess.session_name;
+                        sessionSelect.appendChild(opt);
+                    });
+                }
+                
+                // Populate Subjects
+                if(allSubjects[courseId]) {
+                    allSubjects[courseId].forEach(sub => {
+                        const opt = document.createElement('option');
+                        opt.value = sub.id;
+                        opt.textContent = sub.name;
+                        // Store max marks in data attribute
+                        opt.setAttribute('data-marks', sub.assignment_marks);
+                        subjectSelect.appendChild(opt);
+                    });
+                }
+            }
+        });
+
+        document.getElementById('subject_id').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const marks = selectedOption.getAttribute('data-marks');
+            if(marks) {
+                document.getElementById('total_marks').value = marks;
+            } else {
+                document.getElementById('total_marks').value = '';
             }
         });
 
