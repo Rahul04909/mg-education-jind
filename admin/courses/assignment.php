@@ -44,12 +44,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
             } else {
                 $upload_error = $_FILES["pdf_file"]["error"];
-                $error_message = "Error uploading file. Code: $upload_error. Path: $target_file. Tmp: " . $_FILES["pdf_file"]["tmp_name"];
-                // Check if directory exists and is writable
-                if (!is_dir($target_dir)) {
-                    $error_message .= " Directory does not exist.";
-                } elseif (!is_writable($target_dir)) {
-                    $error_message .= " Directory is not writable.";
+                if ($upload_error == UPLOAD_ERR_INI_SIZE || $upload_error == UPLOAD_ERR_FORM_SIZE) {
+                    $max_size = ini_get('upload_max_filesize');
+                    $error_message = "File is too large. Maximum allowed size is $max_size.";
+                } elseif ($upload_error == UPLOAD_ERR_NO_FILE) {
+                    $error_message = "No file was uploaded.";
+                } else {
+                    $error_message = "Error uploading file. Error Code: $upload_error.";
+                    // Log details for debugging
+                    error_log("Upload Error: Code $upload_error, Path $target_file, Tmp " . $_FILES["pdf_file"]["tmp_name"]);
                 }
             }
         }
