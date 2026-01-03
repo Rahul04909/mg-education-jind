@@ -30,7 +30,7 @@ if ($exam_id == 0) {
 // Fetch Student & Result Details
 $sql = "SELECT er.*, 
                 s.full_name, s.father_name, s.mother_name, s.enrollment_no, s.dob, s.student_photo,
-                sub.name as subject_name, sub.id as subject_id, c.title as course_name, cs.session_name,
+                sub.name as subject_name, sub.id as subject_id, sub.theory_marks, sub.assignment_marks, c.title as course_name, cs.session_name,
                 es.exam_date
          FROM exam_results er
          JOIN admissions s ON er.student_id = s.id
@@ -54,12 +54,18 @@ $internal_sql = "SELECT SUM(marks_obtained) as total FROM student_assignments sa
                  WHERE sa.student_id = $student_id AND a.subject_id = $subject_id AND sa.status = 'GRADED'";
 $internal_res = $conn->query($internal_sql);
 $internal_marks = ($internal_res->num_rows > 0) ? $internal_res->fetch_assoc()['total'] : 0;
-// If null (no assignments graded), set to 0 or leave empty
 $internal_marks = $internal_marks ? $internal_marks : 0; 
-// Total Obtained includes Internal? Usually marksheet shows separate. 
-// Assuming Exam Result 'obtained_marks' is Theory. 
-// Grand Total obtained might need to sum them if the specific 'obtained_marks' column doesn't already include it. 
-// For now, I will display them separately as requested.
+$internal_max = $data['assignment_marks']; // From subjects table
+
+$theory_obtained = $data['obtained_marks'];
+$theory_max = $data['theory_marks']; // From subjects table
+
+// Calculate Totals
+$grand_total_obtained = $internal_marks + $theory_obtained;
+$grand_total_max = $theory_max + $internal_max;
+
+// Recalculate Percentage
+$percentage = ($grand_total_max > 0) ? round(($grand_total_obtained / $grand_total_max) * 100, 2) : 0;
 
 // Grade Calculation Helper
 function getGrade($percentage) {
@@ -72,7 +78,7 @@ function getGrade($percentage) {
     return 'FAIL';
 }
 
-$grade = getGrade($data['percentage']);
+$grade = getGrade($percentage);
 $dob_formatted = date('d/m/Y', strtotime($data['dob']));
 
 // Image Helper
@@ -99,8 +105,10 @@ $bg_src = get_image_base64($bg_image_path);
 $sign_src = get_image_base64($sign_image_path);
 $photo_src = get_image_base64($photo_path);
 
-// Determine Pass/Fail Color
-$status_color = ($data['status'] == 'PASS') ? 'green' : 'red';
+// Determine Pass/Fail Color based on Grade or existing status? 
+// Re-evaluating status based on grade
+$status_result = ($grade == 'FAIL') ? 'FAIL' : 'PASS';
+$status_color = ($status_result == 'PASS') ? 'green' : 'red';
 
 $html = '
 <!DOCTYPE html>
@@ -226,13 +234,14 @@ $html = '
                 <tr>
                     <th rowspan="2" style="width: 10%;">SR. NO.</th>
                     <th rowspan="2" style="width: 35%;">SUBJECT</th>
-                    <th colspan="4">ASSESSMENT OF ACADEMIC AREAS</th>
+                    <th colspan="5">ASSESSMENT OF ACADEMIC AREAS</th>
                     <th rowspan="2">ANNUAL RESULT</th>
                 </tr>
                 <tr>
                     <th>TOTAL MARKS</th>
-                    <th>INTERNAL MARKS</th>
-                    <th>OBTAINED MARKS</th>
+                    <th>INTERNAL</th>
+                    <th>THEORY</th>
+                    <th>OBTAINED</th>
                     <th>GRADE</th>
                 </tr>
             </thead>
@@ -240,11 +249,12 @@ $html = '
                 <tr>
                     <td>1</td>
                     <td style="text-align: left; padding-left: 10px;">'.htmlspecialchars($data['subject_name']).'</td>
-                    <td>'.$data['total_marks'].'</td>
+                    <td>'.$grand_total_max.'</td>
                     <td>'.$internal_marks.'</td>
-                    <td>'.$data['obtained_marks'].'</td>
+                    <td>'.$theory_obtained.'</td>
+                    <td>'.$grand_total_obtained.'</td>
                     <td>'.$grade.'</td>
-                    <td>'.($grade === 'FAIL' ? 'FAIL' : 'PASS').'</td>
+                    <td>'.$status_result.'</td>
                 </tr>';
                 
                 // Filler rows
@@ -257,23 +267,25 @@ $html = '
                         <td>-</td>
                         <td>-</td>
                         <td>-</td>
+                        <td>-</td>
                     </tr>';
                 }
 
 $html .= '       <tr style="background-color: #f0f9ff;">
                     <td colspan="2" style="text-align: right; padding-right: 10px; font-weight: bold;">GRAND TOTAL</td>
-                    <td>'.$data['total_marks'].'</td>
+                    <td>'.$grand_total_max.'</td>
                     <td>'.$internal_marks.'</td>
-                    <td>'.$data['obtained_marks'].'</td>
+                    <td>'.$theory_obtained.'</td>
+                    <td>'.$grand_total_obtained.'</td>
                     <td>-</td>
-                    <td style="color: '.$status_color.';">'.$data['status'].'</td>
+                    <td style="color: '.$status_color.';">'.$status_result.'</td>
                 </tr>
             </tbody>
         </table>
 
         <div class="summary">
-            PERCENTAGE: <span style="margin-right: 30px;">'.$data['percentage'].'%</span>
-            RESULT: <span>'.$data['status'].'</span>
+            PERCENTAGE: <span style="margin-right: 30px;">'.$percentage.'%</span>
+            RESULT: <span>'.$status_result.'</span>
         </div>
 
         <div class="footer">
