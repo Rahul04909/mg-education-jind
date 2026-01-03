@@ -1,6 +1,5 @@
-<?php
 // Include database configuration
-require_once __DIR__ . '/../../database/db-config.php';
+require_once __DIR__ . '/../database/db-config.php';
 $conn = getDbConnection();
 
 ini_set('display_errors', 1);
@@ -9,7 +8,7 @@ error_reporting(E_ALL);
 
 session_start();
 if (!isset($_SESSION['center_id'])) {
-    header("Location: ../login.php");
+    header("Location: login.php");
     exit();
 }
 $center_id = $_SESSION['center_id'];
@@ -70,7 +69,7 @@ $sql_submissions = "SELECT sa.*, a.title as assign_title, a.total_marks, s.name 
 
 $result_submissions = $conn->query($sql_submissions);
 
-include __DIR__ . "/../sidebar.php";
+include __DIR__ . "/sidebar.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
