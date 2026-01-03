@@ -1,3 +1,4 @@
+<?php
 // Include database configuration
 require_once __DIR__ . '/../database/db-config.php';
 $conn = getDbConnection();
