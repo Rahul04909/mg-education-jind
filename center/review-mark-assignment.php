@@ -69,8 +69,6 @@ $sql_submissions = "SELECT sa.*, a.title as assign_title, a.total_marks, s.name 
                     ORDER BY sa.submitted_at DESC";
 
 $result_submissions = $conn->query($sql_submissions);
-
-include __DIR__ . "/sidebar.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -82,7 +80,7 @@ include __DIR__ . "/sidebar.php";
         :root{--active:#22c55e;--indigo:#6f75ff;--line:#e6e8ee;--text:#0b1020;--muted:#6f7787;--error:#ef4444;--success:#22c55e}
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(180deg,#f8fafc 0%,#ffffff 100%);color:var(--text)}
-        .admin-content{margin-left:260px;min-height:100vh;padding:20px;transition:margin-left .25s ease}
+        .admin-content{margin-left:280px;min-height:100vh;padding:20px;transition:margin-left .25s ease} /* Updated margin to match sidebar width 280px */
         body.sidebar-collapsed .admin-content{margin-left:88px}
         .page-header{margin-bottom:30px}
         .page-title{font-size:32px;font-weight:800;color:var(--text);margin-bottom:8px}
@@ -103,6 +101,7 @@ include __DIR__ . "/sidebar.php";
     </style>
 </head>
 <body>
+    <?php include __DIR__ . "/sidebar.php"; ?>
     <main class="admin-content">
         <div class="page-header">
             <div>
