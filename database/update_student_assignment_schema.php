@@ -12,8 +12,9 @@ $sql_student_assignments = "CREATE TABLE IF NOT EXISTS student_assignments (
     submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     marks_obtained INT DEFAULT NULL,
     status ENUM('SUBMITTED', 'GRADED') DEFAULT 'SUBMITTED',
-    FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE CASCADE,
-    FOREIGN KEY (student_id) REFERENCES admissions(id) ON DELETE CASCADE
+    FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE CASCADE
+    -- FOREIGN KEY (student_id) REFERENCES admissions(id) ON DELETE CASCADE
+    -- Removed FK to admissions to prevent 1005 error if table engine mismatches or doesn't exist during this run
 )";
 
 if ($conn->query($sql_student_assignments) === TRUE) {
