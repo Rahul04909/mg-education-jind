@@ -29,16 +29,16 @@ if ($exam_id == 0) {
 
 // Fetch Student & Result Details
 $sql = "SELECT er.*, 
-               s.full_name, s.father_name, s.mother_name, s.enrollment_no, s.dob, s.student_photo,
-               sub.name as subject_name, c.title as course_name, cs.session_name,
-               es.exam_date
-        FROM exam_results er
-        JOIN admissions s ON er.student_id = s.id
-        LEFT JOIN courses c ON s.course_id = c.id
-        LEFT JOIN course_sessions cs ON s.session_id = cs.id
-        JOIN exam_schedules es ON er.exam_schedule_id = es.id
-        JOIN subjects sub ON es.subject_id = sub.id
-        WHERE er.student_id = $student_id AND er.exam_schedule_id = $exam_id";
+                s.full_name, s.father_name, s.mother_name, s.enrollment_no, s.dob, s.student_photo,
+                sub.name as subject_name, sub.id as subject_id, c.title as course_name, cs.session_name,
+                es.exam_date
+         FROM exam_results er
+         JOIN admissions s ON er.student_id = s.id
+         LEFT JOIN courses c ON s.course_id = c.id
+         LEFT JOIN course_sessions cs ON s.session_id = cs.id
+         JOIN exam_schedules es ON er.exam_schedule_id = es.id
+         JOIN subjects sub ON es.subject_id = sub.id
+         WHERE er.student_id = $student_id AND er.exam_schedule_id = $exam_id";
 
 $res = $conn->query($sql);
 if ($res->num_rows == 0) {
@@ -46,6 +46,20 @@ if ($res->num_rows == 0) {
 }
 
 $data = $res->fetch_assoc();
+
+// Fetch Assignment (Internal) Marks
+$subject_id = $data['subject_id'];
+$internal_sql = "SELECT SUM(marks_obtained) as total FROM student_assignments sa 
+                 JOIN assignments a ON sa.assignment_id = a.id 
+                 WHERE sa.student_id = $student_id AND a.subject_id = $subject_id AND sa.status = 'GRADED'";
+$internal_res = $conn->query($internal_sql);
+$internal_marks = ($internal_res->num_rows > 0) ? $internal_res->fetch_assoc()['total'] : 0;
+// If null (no assignments graded), set to 0 or leave empty
+$internal_marks = $internal_marks ? $internal_marks : 0; 
+// Total Obtained includes Internal? Usually marksheet shows separate. 
+// Assuming Exam Result 'obtained_marks' is Theory. 
+// Grand Total obtained might need to sum them if the specific 'obtained_marks' column doesn't already include it. 
+// For now, I will display them separately as requested.
 
 // Grade Calculation Helper
 function getGrade($percentage) {
@@ -212,11 +226,12 @@ $html = '
                 <tr>
                     <th rowspan="2" style="width: 10%;">SR. NO.</th>
                     <th rowspan="2" style="width: 35%;">SUBJECT</th>
-                    <th colspan="3">ASSESSMENT OF ACADEMIC AREAS</th>
+                    <th colspan="4">ASSESSMENT OF ACADEMIC AREAS</th>
                     <th rowspan="2">ANNUAL RESULT</th>
                 </tr>
                 <tr>
                     <th>TOTAL MARKS</th>
+                    <th>INTERNAL MARKS</th>
                     <th>OBTAINED MARKS</th>
                     <th>GRADE</th>
                 </tr>
@@ -226,6 +241,7 @@ $html = '
                     <td>1</td>
                     <td style="text-align: left; padding-left: 10px;">'.htmlspecialchars($data['subject_name']).'</td>
                     <td>'.$data['total_marks'].'</td>
+                    <td>'.$internal_marks.'</td>
                     <td>'.$data['obtained_marks'].'</td>
                     <td>'.$grade.'</td>
                     <td>'.($grade === 'FAIL' ? 'FAIL' : 'PASS').'</td>
@@ -240,12 +256,14 @@ $html = '
                         <td>-</td>
                         <td>-</td>
                         <td>-</td>
+                        <td>-</td>
                     </tr>';
                 }
 
 $html .= '       <tr style="background-color: #f0f9ff;">
                     <td colspan="2" style="text-align: right; padding-right: 10px; font-weight: bold;">GRAND TOTAL</td>
                     <td>'.$data['total_marks'].'</td>
+                    <td>'.$internal_marks.'</td>
                     <td>'.$data['obtained_marks'].'</td>
                     <td>-</td>
                     <td style="color: '.$status_color.';">'.$data['status'].'</td>
