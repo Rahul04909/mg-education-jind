@@ -296,12 +296,7 @@ include __DIR__ . "/../sidebar.php";
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Select Session *</label>
-                    <select name="session_id" id="session_id" class="form-select" required>
-                        <option value="">-- Select Session --</option>
-                    </select>
-                </div>
+
 
                 <div class="form-group">
                     <label class="form-label">Assignment Title *</label>
