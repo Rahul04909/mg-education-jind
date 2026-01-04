@@ -51,6 +51,7 @@ $ogImage=$origin.'assets/images/mg-logo.jpg';
   <?php require_once __DIR__.'/components/courses-grid.php'; ?>
   <?php require_once __DIR__.'/components/skills-ticker.php'; ?>
   <?php require_once __DIR__.'/components/promo-banners.php'; ?>
+  <?php require_once __DIR__.'/components/donation-enquiry.php'; ?>
   <?php require_once __DIR__.'/components/nsdc-certificate.php'; ?>
   <?php require_once __DIR__.'/includes/footer.php'; ?>
 </body>
