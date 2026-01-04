@@ -3,8 +3,8 @@
  * Hero Slider Component
  * 
  * Features:
- * - Static background image
- * - Autoplaying text slides
+ * - Image-only slides (Carousel)
+ * - Autoplay
  * - Navigation buttons
  * - Mobile responsive
  */
@@ -12,39 +12,20 @@
 <style>
     .hero-slider-section {
         position: relative;
-        height: 600px;
         background-color: #0b1020;
-        background-image: url('assets/images/frontend/student-banner.png');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
         overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        /* Removed static background image as slides will have images */
     }
 
-    /* Dark Overlay */
-    .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, rgba(11, 16, 32, 0.9) 0%, rgba(11, 16, 32, 0.7) 50%, rgba(11, 16, 32, 0.4) 100%);
-        z-index: 1;
-    }
-
+    /* Slider Container */
     .hero-container {
         position: relative;
-        z-index: 2;
         width: 100%;
-        max-width: 1200px;
-        padding: 0 20px;
+        max-width: 100%; /* Full width for image slider */
+        padding: 0;
         margin: 0 auto;
     }
 
-    /* Slider Styles */
     .hero-slider {
         position: relative;
         overflow: hidden;
@@ -59,91 +40,34 @@
     .hero-slide {
         min-width: 100%;
         box-sizing: border-box;
-        padding: 40px 0;
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.6s, transform 0.6s;
-    }
-
-    .hero-slide.active {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    /* Typography */
-    .slide-badge {
-        display: inline-block;
-        background-color: #1358db;
-        color: #fff;
-        padding: 6px 14px;
-        border-radius: 50px;
-        font-size: 14px;
-        font-weight: 700;
-        margin-bottom: 24px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .slide-title {
-        font-size: 56px;
-        font-weight: 800;
-        color: #fff;
-        line-height: 1.1;
-        margin: 0 0 20px 0;
-        max-width: 800px;
-    }
-
-    .slide-subtitle {
-        font-size: 20px;
-        color: #e2e8f0;
-        line-height: 1.6;
-        margin: 0 0 32px 0;
-        max-width: 600px;
-    }
-
-    /* Buttons */
-    .slide-cta {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        background-color: #ffda79;
-        color: #0b1020;
-        padding: 16px 32px;
-        border-radius: 12px;
-        font-size: 18px;
-        font-weight: 700;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
-
-    .slide-cta:hover {
-        background-color: #ffcd38;
-        transform: translateY(-2px);
+        position: relative;
+        /* Image Slide Styles */
     }
     
-    .slide-cta svg {
-        width: 20px;
-        height: 20px;
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 2.5;
+    .hero-slide img {
+        width: 100%;
+        height: auto;
+        display: block;
+        max-height: 600px; /* Limit height on large screens */
+        object-fit: cover; /* Ensure it covers nicely */
     }
 
     /* Navigation */
     .slider-nav {
         position: absolute;
-        bottom: 0;
-        right: 0;
+        bottom: 20px; /* Adjusted position */
+        right: 20px;
         display: flex;
         gap: 12px;
+        z-index: 10;
     }
 
     .nav-btn {
-        width: 50px;
-        height: 50px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        background: rgba(0, 0, 0, 0.3);
         color: #fff;
         display: flex;
         align-items: center;
@@ -166,16 +90,20 @@
 
     /* Dots */
     .slider-dots {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
         display: flex;
         gap: 8px;
-        margin-top: 40px;
+        z-index: 10;
     }
 
     .dot {
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: rgba(255, 255, 255, 0.3);
+        background-color: rgba(255, 255, 255, 0.5);
         cursor: pointer;
         transition: all 0.3s;
     }
@@ -183,78 +111,50 @@
     .dot.active {
         width: 30px;
         border-radius: 10px;
-        background-color: #1358db;
+        background-color: #fff; /* White active dot */
     }
 
     /* Responsive */
     @media (max-width: 768px) {
-        .hero-slider-section {
-            height: 500px;
-            background-position: 70% center;
-        }
-
-        .hero-overlay {
-            background: linear-gradient(0deg, rgba(11, 16, 32, 0.95) 0%, rgba(11, 16, 32, 0.6) 100%);
-        }
-
-        .slide-title {
-            font-size: 36px;
-        }
-
-        .slide-subtitle {
-            font-size: 16px;
-        }
-
-        .slider-nav {
-            /* display: none; Removed to show buttons on mobile */
-            bottom: 20px;
-            right: 20px;
+        .hero-slide img {
+            height: 250px; /* Fixed height for mobile consistency */
+            object-fit: cover;
         }
         
         .nav-btn {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
+            width: 36px;
+            height: 36px;
         }
     }
 </style>
 
 <section class="hero-slider-section" id="heroSlider">
-    <div class="hero-overlay"></div>
     <div class="hero-container">
         <div class="hero-slider">
             <div class="hero-slides-wrapper">
                 <!-- Slide 1 -->
                 <div class="hero-slide active">
-                    <span class="slide-badge">Welcome to MG Skill</span>
-                    <h1 class="slide-title">Empowering Youth,<br>Building the Future</h1>
-                    <p class="slide-subtitle">Join our comprehensive skill development programs designed to make you industry-ready and successful.</p>
-                    <a href="courses.php" class="slide-cta">
-                        Explore Courses
-                        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </a>
+                    <img src="assets/images/frontend/student-banner.png" alt="Slide 1">
                 </div>
                 
                 <!-- Slide 2 -->
                 <div class="hero-slide">
-                    <span class="slide-badge" style="background-color: #10b981;">Government Recognized</span>
-                    <h1 class="slide-title">Certified Skill<br>Development Programs</h1>
-                    <p class="slide-subtitle">Get certified by NSDC and other government bodies. Valid across India and recognized by top employers.</p>
-                    <a href="about.php" class="slide-cta">
-                        Know More
-                        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </a>
+                    <img src="assets/images/frontend/student-banner.png" alt="Slide 2">
                 </div>
 
                 <!-- Slide 3 -->
                 <div class="hero-slide">
-                    <span class="slide-badge" style="background-color: #f59e0b;">Placement Support</span>
-                    <h1 class="slide-title">Bridging Talent<br>with Opportunity</h1>
-                    <p class="slide-subtitle">We don't just teach; we place. Benefit from our dedicated placement cell and industry partnerships.</p>
-                    <a href="placements.php" class="slide-cta">
-                        Placement Records
-                        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </a>
+                    <img src="assets/images/frontend/student-banner.png" alt="Slide 3">
+                </div>
+                
+                <!-- Slide 4 -->
+                <div class="hero-slide">
+                    <img src="assets/images/frontend/student-banner.png" alt="Slide 4">
+                </div>
+                
+                <!-- Slide 5 -->
+                <div class="hero-slide">
+                    <img src="assets/images/frontend/student-banner.png" alt="Slide 5">
                 </div>
             </div>
 
@@ -263,6 +163,8 @@
                 <div class="dot active" onclick="goToSlide(0)"></div>
                 <div class="dot" onclick="goToSlide(1)"></div>
                 <div class="dot" onclick="goToSlide(2)"></div>
+                <div class="dot" onclick="goToSlide(3)"></div>
+                <div class="dot" onclick="goToSlide(4)"></div>
             </div>
 
             <!-- Navigation -->
@@ -285,49 +187,33 @@
         const prevBtn = document.querySelector('.prev-btn');
         const nextBtn = document.querySelector('.next-btn');
         const sliderSection = document.getElementById('heroSlider');
+        const wrapper = document.querySelector('.hero-slides-wrapper');
         
         let currentSlide = 0;
         let slideInterval;
         const intervalTime = 5000; // 5 seconds
 
         function showSlide(index) {
-            // Remove active class from all
-            slides.forEach(slide => slide.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));
-            
             // Handle index bounds
             if (index >= slides.length) currentSlide = 0;
             else if (index < 0) currentSlide = slides.length - 1;
             else currentSlide = index;
 
-            // Add active class to current
-            // Note: We're using simple display/opacity toggle for simplicity and performance
-            // For sliding effect, we can manipulate the wrapper transform, but opacity is cleaner for text slides
+            // Update wrapper transform
+            if(wrapper) {
+                wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+            }
+
+            // Update active states
             slides.forEach((slide, i) => {
-                if (i === currentSlide) {
-                    slide.style.display = 'block';
-                    setTimeout(() => slide.classList.add('active'), 50); // Small delay for transition
-                } else {
-                    slide.classList.remove('active');
-                    setTimeout(() => slide.style.display = 'none', 600); // Wait for transition
-                }
+                if (i === currentSlide) slide.classList.add('active');
+                else slide.classList.remove('active');
             });
-             
-            // Using logic to hide non-active immediately for better stacking context if needed, 
-            // but the CSS handles absolute/relative. 
-            // Actually, let's keep them all in flow but hide via display none or absolute positioning?
-            // The CSS uses display: flex on wrapper. If we want cross-fade/slide, the logic changes.
-            // Let's adjust the JS to match the CSS structure which suggests a simple show/hide or transform.
-            // The current CSS has .hero-slide min-width: 100%. We need to translate the wrapper.
             
-            const wrapper = document.querySelector('.hero-slides-wrapper');
-            wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
-            
-            // Re-add active class for specific internal animations (like text fade in)
-            slides.forEach(s => s.classList.remove('active'));
-            slides[currentSlide].classList.add('active');
-            
-            dots[currentSlide].classList.add('active');
+            dots.forEach((dot, i) => {
+                if (i === currentSlide) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
         }
 
         function nextSlide() {
@@ -345,11 +231,12 @@
         }
 
         function startTimer() {
+            stopTimer();
             slideInterval = setInterval(nextSlide, intervalTime);
         }
 
         function stopTimer() {
-            clearInterval(slideInterval);
+            if(slideInterval) clearInterval(slideInterval);
         }
 
         function resetTimer() {
@@ -372,8 +259,6 @@
         sliderSection.addEventListener('mouseleave', startTimer);
 
         // Initialize
-        // Initial state set in CSS/HTML (active class), but let's ensure JS logic syncs
-        // showSlide(0); // This might cause a jump, let's just start timer
         startTimer();
     });
 </script>
