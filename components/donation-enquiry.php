@@ -28,7 +28,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, rgba(19, 88, 219, 0.9) 0%, rgba(11, 16, 32, 0.8) 100%);
+        background: linear-gradient(135deg, rgba(19, 88, 219, 0.6) 0%, rgba(11, 16, 32, 0.8) 100%);
         z-index: 1;
     }
 
