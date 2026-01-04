@@ -180,7 +180,7 @@
     <div class="sidebar-content">
         <ul class="nav-list">
             <li class="nav-item active">
-                <a href="/admin/dashboard" class="nav-link">
+                <a href="../../admin/index.php" class="nav-link">
                     <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                     <span class="nav-text">Dashboard</span>
                 </a>
@@ -196,14 +196,14 @@
                     <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </a>
                 <ul class="submenu">
-                    <li class="submenu-item"><a href="/admin/courses">All Courses</a></li>
-                    <li class="submenu-item"><a href="/admin/course-new">Create Course</a></li>
-                    <li class="submenu-item"><a href="/admin/categories">Categories</a></li>
-                    <li class="submenu-item"><a href="/admin/courses/manage-course-sessions.php">Manage Sessions</a></li>
-                    <li class="submenu-item"><a href="/admin/courses/manage-subjects.php">Manage Subjects</a></li>
-                    <li class="submenu-item"><a href="/admin/courses/manage-syllabus.php">Manage Syllabus</a></li>
-                    <li class="submenu-item"><a href="/admin/courses/manage-exam-schedule.php">Exam Schedule</a></li>
-                    <li class="submenu-item"><a href="/admin/courses/manage-question-paper.php">Question Paper</a></li>
+                    <li class="submenu-item"><a href="../../admin/courses">All Courses</a></li>
+                    <li class="submenu-item"><a href="../../admin/course-new">Create Course</a></li>
+                    <li class="submenu-item"><a href="../../admin/categories">Categories</a></li>
+                    <li class="submenu-item"><a href="../../admin/courses/manage-course-sessions.php">Manage Sessions</a></li>
+                    <li class="submenu-item"><a href="../../admin/courses/manage-subjects.php">Manage Subjects</a></li>
+                    <li class="submenu-item"><a href="../../admin/courses/manage-syllabus.php">Manage Syllabus</a></li>
+                    <li class="submenu-item"><a href="../../admin/courses/manage-exam-schedule.php">Exam Schedule</a></li>
+                    <li class="submenu-item"><a href="../../admin/courses/manage-question-paper.php">Question Paper</a></li>
                 </ul>
             </li>
 
@@ -214,44 +214,12 @@
                     <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </a>
                 <ul class="submenu">
-                    <li class="submenu-item"><a href="/admin/students">All Students</a></li>
-                    <li class="submenu-item"><a href="/admin/student-new">Add Student</a></li>
-                    <li class="submenu-item"><a href="/admin/batches">Batches</a></li>
-                    <li class="submenu-item"><a href="/mg-skill/admin/mg-students/manage-fees.php">Manage Fees</a></li>
+                    <li class="submenu-item"><a href="../../admin/mg-students">All Students</a></li>
+                    <li class="submenu-item"><a href="../../admin/mg-students/add-student.php">Add Student</a></li>
+                    <li class="submenu-item"><a href="../../admin/mg-students/manage-fees.php">Manage Fees</a></li>
                 </ul>
             </li>
         </ul>
-
-        <div class="nav-label">Finance</div>
-        <ul class="nav-list">
-            <li class="nav-item">
-                <a href="#" class="nav-link" onclick="toggleMenu(this)">
-                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
-                    <span class="nav-text">Payments</span>
-                    <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </a>
-                <ul class="submenu">
-                    <li class="submenu-item"><a href="/admin/payments">Transactions</a></li>
-                    <li class="submenu-item"><a href="/admin/invoices">Invoices</a></li>
-                    <li class="submenu-item"><a href="/admin/refunds">Refunds</a></li>
-                </ul>
-            </li>
-        </ul>
-        
-        <div class="nav-label">Management</div>
-        <ul class="nav-list">
-             <li class="nav-item">
-                <a href="#" class="nav-link" onclick="toggleMenu(this)">
-                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12h18"/><path d="M12 3v18"/></svg>
-                    <span class="nav-text">Reports</span>
-                    <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </a>
-                <ul class="submenu">
-                    <li class="submenu-item"><a href="/admin/reports-sales">Sales</a></li>
-                    <li class="submenu-item"><a href="/admin/reports-students">Student Growth</a></li>
-                    <li class="submenu-item"><a href="/admin/reports-courses">Course Performance</a></li>
-                </ul>
-            </li>
             
              <li class="nav-item">
                 <a href="#" class="nav-link" onclick="toggleMenu(this)">
