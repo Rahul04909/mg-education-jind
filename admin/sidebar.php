@@ -36,32 +36,26 @@
     .brand {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 24px 24px 10px 24px;
+        padding: 10px 24px;
         flex-shrink: 0;
+        min-height: 80px;
     }
-    .brand-logo {
-        width: 36px;
-        height: 36px;
-        background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%);
-        color: white;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 800;
-        font-size: 18px;
-        box-shadow: var(--shadow-glow);
-        flex-shrink: 0;
+
+    .brand img {
+        max-width: 150px;
+        height: auto;
+        max-height: 70px;
+        border-radius: 8px;
+        transition: all 0.2s;
     }
-    .brand-text {
-        display: flex;
-        flex-direction: column;
-        transition: opacity 0.2s;
+    
+    .sidebar.collapsed .brand img {
+        max-width: 35px;
+        max-height: 35px;
     }
-    .brand-title { font-size: 18px; font-weight: 700; color: var(--text-main); }
-    .brand-subtitle { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
-    .sidebar.collapsed .brand-text { display: none; opacity: 0; }
+
+    /* Hide text elements in collapsed state if any remain (though we are replacing HTML) */
+    .sidebar.collapsed .brand-text { display: none; }
 
     /* Scrollable Content */
     .sidebar-content {
@@ -176,11 +170,7 @@
 
 <aside class="sidebar" id="sidebar">
     <div class="brand">
-        <div class="brand-logo">MG</div>
-        <div class="brand-text">
-            <span class="brand-title">Admin Panel</span>
-            <span class="brand-subtitle">Manager</span>
-        </div>
+        <img src="../assets/images/sidebar-logo.jpg" alt="MG Admin">
         <!-- Toggle Button for desktop -->
         <div style="margin-left:auto; cursor:pointer; color:#94a3b8;" onclick="toggleSidebar()">
              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
