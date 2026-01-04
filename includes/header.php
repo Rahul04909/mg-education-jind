@@ -54,7 +54,7 @@ body.noscroll{overflow:hidden}
       <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
     <a href="/" class="brand">
-      <img src="<?php echo htmlspecialchars($baseUrl,ENT_QUOTES,'UTF-8'); ?>../../assets/images/logo.jpg" alt="MG Skill" class="brand-logo"/>
+      <img src="<?php echo htmlspecialchars($baseUrl,ENT_QUOTES,'UTF-8'); ?>../../assets/images/sidebar-logo.jpg" alt="MG Skill" class="brand-logo"/>
     </a>
     <div class="search-wrap">
       <form class="search-form" action="/search" method="get">
