@@ -58,7 +58,10 @@ body.noscroll{overflow:hidden}
     </a>
 
     <div class="actions">
-      <a href="/dashboards" class="btn btn-outline"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboards</a>
+      <a href="/donate" class="btn btn-outline" style="border-color: #eab308; color: #ca8a04; background: #fefce8;">
+        <svg class="icon" viewBox="0 0 24 24" style="stroke: #ca8a04;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        DONATE NOW
+      </a>
       <a href="/register" class="btn btn-primary">REGISTER</a>
       <a href="/login" class="btn btn-light">LOGIN</a>
     </div>
@@ -71,9 +74,6 @@ body.noscroll{overflow:hidden}
     <a href="/jobs" class="nav-link">Job Exchange</a>
     <a href="/skill-centre" class="nav-link">Skill Centre</a>
     <a href="/soar" class="nav-link pill">MG EDU AI<span class="pill-badge">New</span></a>
-    <button class="more-btn" aria-label="More">
-      <svg class="icon" viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
-    </button>
   </div>
   <div id="mobileMenu" class="mobile-drawer" role="dialog" aria-modal="true">
     <div class="drawer-inner container">
