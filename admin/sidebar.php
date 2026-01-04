@@ -170,7 +170,7 @@
 
 <aside class="sidebar" id="sidebar">
     <div class="brand">
-        <img src="../assets/images/sidebar-logo.jpg" alt="MG Admin">
+        <img src="../../assets/images/sidebar-logo.jpg" alt="MG Admin">
         <!-- Toggle Button for desktop -->
         <div style="margin-left:auto; cursor:pointer; color:#94a3b8;" onclick="toggleSidebar()">
              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
@@ -227,9 +227,9 @@
                     <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </a>
                 <ul class="submenu">
-                    <li class="submenu-item"><a href="/admin/profile">Profile</a></li>
-                    <li class="submenu-item"><a href="/admin/roles">Roles & Permissions</a></li>
-                    <li class="submenu-item"><a href="/admin/settings/smtp-settings.php">SMTP Settings</a></li>
+                    <li class="submenu-item"><a href="../../admin/profile">Profile</a></li>
+                    <li class="submenu-item"><a href="../../admin/roles">Roles & Permissions</a></li>
+                    <li class="submenu-item"><a href="../../admin/settings/smtp-settings.php">SMTP Settings</a></li>
                 </ul>
             </li>
         </ul>
