@@ -207,105 +207,44 @@ include __DIR__ . '/sidebar.php';
             background: rgba(255,255,255,0.05);
         }
 
-        /* Stats Grid */
+        /* Updated Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px; /* Very tight gap */
-            margin-bottom: 48px; /* Increased spacing */
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
         }
-        /* Aggressively keep 6 columns until tablet portrait */
-        @media (max-width: 1100px) { .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; } }
-        @media (max-width: 600px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 400px) { .stats-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 1000px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .stats-grid { grid-template-columns: 1fr; } }
+        
+        .stat-card.blue { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+        .stat-card.green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .stat-card.teal { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); }
+        .stat-card.yellow { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .stat-card.purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+        .stat-card.red { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
 
         .stat-card {
-            background: var(--surface);
-            border-radius: 10px;
-            padding: 12px; /* Minimal padding */
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 100%;
-            min-width: 0;
+            position: relative; 
+            overflow: hidden; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 24px 28px; 
+            min-height: 120px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border: none;
+            transition: transform 0.2s;
         }
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--primary-soft);
-        }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15); }
         
-        .stat-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 4px;
-        }
+        .stat-content { z-index: 2; position: relative; display: flex; flex-direction: column; justify-content: center; }
+        .stat-number { font-size: 36px; font-weight: 700; line-height: 1; margin-bottom: 6px; color:white; }
+        .stat-label { font-size: 15px; font-weight: 500; opacity: 0.95; color:white; letter-spacing: 0.5px; }
         
-        .stat-val-group { display: flex; flex-direction: column; overflow: hidden; }
-        
-        .stat-value {
-            font-size: 20px; /* Compact size */
-            font-weight: 700;
-            color: var(--text-main);
-            line-height: 1.1;
-            margin-bottom: 2px;
-            white-space: nowrap;
-        }
-        .stat-label {
-            font-size: 10px;
-            color: var(--text-light);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .stat-icon {
-            width: 28px; /* Micro icon */
-            height: 28px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            margin-left: 6px;
-        }
-        .stat-icon svg { width: 16px; height: 16px; }
-
-        /* Icon Colors */
-        .icon-bg-indigo { background: #eef2ff; color: #4f46e5; }
-        .icon-bg-green { background: #f0fdf4; color: #16a34a; }
-        .icon-bg-orange { background: #fff7ed; color: #ea580c; }
-        .icon-bg-blue { background: #eff6ff; color: #2563eb; }
-        .icon-bg-purple { background: #faf5ff; color: #9333ea; }
-        .icon-bg-red { background: #fef2f2; color: #dc2626; }
-
-        .stat-footer {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-top: 6px;
-            padding-top: 6px;
-        }
-        .trend-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 2px;
-            font-size: 10px;
-            font-weight: 700;
-        }
-        .trend-up { color: #16a34a; }
-        .trend-down { color: #dc2626; }
-        .trend-neutral { color: #64748b; }
-        
-        /* Hide text on very compact rows to save space */
-        .trend-text { font-size: 9px; color: var(--text-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .stat-icon-bg { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); opacity: 0.2; width: 80px; height: 80px; }
+        .stat-icon-bg svg { width: 100%; height: 100%; fill: currentColor; color: white; }
         
         /* Main Grid */
         .content-grid {
@@ -433,123 +372,69 @@ include __DIR__ . '/sidebar.php';
     </div>
 
     <div class="stats-grid">
-        <!-- Stat 1: Students -->
-        <div class="stat-card">
-            <div class="stat-top">
-                <div class="stat-val-group">
-                    <div class="stat-value">2,543</div>
-                    <div class="stat-label">Total Students</div>
-                </div>
-                <div class="stat-icon icon-bg-indigo">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                </div>
+        <!-- Stat 1: Students (Blue) -->
+        <div class="stat-card blue">
+            <div class="stat-content">
+                <div class="stat-number">2,543</div>
+                <div class="stat-label">Total Students</div>
             </div>
-            <div class="stat-footer">
-                <span class="trend-badge trend-up">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                    12%
-                </span>
-                <span class="trend-text">vs last month</span>
+            <div class="stat-icon-bg">
+                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
             </div>
         </div>
 
-        <!-- Stat 2: Revenue -->
-        <div class="stat-card">
-            <div class="stat-top">
-                <div class="stat-val-group">
-                    <div class="stat-value">₹45.2L</div>
-                    <div class="stat-label">Total Revenue</div>
-                </div>
-                <div class="stat-icon icon-bg-green">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-                </div>
+        <!-- Stat 2: Revenue (Green) -->
+        <div class="stat-card green">
+            <div class="stat-content">
+                <div class="stat-number">₹45.2L</div>
+                <div class="stat-label">Total Revenue</div>
             </div>
-            <div class="stat-footer">
-                <span class="trend-badge trend-up">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                    8%
-                </span>
-                <span class="trend-text">vs last month</span>
+            <div class="stat-icon-bg">
+                <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
             </div>
         </div>
 
-        <!-- Stat 3: Batches -->
-        <div class="stat-card">
-            <div class="stat-top">
-                <div class="stat-val-group">
-                    <div class="stat-value">128</div>
-                    <div class="stat-label">Active Batches</div>
-                </div>
-                <div class="stat-icon icon-bg-orange">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22 6 12 13 2 6"></polyline></svg>
-                </div>
+        <!-- Stat 3: Batches (Teal) -->
+        <div class="stat-card teal">
+            <div class="stat-content">
+                <div class="stat-number">128</div>
+                <div class="stat-label">Active Batches</div>
             </div>
-            <div class="stat-footer">
-                <span class="trend-badge trend-down">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>
-                    2%
-                </span>
-                <span class="trend-text">vs last month</span>
+            <div class="stat-icon-bg">
+                <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22 6 12 13 2 6"></polyline></svg>
             </div>
         </div>
 
-        <!-- Stat 4: Courses -->
-        <div class="stat-card">
-             <div class="stat-top">
-                <div class="stat-val-group">
-                    <div class="stat-value">48</div>
-                    <div class="stat-label">New Courses</div>
-                </div>
-                <div class="stat-icon icon-bg-blue">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                </div>
+        <!-- Stat 4: New Courses (Yellow) -->
+        <div class="stat-card yellow">
+             <div class="stat-content">
+                <div class="stat-number">48</div>
+                <div class="stat-label">New Courses</div>
             </div>
-            <div class="stat-footer">
-                <span class="trend-badge trend-up">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                    15%
-                </span>
-                <span class="trend-text">vs last month</span>
+            <div class="stat-icon-bg">
+                <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
             </div>
         </div>
         
-        <!-- Stat 5: Instructors (NEW) -->
-         <div class="stat-card">
-            <div class="stat-top">
-                <div class="stat-val-group">
-                    <div class="stat-value">32</div>
-                    <div class="stat-label">Instructors</div>
-                </div>
-                <div class="stat-icon icon-bg-purple">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-                </div>
+        <!-- Stat 5: Instructors (Purple) -->
+         <div class="stat-card purple">
+            <div class="stat-content">
+                <div class="stat-number">32</div>
+                <div class="stat-label">Instructors</div>
             </div>
-            <div class="stat-footer">
-                <span class="trend-badge trend-up">
-                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                    4%
-                </span>
-                <span class="trend-text">New joining</span>
+            <div class="stat-icon-bg">
+                <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
             </div>
         </div>
         
-        <!-- Stat 6: Tickets (NEW) -->
-         <div class="stat-card">
-            <div class="stat-top">
-                <div class="stat-val-group">
-                    <div class="stat-value">12</div>
-                    <div class="stat-label">Open Tickets</div>
-                </div>
-                <div class="stat-icon icon-bg-red">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                </div>
+        <!-- Stat 6: Tickets (Red) -->
+         <div class="stat-card red">
+            <div class="stat-content">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Open Tickets</div>
             </div>
-            <div class="stat-footer">
-                <span class="trend-badge trend-down">
-                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>
-                    5%
-                </span>
-                <span class="trend-text">Decreased</span>
+            <div class="stat-icon-bg">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
             </div>
         </div>
     </div>
