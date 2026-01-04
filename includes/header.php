@@ -56,15 +56,7 @@ body.noscroll{overflow:hidden}
     <a href="/" class="brand">
       <img src="<?php echo htmlspecialchars($baseUrl,ENT_QUOTES,'UTF-8'); ?>../../assets/images/sidebar-logo.jpg" alt="MG Skill" class="brand-logo"/>
     </a>
-    <div class="search-wrap">
-      <form class="search-form" action="/search" method="get">
-        <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        <input class="search-input" type="search" name="q" placeholder="Search Skill Courses" aria-label="Search Skill Courses"/>
-        <button class="search-btn" type="submit">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M5 12l14 0"/><path d="M13 5l7 7-7 7"/></svg>
-        </button>
-      </form>
-    </div>
+
     <div class="actions">
       <a href="/dashboards" class="btn btn-outline"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboards</a>
       <a href="/register" class="btn btn-primary">REGISTER</a>
