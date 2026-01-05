@@ -26,19 +26,59 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $duration_value = isset($_POST['duration_value']) ? intval($_POST['duration_value']) : 0;
     $duration_type = mysqli_real_escape_string($conn, $_POST['duration_type']);
 
-    // ... (Slug logic remains)
 
-    // ... (Details logic remains)
+    // Slug
+    $slug = !empty($_POST['slug']) ? $_POST['slug'] : strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title)));
+    $slug = mysqli_real_escape_string($conn, $slug);
 
-    // ... (Labels logic remains)
+    // Details
+    $description = mysqli_real_escape_string($conn, $_POST['description']);
+    
+    // Labels (JSON)
+    $labels_input = isset($_POST['labels']) ? $_POST['labels'] : '';
+    $labels_array = array_map('trim', explode(',', $labels_input));
+    $labels_array = array_filter($labels_array); // Remove empty
+    $labels_json = mysqli_real_escape_string($conn, json_encode($labels_array));
 
-    // ... (Features logic remains)
+    // Features (JSON)
+    $features_input = isset($_POST['features']) ? $_POST['features'] : [];
+    $features_input = array_filter($features_input); // Remove empty
+    $features_json = mysqli_real_escape_string($conn, json_encode(array_values($features_input)));
 
-    // ... (Fees logic remains)
+    // Fees (JSON)
+    $fee_amount = isset($_POST['fee_amount']) ? $_POST['fee_amount'] : '';
+    $fee_text = isset($_POST['fee_text']) ? $_POST['fee_text'] : '';
+    $fees_data = [
+        'amount' => $fee_amount,
+        'description' => $fee_text
+    ];
+    $fees_json = mysqli_real_escape_string($conn, json_encode($fees_data));
+    $base_currency = 'INR';
 
-    // ... (SEO logic remains)
+    // SEO
+    $meta_title = mysqli_real_escape_string($conn, $_POST['meta_title']);
+    $meta_desc = mysqli_real_escape_string($conn, $_POST['meta_desc']);
+    $meta_keywords = mysqli_real_escape_string($conn, $_POST['meta_keywords']);
+    $is_active = isset($_POST['is_active']) ? 1 : 0;
 
-    // ... (Image logic remains)
+    // Image Upload
+    $featured_image = "";
+    if (isset($_FILES['featured_image']) && $_FILES['featured_image']['error'] == 0) {
+        $target_dir = "../../assets/uploads/courses/";
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+        $file_extension = pathinfo($_FILES["featured_image"]["name"], PATHINFO_EXTENSION);
+        $new_filename = "course_" . time() . "." . $file_extension;
+        $target_file = $target_dir . $new_filename;
+        
+        if (move_uploaded_file($_FILES["featured_image"]["tmp_name"], $target_file)) {
+            $featured_image = "assets/uploads/courses/" . $new_filename;
+        } else {
+            $error_message = "Error uploading image.";
+        }
+    }
+
 
     if (empty($error_message)) {
         $sql = "INSERT INTO courses (
