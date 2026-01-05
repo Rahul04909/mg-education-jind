@@ -134,7 +134,7 @@
             <div class="hero-slides-wrapper">
                 <!-- Slide 1 -->
                 <div class="hero-slide active">
-                    <img src="assets/images/frontend/student-banner.png" alt="Slide 1">
+                    <img src="assets/images/frontend/hkcl-banner.jpg" alt="Slide 1">
                 </div>
                 
                 <!-- Slide 2 -->
