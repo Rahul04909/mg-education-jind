@@ -139,7 +139,7 @@
                 
                 <!-- Slide 2 -->
                 <div class="hero-slide">
-                    <img src="assets/images/frontend/student-banner.png" alt="Slide 2">
+                    <img src="assets/images/frontend/dr.midda.jpg" alt="Slide 2">
                 </div>
 
                 <!-- Slide 3 -->
