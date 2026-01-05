@@ -4,6 +4,16 @@ require_once __DIR__ . '/../../database/db-config.php';
 // Ensure schema is updated
 require_once __DIR__ . '/../../database/update_course_schema.php';
 
+$conn = getDbConnection();
+
+// Fetch Categories
+$categories = [];
+$cat_sql = "SELECT id, name FROM course_categories WHERE is_active = 1";
+$cat_res = $conn->query($cat_sql);
+while($row = $cat_res->fetch_assoc()) {
+    $categories[] = $row;
+}
+
 // ... (Rest of connection logic remains)
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
