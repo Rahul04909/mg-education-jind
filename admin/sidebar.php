@@ -217,6 +217,7 @@
                     <li class="submenu-item"><a href="../../admin/mg-students">All Students</a></li>
                     <li class="submenu-item"><a href="../../admin/mg-students/add-student.php">Add Student</a></li>
                     <li class="submenu-item"><a href="../../admin/mg-students/manage-fees.php">Manage Fees</a></li>
+                    <li class="submenu-item"><a href="../../admin/mg-students/mg-students.php">MG Students</a></li>
                 </ul>
             </li>
             <!-- addon to centers menu start here -->
