@@ -196,9 +196,9 @@
                     <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </a>
                 <ul class="submenu">
-                    <li class="submenu-item"><a href="../../admin/courses">All Courses</a></li>
-                    <li class="submenu-item"><a href="../../admin/course-new">Create Course</a></li>
-                    <li class="submenu-item"><a href="../../admin/categories">Categories</a></li>
+                    <li class="submenu-item"><a href="../../admin/courses/">All Courses</a></li>
+                    <li class="submenu-item"><a href="../../admin/courses/add-course.php">Create Course</a></li>
+                    <li class="submenu-item"><a href="../../admin/courses/add-category.php">Categories</a></li>
                     <li class="submenu-item"><a href="../../admin/courses/manage-course-sessions.php">Manage Sessions</a></li>
                     <li class="submenu-item"><a href="../../admin/courses/manage-subjects.php">Manage Subjects</a></li>
                     <li class="submenu-item"><a href="../../admin/courses/manage-syllabus.php">Manage Syllabus</a></li>
