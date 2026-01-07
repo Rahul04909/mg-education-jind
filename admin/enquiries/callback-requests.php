@@ -83,8 +83,8 @@ $total_pages = ceil($total_rows / $limit);
         
         .table-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05);border:1px solid var(--line)}
         table{width:100%;border-collapse:collapse;font-size:14px}
-        th{background:#f8fafc;padding:12px 20px;text-align:left;font-weight:600;color:var(--muted);border-bottom:1px solid var(--line);font-size:12px;text-transform:uppercase;letter-spacing:0.5px}
-        td{padding:14px 20px;border-bottom:1px solid var(--line);vertical-align:middle}
+        th{background:#f8fafc;padding:12px 20px;text-align:left;font-weight:600;color:var(--muted);border-bottom:1px solid var(--line);font-size:12px;text-transform:uppercase;letter-spacing:0.5px; white-space: nowrap;}
+        td{padding:14px 20px;border-bottom:1px solid var(--line);vertical-align:middle; white-space: nowrap;}
         tr:last-child td{border-bottom:none}
         tr:hover td{background:#f8fafc}
         
@@ -99,6 +99,13 @@ $total_pages = ceil($total_rows / $limit);
         
         .badge{display:inline-flex;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#e2e8f0;color:#475569}
         .badge.blue{background:#eff6ff;color:#1e40af}
+        
+        .course-name-cell {
+            max-width: 250px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
 
         /* Filter Styles */
         .filter-card{background:#fff;padding:20px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.05);margin-bottom:24px}
@@ -181,7 +188,9 @@ $total_pages = ceil($total_rows / $limit);
                                     </td>
                                     <td>
                                         <?php if($row['course_name']): ?>
-                                            <span class="badge blue"><?php echo htmlspecialchars($row['course_name']); ?></span>
+                                            <div class="course-name-cell" title="<?php echo htmlspecialchars($row['course_name']); ?>">
+                                                <span class="badge blue"><?php echo htmlspecialchars($row['course_name']); ?></span>
+                                            </div>
                                         <?php else: ?>
                                             <a href="<?php echo htmlspecialchars($row['page_url']); ?>" target="_blank" style="font-size:12px; color:var(--indigo)">View Page</a>
                                         <?php endif; ?>
