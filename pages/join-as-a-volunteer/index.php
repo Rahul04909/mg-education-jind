@@ -7,8 +7,10 @@ require_once __DIR__ . '/../../includes/header.php';
         --secondary: #0f1419;
         --light: #f3f4f6;
         --border: #e6e8ee;
+        --white: #fff;
     }
-    body { background: #f8fafc; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background: var(--light); color: var(--secondary); min-height: 100vh; }
     
     .page-header {
         background: linear-gradient(135deg, #1358db 0%, #06b6d4 100%);
@@ -17,33 +19,35 @@ require_once __DIR__ . '/../../includes/header.php';
         text-align: center;
         margin-bottom: 40px;
     }
-    .page-title { font-size: 36px; font-weight: 800; margin-bottom: 10px; }
-    .page-subtitle { font-size: 18px; opacity: 0.9; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+    .page-title { font-size: 32px; font-weight: 700; margin-bottom: 10px; line-height: 1.2; }
+    .page-subtitle { font-size: 16px; opacity: 0.9; max-width: 600px; margin: 0 auto; line-height: 1.6; }
 
     .form-container {
-        max-width: 900px;
+        max-width: 800px;
         margin: 0 auto 60px;
         padding: 0 20px;
+        position: relative;
+        z-index: 10;
     }
     
     .form-card {
         background: white;
-        border-radius: 20px;
+        border-radius: 30px;
         box-shadow: 0 20px 40px rgba(0,0,0,0.05);
         padding: 40px;
-        border: 1px solid var(--border);
+        border: 1px solid white;
     }
     
     .section-title {
         font-size: 20px;
         font-weight: 700;
-        color: var(--secondary);
-        margin-bottom: 24px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid #f1f5f9;
+        margin: 30px 0 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+        color: var(--primary);
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
     }
     .section-number {
         background: var(--primary);
@@ -55,45 +59,118 @@ require_once __DIR__ . '/../../includes/header.php';
         align-items: center;
         justify-content: center;
         font-size: 14px;
+        border: 2px solid rgba(255,255,255,0.2);
     }
     
     .form-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 24px;
+        gap: 20px;
         margin-bottom: 30px;
     }
     .form-full { grid-column: 1/-1; }
     
-    .form-group { margin-bottom: 5px; }
+    .form-group { margin-bottom: 15px; }
     .form-label {
         display: block;
         margin-bottom: 8px;
         font-weight: 600;
-        color: #475569;
         font-size: 14px;
+        color: var(--secondary);
     }
     .form-control {
         width: 100%;
-        padding: 12px 16px;
-        border: 1px solid #cbd5e1;
-        border-radius: 10px;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
         font-size: 15px;
-        transition: all 0.2s;
-        background: #f8fafc;
+        transition: border .2s;
+        background: white;
     }
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: none;
+    }
+    
     /* Custom Select Arrow */
     select.form-control {
         appearance: none;
         -webkit-appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23374151' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
-        background-position: right 12px center;
+        background-position: right 16px center;
         background-size: 16px;
         padding-right: 40px;
     }
 
-    /* Success Popup */
+    /* Checkbox Group */
+    .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .custom-check {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        padding: 10px 16px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        transition: all 0.2s;
+        font-size: 14px;
+        background: white;
+    }
+    .custom-check:hover { background: #f9fafb; }
+    .custom-check input:checked + span { color: var(--primary); font-weight: 600; }
+    .custom-check input { accent-color: var(--primary); }
+    
+    /* File Upload */
+    .file-upload-box {
+        width: 120px;
+        height: 120px;
+        border: 2px dashed var(--border);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-top: 5px;
+        background: #f9fafb;
+        cursor: pointer;
+        position: relative;
+        transition: border-color 0.2s;
+    }
+    .file-upload-box:hover { border-color: var(--primary); }
+    .file-upload-box img { width: 100%; height: 100%; object-fit: cover; }
+    .upload-label { font-size: 12px; color: #64748b; text-align: center; padding: 10px; }
+    
+    .btn-submit {
+        padding: 14px 28px;
+        background: var(--primary);
+        color: var(--white);
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+        margin-top: 20px;
+        transition: opacity 0.2s;
+        box-shadow: none;
+    }
+    .btn-submit:hover { opacity: 0.9; transform: none; box-shadow: none; }
+    .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+
+    
+    @media(max-width: 768px) {
+        .form-grid { grid-template-columns: 1fr; }
+        .page-title { font-size: 28px; }
+        .form-card { padding: 24px; border-radius: 20px; }
+    }
+
+    /* Popup Styles */
     .popup-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(0,0,0,0.5); z-index: 1000;
