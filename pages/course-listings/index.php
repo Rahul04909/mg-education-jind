@@ -205,35 +205,35 @@ include __DIR__ . '/../../includes/header.php';
     /* Course Grid */
     .course-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 24px;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
     }
 
     .course-list-view {
         display: flex;
         flex-direction: column;
-        gap: 24px;
+        gap: 16px;
     }
 
     /* Course Card */
     .course-card {
         background: white;
-        border-radius: 16px;
+        border-radius: 12px;
         overflow: hidden;
         border: 1px solid var(--border-color);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
         position: relative;
         display: flex;
         flex-direction: column;
     }
 
     .course-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.06);
     }
 
     .card-thumb {
-        height: 200px;
+        height: 160px;
         background: #f1f5f9;
         overflow: hidden;
         position: relative;
@@ -243,7 +243,7 @@ include __DIR__ . '/../../includes/header.php';
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.5s ease;
+        transition: transform 0.4s ease;
     }
 
     .course-card:hover .card-thumb img {
@@ -251,7 +251,7 @@ include __DIR__ . '/../../includes/header.php';
     }
 
     .card-body {
-        padding: 20px;
+        padding: 16px;
         flex: 1;
         display: flex;
         flex-direction: column;
@@ -259,37 +259,54 @@ include __DIR__ . '/../../includes/header.php';
 
     .course-badge {
         display: inline-block;
-        padding: 4px 12px;
+        padding: 3px 10px;
         background: #e0e7ff;
         color: var(--primary-color);
         border-radius: 50px;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 600;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
         align-self: flex-start;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .course-title {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 700;
         color: #1a202c;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
     .course-meta {
         display: flex;
         align-items: center;
-        gap: 15px;
-        font-size: 13px;
+        gap: 12px;
+        font-size: 12px;
         color: #718096;
-        margin-bottom: 20px;
+        margin-bottom: 12px;
     }
 
     .meta-item {
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 4px;
+    }
+
+    .course-desc {
+        font-size: 13px;
+        color: #718096;
+        margin-bottom: 16px; 
+        line-height: 1.5; 
+        display:-webkit-box; 
+        -webkit-line-clamp:2; 
+        -webkit-box-orient:vertical; 
+        overflow:hidden;
     }
 
     .course-footer {
@@ -297,24 +314,24 @@ include __DIR__ . '/../../includes/header.php';
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-top: 15px;
+        padding-top: 12px;
         border-top: 1px solid #f1f5f9;
     }
 
     .price {
-        font-size: 20px;
-        font-weight: 800;
+        font-size: 18px;
+        font-weight: 700;
         color: var(--primary-color);
     }
 
     .view-btn-link {
-        padding: 8px 20px;
-        background: #f8fafc;
-        color: #4a5568;
-        border-radius: 8px;
+        padding: 6px 16px;
+        background: var(--bg-color);
+        color: var(--secondary-color);
+        border-radius: 6px;
         text-decoration: none;
         font-weight: 600;
-        font-size: 14px;
+        font-size: 13px;
         transition: all 0.2s;
     }
     .view-btn-link:hover {
@@ -325,14 +342,23 @@ include __DIR__ . '/../../includes/header.php';
     /* List View Overrides */
     .course-list-view .course-card {
         flex-direction: row;
-        height: 220px;
+        height: 180px;
     }
     .course-list-view .card-thumb {
-        width: 300px;
+        width: 260px;
         height: 100%;
+        flex-shrink: 0;
     }
     .course-list-view .card-body {
-        padding: 24px;
+        padding: 20px;
+        justify-content: center;
+    }
+    .course-list-view .course-desc {
+        -webkit-line-clamp: 2;
+        margin-bottom: 10px;
+    }
+    .course-list-view .course-title {
+        font-size: 18px;
     }
 
     @media (max-width: 992px) {
@@ -348,7 +374,7 @@ include __DIR__ . '/../../includes/header.php';
         }
         .course-list-view .card-thumb {
             width: 100%;
-            height: 200px;
+            height: 180px;
         }
     }
 </style>
@@ -455,7 +481,7 @@ include __DIR__ . '/../../includes/header.php';
                             <!-- Add more meta if needed -->
                         </div>
 
-                        <p style="font-size:14px; color:#718096; margin-bottom:20px; line-height:1.6; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+                        <p class="course-desc">
                             <?php echo strip_tags($course['description']); ?>
                         </p>
 
