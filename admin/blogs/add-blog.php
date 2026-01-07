@@ -9,43 +9,56 @@ if($cat_res) {
     while($row = $cat_res->fetch_assoc()) $cats[] = $row;
 }
 
+// Enable Error Reporting for Debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $title = mysqli_real_escape_string($conn, trim($_POST['title']));
     $category_id = intval($_POST['category_id']);
     
-    $slug = !empty($_POST['slug']) ? $_POST['slug'] : strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title)));
-    $slug = mysqli_real_escape_string($conn, $slug);
-    
-    $description = mysqli_real_escape_string($conn, $_POST['description']);
-    
-    $meta_title = mysqli_real_escape_string($conn, $_POST['meta_title']);
-    $meta_desc = mysqli_real_escape_string($conn, $_POST['meta_desc']);
-    $meta_keywords = mysqli_real_escape_string($conn, $_POST['meta_keywords']);
-    $schema_markup = mysqli_real_escape_string($conn, $_POST['schema_markup']);
-    $is_active = isset($_POST['is_active']) ? 1 : 0;
-
-    // Image Upload
-    $featured_image = "";
-    if (isset($_FILES['featured_image']) && $_FILES['featured_image']['error'] == 0) {
-        $target_dir = "../../assets/uploads/blogs/";
-        if (!file_exists($target_dir)) mkdir($target_dir, 0777, true);
-        
-        $ext = pathinfo($_FILES['featured_image']['name'], PATHINFO_EXTENSION);
-        $filename = "blog_" . time() . "." . $ext;
-        
-        if (move_uploaded_file($_FILES['featured_image']['tmp_name'], $target_dir . $filename)) {
-            $featured_image = "assets/uploads/blogs/" . $filename;
-        }
-    }
-
-    $sql = "INSERT INTO blogs (category_id, title, slug, description, featured_image, meta_title, meta_desc, meta_keywords, schema_markup, is_active) 
-            VALUES ($category_id, '$title', '$slug', '$description', '$featured_image', '$meta_title', '$meta_desc', '$meta_keywords', '$schema_markup', $is_active)";
-
-    if ($conn->query($sql) === TRUE) {
-        $success = "Blog post published successfully!";
+    // Validation
+    if($category_id <= 0) {
+        $error = "Please select a valid category.";
     } else {
-        $error = "Error: " . $conn->error;
+        $slug = !empty($_POST['slug']) ? $_POST['slug'] : strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title)));
+        $slug = mysqli_real_escape_string($conn, $slug);
+        
+        $description = mysqli_real_escape_string($conn, $_POST['description']);
+        
+        $meta_title = mysqli_real_escape_string($conn, $_POST['meta_title']);
+        $meta_desc = mysqli_real_escape_string($conn, $_POST['meta_desc']);
+        $meta_keywords = mysqli_real_escape_string($conn, $_POST['meta_keywords']);
+        $schema_markup = mysqli_real_escape_string($conn, $_POST['schema_markup']);
+        $is_active = isset($_POST['is_active']) ? 1 : 0;
+
+        // Image Upload
+        $featured_image = "";
+        if (isset($_FILES['featured_image']) && $_FILES['featured_image']['error'] == 0) {
+            $target_dir = "../../assets/uploads/blogs/";
+            if (!file_exists($target_dir)) mkdir($target_dir, 0777, true);
+            
+            $ext = pathinfo($_FILES['featured_image']['name'], PATHINFO_EXTENSION);
+            $filename = "blog_" . time() . "." . $ext;
+            
+            if (move_uploaded_file($_FILES['featured_image']['tmp_name'], $target_dir . $filename)) {
+                $featured_image = "assets/uploads/blogs/" . $filename;
+            }
+        }
+
+        try {
+            $sql = "INSERT INTO blogs (category_id, title, slug, description, featured_image, meta_title, meta_desc, meta_keywords, schema_markup, is_active) 
+                    VALUES ($category_id, '$title', '$slug', '$description', '$featured_image', '$meta_title', '$meta_desc', '$meta_keywords', '$schema_markup', $is_active)";
+
+            if ($conn->query($sql) === TRUE) {
+                $success = "Blog post published successfully!";
+            }
+        } catch (mysqli_sql_exception $e) {
+            $error = "Database Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            $error = "Error: " . $e->getMessage();
+        }
     }
 }
 ?>
