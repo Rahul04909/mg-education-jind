@@ -23,7 +23,7 @@ require_once __DIR__ . '/../../includes/header.php';
     .page-subtitle { font-size: 16px; opacity: 0.9; max-width: 600px; margin: 0 auto; line-height: 1.6; }
 
     .form-container {
-        max-width: 800px;
+        max-width: 1200px;
         margin: 0 auto 60px;
         padding: 0 20px;
         position: relative;
