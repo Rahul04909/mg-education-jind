@@ -65,6 +65,28 @@ if ($result->num_rows > 0) {
             .main{margin:0;border-radius:0}
             .form-grid{grid-template-columns:1fr}
         }
+
+        /* Course Row Grid */
+        .course-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        @media(max-width: 600px) {
+            .course-row { grid-template-columns: 1fr; }
+        }
+
+        /* Custom Select Design */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23374151' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
     </style>
 </head>
 <body>
@@ -89,16 +111,24 @@ if ($result->num_rows > 0) {
         <form id="admissionForm" enctype="multipart/form-data">
             
             <!-- Course Selection -->
-            <div class="form-group">
-                <label>Select Course *</label>
-                <select name="course_id" id="course_select" required onchange="updateFee()">
-                    <option value="">-- Choose a Course --</option>
-                    <?php foreach($courses as $c): ?>
-                        <option value="<?php echo $c['id']; ?>" data-fee="<?php echo $c['amount']; ?>" data-dur="<?php echo $c['duration_value'] . ' ' . $c['duration_type']; ?>">
-                            <?php echo htmlspecialchars($c['title']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
+            <div class="course-row">
+                <div class="form-group">
+                    <label>Select Course *</label>
+                    <select name="course_id" id="course_select" required onchange="onCourseChange()">
+                        <option value="">-- Choose a Course --</option>
+                        <?php foreach($courses as $c): ?>
+                            <option value="<?php echo $c['id']; ?>" data-fee="<?php echo $c['amount']; ?>" data-dur="<?php echo $c['duration_value'] . ' ' . $c['duration_type']; ?>">
+                                <?php echo htmlspecialchars($c['title']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Select Session *</label>
+                    <select name="session_id" id="session_select" required>
+                        <option value="">-- Select Course First --</option>
+                    </select>
+                </div>
             </div>
             
             <div id="feeBox" class="fee-card" style="display:none">
@@ -318,6 +348,43 @@ if ($result->num_rows > 0) {
     // Previous Course Toggle
     function togglePrev(val) {
         document.getElementById('prevCourseBox').style.display = (val === 'yes') ? 'grid' : 'none';
+    }
+
+    // Course Change Handler
+    function onCourseChange() {
+        updateFee();
+        fetchSessions();
+    }
+
+    // Fetch Sessions
+    function fetchSessions() {
+        let courseId = document.getElementById('course_select').value;
+        let sessionSel = document.getElementById('session_select');
+        
+        sessionSel.innerHTML = '<option value="">Loading...</option>';
+        
+        if(!courseId) {
+            sessionSel.innerHTML = '<option value="">-- Select Course First --</option>';
+            return;
+        }
+
+        fetch('get-sessions.php?course_id=' + courseId)
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === 'success') {
+                let options = '<option value="">-- Choose Session --</option>';
+                data.data.forEach(s => {
+                    options += `<option value="${s.id}">${s.session_name}</option>`;
+                });
+                sessionSel.innerHTML = options;
+            } else {
+                sessionSel.innerHTML = '<option value="">No Active Sessions</option>';
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            sessionSel.innerHTML = '<option value="">Error Loading Sessions</option>';
+        });
     }
 
     // Fee Update

@@ -72,6 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Inputs
     $course_id = intval($_POST['course_id']);
+    $session_id = intval($_POST['session_id']); // Capture Session ID
     $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
     $father_name = mysqli_real_escape_string($conn, $_POST['father_name']);
     $mother_name = mysqli_real_escape_string($conn, $_POST['mother_name']);
@@ -113,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $cert_path = uploadFile($_FILES['edu_cert_file'], 'documents');
     
     $sql = "INSERT INTO admissions (
-        enrollment_no, course_id, full_name, father_name, mother_name, dob, category, admission_mode,
+        enrollment_no, course_id, session_id, full_name, father_name, mother_name, dob, category, admission_mode,
         student_photo, student_sign, mobile, alt_mobile, email,
         pincode, country, state, city, address,
         highest_qual, school_name, board_university, passing_year, percentage,
@@ -121,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         aadhar_no, aadhar_file, edu_cert_file,
         course_fee, payment_status, razorpay_payment_id, razorpay_order_id
     ) VALUES (
-        '$enrollment_no', $course_id, '$full_name', '$father_name', '$mother_name', '$dob', '$category', '$admission_mode',
+        '$enrollment_no', $course_id, $session_id, '$full_name', '$father_name', '$mother_name', '$dob', '$category', '$admission_mode',
         '$photo_path', '$sign_path', '$mobile', '$alt_mobile', '$email',
         '$pincode', '$country', '$state', '$city', '$address',
         '$highest_qual', '$school_name', '$board', $passing_year, '$percentage',
