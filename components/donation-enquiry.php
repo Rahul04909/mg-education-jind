@@ -290,26 +290,26 @@
                 <p>Fill out the form to know how you can contribute</p>
             </div>
             
-            <form action="#" method="POST">
+            <form action="actions/submit-donation-enquiry.php" method="POST">
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Full Name</label>
-                        <input type="text" class="form-control" placeholder="John Doe" required>
+                        <input type="text" name="full_name" class="form-control" placeholder="John Doe" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" placeholder="+91 98765 43210" required>
+                        <input type="tel" name="phone" class="form-control" placeholder="+91 98765 43210" required>
                     </div>
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Email Address</label>
-                    <input type="email" class="form-control" placeholder="john@example.com" required>
+                    <input type="email" name="email" class="form-control" placeholder="john@example.com" required>
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Purpose of Donation</label>
-                    <select class="form-control">
+                    <select name="purpose" class="form-control">
                         <option>Sponsor a Student's Education</option>
                         <option>Support Infrastructure</option>
                         <option>General Donation</option>
@@ -319,7 +319,7 @@
                 
                 <div class="form-group">
                     <label class="form-label">Message (Optional)</label>
-                    <textarea class="form-control" rows="2" placeholder="Tell us more..."></textarea>
+                    <textarea name="message" class="form-control" rows="2" placeholder="Tell us more..."></textarea>
                 </div>
                 
                 <button type="submit" class="btn-submit">Submit Enquiry</button>
