@@ -256,7 +256,7 @@
                     <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </a>
                 <ul class="submenu">
-                    <li class="submenu-item"><a href="../../admin/enquiries/callback-requests.php">Donation Enquiry</a></li>
+                    <li class="submenu-item"><a href="../../admin/enquiries/callback-requests.php">Callback Requests</a></li>
                </ul>
             </li>
 
