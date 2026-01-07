@@ -3,25 +3,37 @@ require_once __DIR__ . '/../../database/db-config.php';
 $conn = getDbConnection();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = mysqli_real_escape_string($conn, trim($_POST['name']));
     
-    // Slug Generation
-    $slug = !empty($_POST['slug']) ? $_POST['slug'] : strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $name)));
-    $slug = mysqli_real_escape_string($conn, $slug);
-
-    $meta_title = mysqli_real_escape_string($conn, $_POST['meta_title']);
-    $meta_desc = mysqli_real_escape_string($conn, $_POST['meta_desc']);
-    $meta_keywords = mysqli_real_escape_string($conn, $_POST['meta_keywords']);
-    $schema_markup = mysqli_real_escape_string($conn, $_POST['schema_markup']);
-    $is_active = isset($_POST['is_active']) ? 1 : 0;
-
-    $sql = "INSERT INTO blog_categories (name, slug, meta_title, meta_desc, meta_keywords, schema_markup, is_active) 
-            VALUES ('$name', '$slug', '$meta_title', '$meta_desc', '$meta_keywords', '$schema_markup', $is_active)";
-
-    if ($conn->query($sql) === TRUE) {
-        $success = "Category added successfully!";
+    // Check for Post Max Size
+    if (empty($_POST) && $_SERVER['CONTENT_LENGTH'] > 0) {
+        $error = "Error: content exceeds server limit.";
     } else {
-        $error = "Error: " . $conn->error;
+        $name = isset($_POST['name']) ? mysqli_real_escape_string($conn, trim($_POST['name'])) : '';
+        
+        if(empty($name)) {
+            $error = "Category Name is required.";
+        } else {
+            // Slug Generation
+            $slug = !empty($_POST['slug']) ? $_POST['slug'] : strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $name)));
+            $slug = mysqli_real_escape_string($conn, $slug);
+        
+            $meta_title = mysqli_real_escape_string($conn, $_POST['meta_title'] ?? '');
+            $meta_desc = mysqli_real_escape_string($conn, $_POST['meta_desc'] ?? '');
+            $meta_keywords = mysqli_real_escape_string($conn, $_POST['meta_keywords'] ?? '');
+            $schema_markup = mysqli_real_escape_string($conn, $_POST['schema_markup'] ?? '');
+            $is_active = isset($_POST['is_active']) ? 1 : 0;
+        
+            try {
+                $sql = "INSERT INTO blog_categories (name, slug, meta_title, meta_desc, meta_keywords, schema_markup, is_active) 
+                        VALUES ('$name', '$slug', '$meta_title', '$meta_desc', '$meta_keywords', '$schema_markup', $is_active)";
+        
+                if ($conn->query($sql) === TRUE) {
+                    $success = "Category added successfully!";
+                }
+            } catch (mysqli_sql_exception $e) {
+                $error = "Database Error: " . $e->getMessage();
+            }
+        }
     }
 }
 ?>
