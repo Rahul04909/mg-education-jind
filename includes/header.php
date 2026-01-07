@@ -67,7 +67,7 @@ body.noscroll{overflow:hidden}
     </div>
   </div>
   <div class="container header-nav" role="navigation" aria-label="Secondary">
-    <a href="/msde" class="nav-link">Join As a Volunteer</a>
+    <a href="../../pages/join-as-a-volunteer/index.php" class="nav-link">Join As a Volunteer</a>
     <a href="/schemes" class="nav-link">Schemes/Programs</a>
     <a href="/recommendations" class="nav-link">Recommendation</a>
     <a href="/courses" class="nav-link">Skill Courses</a>
@@ -86,7 +86,7 @@ body.noscroll{overflow:hidden}
       </form>
       <nav class="drawer-nav" aria-label="Mobile Navigation">
         <a class="drawer-link" href="/dashboards">Dashboards</a>
-        <a class="drawer-link" href="/msde">MSDE</a>
+        <a class="drawer-link" href="../../pages/join-as-a-volunteer/index.php">Join As a Volunteer</a>
         <a class="drawer-link" href="/schemes">Schemes/Programs</a>
         <a class="drawer-link" href="/recommendations">Recommendation</a>
         <a class="drawer-link" href="/courses">Skill Courses</a>
