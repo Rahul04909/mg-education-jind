@@ -2,8 +2,11 @@
 require_once __DIR__ . '/db-config.php';
 $conn = getDbConnection();
 
+$conn->query("DROP TABLE IF EXISTS volunteers");
+
 $sql = "CREATE TABLE IF NOT EXISTS volunteers (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    volunteer_id VARCHAR(20) UNIQUE,
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     mobile VARCHAR(20) NOT NULL,

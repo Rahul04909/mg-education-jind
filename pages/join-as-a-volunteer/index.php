@@ -82,73 +82,41 @@ require_once __DIR__ . '/../../includes/header.php';
         transition: all 0.2s;
         background: #f8fafc;
     }
-    .form-control:focus {
-        outline: none;
-        border-color: var(--primary);
-        background: white;
-        box-shadow: 0 0 0 4px rgba(19, 88, 219, 0.1);
+    /* Custom Select Arrow */
+    select.form-control {
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+        padding-right: 40px;
     }
-    
-    /* Checkbox Group */
-    .checkbox-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
+
+    /* Success Popup */
+    .popup-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5); z-index: 1000;
+        display: none; align-items: center; justify-content: center;
+        backdrop-filter: blur(5px);
     }
-    .custom-check {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        padding: 8px 16px;
-        border: 1px solid #cbd5e1;
-        border-radius: 50px;
-        transition: all 0.2s;
-        font-size: 14px;
+    .popup-card {
+        background: white; width: 100%; max-width: 400px;
+        padding: 30px; border-radius: 20px; text-align: center;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        animation: popUp 0.3s ease-out;
     }
-    .custom-check:hover { background: #f1f5f9; }
-    .custom-check input:checked + span { color: var(--primary); font-weight: 600; }
-    .custom-check input { accent-color: var(--primary); }
-    
-    /* File Upload */
-    .file-upload-box {
-        border: 2px dashed #cbd5e1;
-        border-radius: 12px;
-        padding: 20px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.2s;
-        position: relative;
+    @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .popup-icon {
+        width: 80px; height: 80px; background: #dcfce7; color: #16a34a;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 20px;
     }
-    .file-upload-box:hover { border-color: var(--primary); background: #f8fafc; }
-    .upload-label { color: #64748b; font-size: 14px; pointer-events: none; }
-    .preview-img {
-        max-width: 100%;
-        max-height: 150px;
-        border-radius: 8px;
-        margin-top: 10px;
-        display: none;
-    }
-    
-    .btn-submit {
-        width: 100%;
-        padding: 16px;
-        background: var(--primary);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-size: 18px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.2s;
-        box-shadow: 0 10px 20px rgba(19, 88, 219, 0.2);
-    }
-    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(19, 88, 219, 0.3); }
-    
-    @media(max-width: 768px) {
-        .form-grid { grid-template-columns: 1fr; }
-        .page-title { font-size: 28px; }
-        .form-card { padding: 24px; }
+    .popup-title { font-size: 24px; font-weight: 800; margin-bottom: 10px; color: #0f1419; }
+    .popup-text { color: #64748b; line-height: 1.6; margin-bottom: 24px; }
+    .popup-btn {
+        display: block; width: 100%; padding: 14px; background: #1358db; color: white;
+        text-decoration: none; font-weight: 700; border-radius: 12px;
     }
 </style>
 
@@ -159,6 +127,8 @@ require_once __DIR__ . '/../../includes/header.php';
 
 <div class="form-container">
     <form id="volunteerForm" class="form-card" enctype="multipart/form-data">
+        <!-- Form Content remains same, stripped for brevity in replace tool context if not replacing whole block -->
+        <!-- ... (Existing Form Fields) ... -->
         
         <!-- 1. Personal Details -->
         <h3 class="section-title"><span class="section-number">1</span> Personal Details</h3>
@@ -321,6 +291,18 @@ require_once __DIR__ . '/../../includes/header.php';
     </form>
 </div>
 
+<!-- Success Popup -->
+<div class="popup-overlay" id="successPopup">
+    <div class="popup-card">
+        <div class="popup-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        </div>
+        <h3 class="popup-title">Registration Successful!</h3>
+        <p class="popup-text" id="popupMsg">Welcome to the team.</p>
+        <a href="/" class="popup-btn">Go to Home</a>
+    </div>
+</div>
+
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
 
 <script>
@@ -390,8 +372,8 @@ require_once __DIR__ . '/../../includes/header.php';
         .then(res => res.json())
         .then(data => {
             if(data.status === 'success') {
-                alert('Success! ' + data.message);
-                window.location.reload();
+                document.getElementById('popupMsg').innerText = data.message;
+                document.getElementById('successPopup').style.display = 'flex';
             } else {
                 alert('Error: ' + data.message);
                 btn.disabled = false;
