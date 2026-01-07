@@ -234,6 +234,34 @@
 
             <!-- Addon to center menu ends here above it -->
 
+             <!-- addon to Donations menu start here -->
+             <li class="nav-item">
+                <a href="#" class="nav-link" onclick="toggleMenu(this)">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg>
+                    <span class="nav-text">Donations</span>
+                    <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </a>
+                <ul class="submenu">
+                    <li class="submenu-item"><a href="../../admin/donations/donation-enquiry.php">Donation Enquiry</a></li>
+               </ul>
+            </li>
+
+            <!-- Addon to Donations menu ends here above it -->
+
+            <!-- addon to Donations menu start here -->
+             <li class="nav-item">
+                <a href="#" class="nav-link" onclick="toggleMenu(this)">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg>
+                    <span class="nav-text">Enquiry Management</span>
+                    <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </a>
+                <ul class="submenu">
+                    <li class="submenu-item"><a href="../../admin/enquiries/callback-requests.php">Donation Enquiry</a></li>
+               </ul>
+            </li>
+
+            <!-- Addon to Donations menu ends here above it -->
+
              <li class="nav-item">
                 <a href="#" class="nav-link" onclick="toggleMenu(this)">
                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2l9 9-9 9-9-9 9-9z"/></svg>
