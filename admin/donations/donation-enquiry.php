@@ -19,16 +19,62 @@ $limit = 10;
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 
+// Filter Logic
+$where_clauses = ["1=1"];
+$params = [];
+$types = "";
+
+// Search Filter
+if (!empty($_GET['search'])) {
+    $search = "%" . trim($_GET['search']) . "%";
+    $where_clauses[] = "(full_name LIKE ? OR email LIKE ? OR phone LIKE ?)";
+    $params[] = $search;
+    $params[] = $search;
+    $params[] = $search;
+    $types .= "sss";
+}
+
+// Purpose Filter
+if (!empty($_GET['purpose'])) {
+    $where_clauses[] = "purpose = ?";
+    $params[] = $_GET['purpose'];
+    $types .= "s";
+}
+
+// Date Range Filter
+if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
+    $where_clauses[] = "DATE(created_at) BETWEEN ? AND ?";
+    $params[] = $_GET['from_date'];
+    $params[] = $_GET['to_date'];
+    $types .= "ss";
+}
+
+$where_sql = implode(" AND ", $where_clauses);
+
 // Fetch Enquiries
-$sql = "SELECT * FROM donation_enquiries ORDER BY created_at DESC LIMIT ?, ?";
+$sql = "SELECT * FROM donation_enquiries WHERE $where_sql ORDER BY created_at DESC LIMIT ?, ?";
+$params[] = $offset;
+$params[] = $limit;
+$types .= "ii";
+
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ii", $offset, $limit);
+$stmt->bind_param($types, ...$params);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Total Count
-$count_sql = "SELECT COUNT(*) as total FROM donation_enquiries";
-$count_res = $conn->query($count_sql);
+// Total Count (for pagination)
+$count_sql = "SELECT COUNT(*) as total FROM donation_enquiries WHERE $where_sql";
+$count_stmt = $conn->prepare($count_sql);
+
+// Remove limit/offset params for count query
+$count_types = substr($types, 0, -2);
+$count_params = array_slice($params, 0, -2);
+
+if ($count_params) {
+    $count_stmt->bind_param($count_types, ...$count_params);
+}
+$count_stmt->execute();
+$count_res = $count_stmt->get_result();
 $total_rows = $count_res->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 
@@ -65,6 +111,18 @@ $total_pages = ceil($total_rows / $limit);
         .user-info{display:flex;flex-direction:column}
         .user-name{font-weight:600;color:var(--text)}
         .user-email{font-size:12px;color:var(--muted)}
+
+        /* Filter Styles */
+        .filter-card{background:#fff;padding:20px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.05);margin-bottom:24px}
+        .filter-form{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:16px;align-items:end}
+        .form-group label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--muted)}
+        .form-control{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;transition:all 0.2s}
+        .form-control:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px rgba(79, 70, 229, 0.1)}
+        .btn{padding:10px 20px;border-radius:8px;font-weight:500;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:14px;border:none;cursor:pointer;transition:all 0.2s}
+        .btn-primary{background:var(--indigo);color:#fff}
+        .btn-primary:hover{background:#4338ca}
+        .btn-secondary{background:#fff;border:1px solid var(--line);color:var(--text)}
+        .btn-secondary:hover{background:#f8fafc}
     </style>
 </head>
 <body>
@@ -77,6 +135,37 @@ $total_pages = ceil($total_rows / $limit);
                     <h1 class="page-title">Donation Enquiries</h1>
                     <p style="color:var(--muted); font-size:14px; margin-top:4px">View enquiries received from the frontend.</p>
                 </div>
+            </div>
+            
+            <div class="filter-card">
+                <form method="GET" class="filter-form">
+                    <div class="form-group">
+                        <label>Search</label>
+                        <input type="text" name="search" class="form-control" placeholder="Name, Email, Phone..." value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>Purpose</label>
+                        <select name="purpose" class="form-control">
+                            <option value="">All Purposes</option>
+                            <option value="Sponsor a Student's Education" <?php echo (isset($_GET['purpose']) && $_GET['purpose'] == "Sponsor a Student's Education") ? 'selected' : ''; ?>>Sponsor a Student's Education</option>
+                            <option value="Support Infrastructure" <?php echo (isset($_GET['purpose']) && $_GET['purpose'] == "Support Infrastructure") ? 'selected' : ''; ?>>Support Infrastructure</option>
+                            <option value="General Donation" <?php echo (isset($_GET['purpose']) && $_GET['purpose'] == "General Donation") ? 'selected' : ''; ?>>General Donation</option>
+                            <option value="Corporate CSR" <?php echo (isset($_GET['purpose']) && $_GET['purpose'] == "Corporate CSR") ? 'selected' : ''; ?>>Corporate CSR</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>From Date</label>
+                        <input type="date" name="from_date" class="form-control" value="<?php echo htmlspecialchars($_GET['from_date'] ?? ''); ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>To Date</label>
+                        <input type="date" name="to_date" class="form-control" value="<?php echo htmlspecialchars($_GET['to_date'] ?? ''); ?>">
+                    </div>
+                    <div class="form-group" style="display:flex; gap:10px">
+                        <button type="submit" class="btn btn-primary" style="flex:1">Filter</button>
+                        <a href="donation-enquiry.php" class="btn btn-secondary">Reset</a>
+                    </div>
+                </form>
             </div>
             
             <div class="table-card">
@@ -116,16 +205,23 @@ $total_pages = ceil($total_rows / $limit);
             
             <?php if ($total_pages > 1): ?>
             <div class="pagination">
+                <?php 
+                    $query_params = $_GET;
+                    unset($query_params['page']);
+                    $query_string = http_build_query($query_params);
+                    $query_string = $query_string ? '&' . $query_string : '';
+                ?>
+                
                 <?php if($page > 1): ?>
-                    <a href="?page=<?php echo $page-1; ?>" class="page-link">&laquo;</a>
+                    <a href="?page=<?php echo $page-1 . $query_string; ?>" class="page-link">&laquo;</a>
                 <?php endif; ?>
                 
                 <?php for($i=1; $i<=$total_pages; $i++): ?>
-                    <a href="?page=<?php echo $i; ?>" class="page-link <?php echo $page == $i ? 'active' : ''; ?>"><?php echo $i; ?></a>
+                    <a href="?page=<?php echo $i . $query_string; ?>" class="page-link <?php echo $page == $i ? 'active' : ''; ?>"><?php echo $i; ?></a>
                 <?php endfor; ?>
                 
                 <?php if($page < $total_pages): ?>
-                    <a href="?page=<?php echo $page+1; ?>" class="page-link">&raquo;</a>
+                    <a href="?page=<?php echo $page+1 . $query_string; ?>" class="page-link">&raquo;</a>
                 <?php endif; ?>
             </div>
             <?php endif; ?>
