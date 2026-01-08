@@ -85,8 +85,8 @@ $total_pages = ceil($total_rows / $limit);
         .page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
         .page-title{font-size:24px;font-weight:700;color:var(--text)}
         
-        .table-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05);border:1px solid var(--line)}
-        table{width:100%;border-collapse:collapse;font-size:14px}
+        .table-card{background:#fff;border-radius:12px;overflow-x:auto;box-shadow:0 1px 3px rgba(0,0,0,0.05);border:1px solid var(--line)}
+        table{width:100%;border-collapse:collapse;font-size:14px;white-space:nowrap}
         th{background:#f8fafc;padding:12px 20px;text-align:left;font-weight:600;color:var(--muted);border-bottom:1px solid var(--line);font-size:12px;text-transform:uppercase;letter-spacing:0.5px}
         td{padding:14px 20px;border-bottom:1px solid var(--line);vertical-align:middle}
         tr:last-child td{border-bottom:none}
