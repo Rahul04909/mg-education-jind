@@ -70,7 +70,7 @@ body.noscroll{overflow:hidden}
   <div class="container header-nav" role="navigation" aria-label="Secondary">
     <a href="../../pages/join-as-a-volunteer/index.php" class="nav-link">Join As a Volunteer</a>
     <a href="../../online-admisson" class="nav-link">Online Admission</a>
-    <a href="/recommendations" class="nav-link">Recommendation</a>
+    <a href="../../pages/course-listings/" class="nav-link">Our Courses</a>
     <a href="/courses" class="nav-link">Skill Courses</a>
     <a href="/jobs" class="nav-link">Job Exchange</a>
     <a href="/skill-centre" class="nav-link">Skill Centre</a>

@@ -425,11 +425,12 @@ include __DIR__ . '/../../includes/header.php';
                 <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                 Quick Enquiry
             </h3>
-            <form class="enquiry-form">
-                <input type="text" placeholder="Your Name" required>
-                <input type="tel" placeholder="Mobile Number" required>
-                <textarea rows="3" placeholder="Message / Course Interest"></textarea>
+            <form class="enquiry-form" id="quickEnquiryForm">
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="tel" name="phone" placeholder="Mobile Number" required>
+                <textarea name="message" rows="3" placeholder="Message / Course Interest"></textarea>
                 <button type="submit" class="enquiry-btn">Send Message</button>
+                <p id="enquiry-feedback" style="margin-top:10px; font-size:13px; display:none;"></p>
             </form>
         </div>
     </aside>
@@ -457,9 +458,7 @@ include __DIR__ . '/../../includes/header.php';
         <div id="course-container" class="course-grid">
             <?php if (count($courses) > 0): ?>
                 <?php foreach($courses as $course): 
-                    // Calculate Price (Basic logic since it's JSON)
-                    $price = isset($course['fees']['total_fee']) ? '₹' . number_format($course['fees']['total_fee']) : 'Fees Apply';
-                    // Category Name mapping (simplified, ideal to join table)
+                    // Category Name mapping
                     $cat_name = "Course";
                     foreach($categories as $c) { if($c['id'] == $course['category_id']) { $cat_name = $c['name']; break; } }
                 ?>
@@ -478,7 +477,6 @@ include __DIR__ . '/../../includes/header.php';
                                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 <?php echo $course['duration_value'] . ' ' . $course['duration_type']; ?>
                             </div>
-                            <!-- Add more meta if needed -->
                         </div>
 
                         <p class="course-desc">
@@ -486,8 +484,10 @@ include __DIR__ . '/../../includes/header.php';
                         </p>
 
                         <div class="course-footer">
-                            <span class="price"><?php echo $price; ?></span>
-                            <a href="../../course-details.php?id=<?php echo $course['id']; ?>" class="view-btn-link">View Details</a>
+                            <a href="../../online-admisson" style="background:#22c55e; color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:6px;">
+                                Online Admission
+                            </a>
+                            <a href="../../course-details.php?slug=<?php echo urlencode($course['slug']); ?>" class="view-btn-link">View Details</a>
                         </div>
                     </div>
                 </div>
@@ -519,6 +519,49 @@ include __DIR__ . '/../../includes/header.php';
         container.classList.add('course-list-view');
         listBtn.classList.add('active');
         gridBtn.classList.remove('active');
+    });
+
+    // Quick Enquiry AJAX
+    document.getElementById('quickEnquiryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = this.querySelector('button');
+        const feedback = document.getElementById('enquiry-feedback');
+        const originalText = btn.innerText;
+
+        btn.innerText = 'Sending...';
+        btn.disabled = true;
+
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => data[key] = value);
+        data['course_source'] = 'listing_page';
+
+        fetch('../../actions/submit-quick-enquiry.php', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(result => {
+            feedback.style.display = 'block';
+            if(result.success) {
+                feedback.style.color = 'green';
+                feedback.innerText = 'Thanks! Your inquiry has been sent.';
+                this.reset();
+            } else {
+                feedback.style.color = 'red';
+                feedback.innerText = result.message || 'Something went wrong.';
+            }
+        })
+        .catch(err => {
+            feedback.style.display = 'block';
+            feedback.style.color = 'red';
+            feedback.innerText = 'Network error. Please try again.';
+        })
+        .finally(() => {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        });
     });
 </script>
 
