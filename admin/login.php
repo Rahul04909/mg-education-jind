@@ -184,6 +184,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             
             <div class="mt-8 text-center text-sm text-gray-400">
                 <p>&copy; <?php echo date('Y'); ?> MG Education & Social Development Organisation</p>
+                <br>
+                <p>Website Desigen By Rahul Dhiman</p>
             </div>
         </div>
     </div>
