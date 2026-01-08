@@ -68,7 +68,7 @@ body.noscroll{overflow:hidden}
   </div>
   <div class="container header-nav" role="navigation" aria-label="Secondary">
     <a href="../../pages/join-as-a-volunteer/index.php" class="nav-link">Join As a Volunteer</a>
-    <a href="/schemes" class="nav-link">Schemes/Programs</a>
+    <a href="../../online-admisson" class="nav-link">Online Admission</a>
     <a href="/recommendations" class="nav-link">Recommendation</a>
     <a href="/courses" class="nav-link">Skill Courses</a>
     <a href="/jobs" class="nav-link">Job Exchange</a>
@@ -87,7 +87,7 @@ body.noscroll{overflow:hidden}
       <nav class="drawer-nav" aria-label="Mobile Navigation">
         <a class="drawer-link" href="/dashboards">Dashboards</a>
         <a class="drawer-link" href="../../pages/join-as-a-volunteer/index.php">Join As a Volunteer</a>
-        <a class="drawer-link" href="../../online-admission">Online Admission</a>
+        <a class="drawer-link" href="../../online-admisson">Online Admission</a>
         <a class="drawer-link" href="/recommendations">Recommendation</a>
         <a class="drawer-link" href="/courses">Skill Courses</a>
         <a class="drawer-link" href="/jobs">Job Exchange</a>
