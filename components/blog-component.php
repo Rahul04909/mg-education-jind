@@ -96,9 +96,9 @@ $result = $conn->query($sql);
 
 /* Navigation Buttons */
 .blogs-nav{display:flex;gap:8px}
-.nav-btn{height:40px;width:40px;border-radius:50%;border:1px solid #cbd5e1;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s}
-.nav-btn:hover{border-color:#1358db;color:#1358db}
-.nav-btn svg{width:20px;height:20px;stroke-width:2;stroke:currentColor;fill:none}
+.blog-nav-btn{height:40px;width:40px;border-radius:50%;border:1px solid #cbd5e1;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;color:#64748b}
+.blog-nav-btn:hover{border-color:#1358db;color:#1358db}
+.blog-nav-btn svg{width:20px;height:20px;stroke-width:2;stroke:currentColor;fill:none}
 
 @media(max-width:768px){
     .blog-card{flex:0 0 280px;height:auto;min-height:380px}
@@ -115,8 +115,8 @@ $result = $conn->query($sql);
                 <p class="blogs-subtitle">Stay informed with our latest news and educational insights.</p>
             </div>
             <div class="blogs-nav">
-                <button class="nav-btn prev-blog" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
-                <button class="nav-btn next-blog" aria-label="Next"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+                <button class="blog-nav-btn prev-blog" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <button class="blog-nav-btn next-blog" aria-label="Next"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
             </div>
         </div>
 
