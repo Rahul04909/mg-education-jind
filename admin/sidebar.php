@@ -243,6 +243,7 @@
                 </a>
                 <ul class="submenu">
                     <li class="submenu-item"><a href="../../admin/donations/donation-enquiry.php">Donation Enquiry</a></li>
+                    <li class="submenu-item"><a href="../../admin/donations/index.php">Donation List</a></li>
                </ul>
             </li>
 
