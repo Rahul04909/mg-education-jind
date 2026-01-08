@@ -271,6 +271,41 @@ $html = '
                     </tr>';
                 }
 
+// Output PDF
+$options = new Options();
+$options->set('isRemoteEnabled', true);
+$dompdf = new Dompdf($options);
+
+// QR Code Generation
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Label\LabelAlignment;
+use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
+
+// Build QR Data
+$qr_content = "Name: " . $data['full_name'] . "\n";
+$qr_content .= "Enrollment No: " . $data['enrollment_no'] . "\n";
+$qr_content .= "Course: " . $data['course_name'] . "\n";
+$qr_content .= "Session: " . $data['session_name'] . "\n";
+$qr_content .= "Total Marks: " . $grand_total_obtained . "/" . $grand_total_max . "\n";
+$qr_content .= "Result: " . $status_result;
+
+$qr_result = Builder::create()
+    ->writer(new PngWriter())
+    ->writerOptions([])
+    ->data($qr_content)
+    ->encoding(new Encoding('UTF-8'))
+    ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+    ->size(100)
+    ->margin(0)
+    ->validateResult(false)
+    ->build();
+
+$qr_data_uri = $qr_result->getDataUri();
+
 $html .= '       <tr style="background-color: #f0f9ff;">
                     <td colspan="2" style="text-align: right; padding-right: 10px; font-weight: bold;">GRAND TOTAL</td>
                     <td>'.$grand_total_max.'</td>
@@ -289,10 +324,20 @@ $html .= '       <tr style="background-color: #f0f9ff;">
         </div>
 
         <div class="footer">
-            <div style="text-align: center; display: inline-block;">
-                <img src="' . $sign_src . '" style="height: 50px; display: block; margin: 0 auto;">
-                <div style="border-top: 1px solid #000; margin-top: 5px; font-weight: bold; font-size: 12px; padding-top: 2px;">AUTHORIZED SIGNATORY</div>
-            </div>
+            <table style="width: 100%; border: none; margin-top: 30px;">
+                <tr>
+                    <td style="width: 50%; text-align: center; vertical-align: bottom;">
+                        <img src="' . $qr_data_uri . '" style="width: 90px; height: 90px;">
+                        <div style="font-size: 10px; margin-top: 5px; font-weight: bold;">Scan to Verify</div>
+                    </td>
+                    <td style="width: 50%; text-align: right; vertical-align: bottom;">
+                        <div style="display: inline-block; text-align: center;">
+                            <img src="' . $sign_src . '" style="height: 50px; display: block; margin: 0 auto;">
+                            <div style="border-top: 1px solid #000; margin-top: 5px; font-weight: bold; font-size: 12px; padding-top: 2px;">AUTHORIZED SIGNATORY</div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
 
         </div> <!-- End aligned-container -->
@@ -300,10 +345,6 @@ $html .= '       <tr style="background-color: #f0f9ff;">
 </body>
 </html>';
 
-// Output PDF
-$options = new Options();
-$options->set('isRemoteEnabled', true);
-$dompdf = new Dompdf($options);
 $dompdf->loadHtml($html);
 $dompdf->setPaper('A4', 'portrait');
 $dompdf->render();
