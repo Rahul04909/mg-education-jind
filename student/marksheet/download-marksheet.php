@@ -94,7 +94,7 @@ function get_image_base64($path) {
 
 // Prepare Images
 $base_dir = __DIR__;
-$bg_image_path = $base_dir . '/legal-marksheet-background.png';
+$bg_image_path = $base_dir . '/mg-background.png';
 $sign_image_path = $base_dir . '/mg-sign.png';
 
 // Student photo is in root/assets/uploads... so we go up 2 levels from student/marksheet to get to root

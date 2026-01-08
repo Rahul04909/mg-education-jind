@@ -78,7 +78,7 @@ $total_words = strtoupper($f->format($data['obtained_marks']));
             width: 210mm;
             height: 297mm;
             margin: 20px auto;
-            background: white url('legal-marksheet-background.png') no-repeat center center;
+            background: white url('mg-background.png') no-repeat center center;
             background-size: 100% 100%;
             position: relative;
             box-shadow: 0 0 20px rgba(0,0,0,0.2);
