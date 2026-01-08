@@ -55,21 +55,51 @@ if ($rev_result && $rev_result->num_rows > 0) {
 .ri-msg { color: #334155; line-height: 1.6; }
 
 /* Form */
-.rev-form-wrap { display: none; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); margin-bottom: 24px; }
-.rev-form-wrap.open { display: block; animation: slideDown 0.3s ease; }
-@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.rev-form-wrap { display: none; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); margin-bottom: 24px; }
+.rev-form-wrap.open { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
-.star-input { display: flex; gap: 8px; margin-bottom: 16px; cursor: pointer; }
-.star-icon { width: 32px; height: 32px; fill: #e2e8f0; transition: fill 0.2s; }
+.star-input { display: flex; gap: 4px; margin-bottom: 24px; cursor: pointer; }
+.star-icon { width: 32px; height: 32px; fill: #cbd5e1; transition: fill 0.2s, transform 0.1s; }
+.star-icon:hover { transform: scale(1.1); }
 .star-icon.active { fill: #fbbf24; }
 
-.form-group { margin-bottom: 16px; }
-.form-input { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; }
-.btn-submit { background: #4f46e5; color: #fff; padding: 12px 24px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+.form-group { margin-bottom: 0; } /* Reset margin since row handles gap */
+.form-input { 
+    width: 100%; 
+    padding: 14px 16px; 
+    border: 1px solid #e2e8f0; 
+    border-radius: 8px; 
+    font-size: 15px; 
+    color: #334155;
+    background: #f8fafc;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+.form-input:focus { outline: none; border-color: #6366f1; background: #fff; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+.form-input::placeholder { color: #94a3b8; }
+.form-textarea { margin-bottom: 24px; resize: vertical; min-height: 120px; }
+
+.btn-submit { 
+    background: #4f46e5; 
+    color: #fff; 
+    padding: 14px 28px; 
+    border-radius: 8px; 
+    border: none; 
+    font-weight: 600; 
+    cursor: pointer; 
+    font-size: 15px;
+    transition: background 0.2s, transform 0.1s;
+}
+.btn-submit:hover { background: #4338ca; transform: translateY(-1px); }
+.btn-submit:active { transform: translateY(0); }
 
 @media(max-width: 600px) {
     .stats-box { grid-template-columns: 1fr; gap: 20px; text-align: center; }
     .rating-bars { padding: 0 10px; }
+    .form-row { grid-template-columns: 1fr; gap: 16px; }
+    .rev-form-wrap { padding: 20px; }
 }
 </style>
 
@@ -92,7 +122,7 @@ if ($rev_result && $rev_result->num_rows > 0) {
                 <?php endfor; ?>
             </div>
 
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="form-row">
                 <div class="form-group">
                     <input type="text" name="name" class="form-input" placeholder="Your Name" required>
                 </div>
@@ -101,9 +131,7 @@ if ($rev_result && $rev_result->num_rows > 0) {
                 </div>
             </div>
             
-            <div class="form-group">
-                <textarea name="review" class="form-input" rows="4" placeholder="Write your thoughts..." required></textarea>
-            </div>
+            <textarea name="review" class="form-input form-textarea" placeholder="Write your thoughts..." required></textarea>
             
             <button type="submit" class="btn-submit" id="submitBtn">Submit Review</button>
             <div id="formMsg" style="margin-top:12px;font-size:14px;display:none"></div>
