@@ -64,10 +64,11 @@ if ($rev_result && $rev_result->num_rows > 0) {
 .star-icon:hover { transform: scale(1.1); }
 .star-icon.active { fill: #fbbf24; }
 
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px; }
 .form-group { margin-bottom: 0; } /* Reset margin since row handles gap */
 .form-input { 
     width: 100%; 
+    max-width: 100%; /* Ensure they don't overflow */
     padding: 14px 16px; 
     border: 1px solid #e2e8f0; 
     border-radius: 8px; 
@@ -79,6 +80,10 @@ if ($rev_result && $rev_result->num_rows > 0) {
 }
 .form-input:focus { outline: none; border-color: #6366f1; background: #fff; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
 .form-input::placeholder { color: #94a3b8; }
+/* Use a constrained width for the Name/Email row to avoid super wide inputs */
+.form-row .form-input { width: 100%; }
+.rev-form-wrap form { max-width: 700px; } /* Constrain the inner form width */
+
 .form-textarea { margin-bottom: 24px; resize: vertical; min-height: 120px; }
 
 .btn-submit { 
