@@ -162,6 +162,12 @@ $description = !empty($blog['meta_desc']) ? $blog['meta_desc'] : substr(strip_ta
                             <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode($url); ?>" target="_blank" class="share-btn" style="color:#0a66c2"><i class="fab fa-linkedin-in"></i></a>
                         </div>
                     </div>
+
+                    <!-- Blog Reviews Component -->
+                    <?php 
+                        $blog_id = $blog['id'];
+                        include 'components/blog-reviews.php'; 
+                    ?>
                 </article>
 
                 <!-- Sidebar -->
@@ -190,10 +196,71 @@ $description = !empty($blog['meta_desc']) ? $blog['meta_desc'] : substr(strip_ta
                         
                     </div>
                     
-                    <div class="widget" style="background:#f0f9ff;border-color:#bae6fd;">
-                        <h4 class="widget-title" style="color:#0369a1;border-color:#bae6fd">Donate for a Cause</h4>
-                        <p style="font-size:14px;color:#334155;margin-bottom:16px;">Your small contribution can make a big difference in a student's life.</p>
-                        <a href="pages/donate-now/" class="btn-read-more" style="width:100%;justify-content:center;background:#0ea5e9;color:#fff;text-decoration:none;padding:12px;border-radius:8px;font-weight:600;display:inline-block;text-align:center">Donate Now</a>
+                    <!-- Enhanced Donate Widget -->
+                    <style>
+                        .donate-card {
+                            background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+                            border-radius: 16px;
+                            padding: 30px 24px;
+                            color: #fff;
+                            text-align: center;
+                            box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.4);
+                            position: relative;
+                            overflow: hidden;
+                        }
+                        .donate-card::before {
+                            content: '';
+                            position: absolute;
+                            top: -20px;
+                            left: -20px;
+                            width: 100px;
+                            height: 100px;
+                            background: rgba(255,255,255,0.1);
+                            border-radius: 50%;
+                        }
+                        .donate-card::after {
+                            content: '';
+                            position: absolute;
+                            bottom: -10px;
+                            right: -10px;
+                            width: 80px;
+                            height: 80px;
+                            background: rgba(255,255,255,0.1);
+                            border-radius: 50%;
+                        }
+                        .dc-icon {
+                            width: 60px;
+                            height: 60px;
+                            background: rgba(255,255,255,0.2);
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            margin: 0 auto 20px;
+                            font-size: 24px;
+                        }
+                        .dc-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; line-height: 1.2; position: relative; z-index: 2; }
+                        .dc-text { font-size: 14px; opacity: 0.9; margin-bottom: 24px; line-height: 1.6; position: relative; z-index: 2; }
+                        .dc-btn {
+                            display: inline-block;
+                            background: #fff;
+                            color: #2563eb;
+                            font-weight: 700;
+                            padding: 14px 28px;
+                            border-radius: 99px;
+                            text-decoration: none;
+                            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+                            transition: transform 0.2s;
+                            position: relative;
+                            z-index: 2;
+                        }
+                        .dc-btn:hover { transform: translateY(-3px); }
+                    </style>
+                    <div class="donate-card">
+                        <div class="dc-icon"><i class="fas fa-heart"></i></div>
+                        <h4 class="dc-title">Support Our Mission</h4>
+                        <p class="dc-text">Your small contribution can empower a student's dream. Help us make a difference today.</p>
+                        <a href="pages/donate-now/" class="dc-btn">Donate Now</a>
                     </div>
                 </aside>
                 
