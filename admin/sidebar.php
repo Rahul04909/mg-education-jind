@@ -306,7 +306,7 @@
         </ul>
 
         <div class="sidebar-footer">
-             <a href="/logout" class="nav-link" style="color:#ef4444; background: #fef2f2;">
+             <a href="../../admin/logout.php" class="nav-link" style="color:#ef4444; background: #fef2f2;">
                  <svg class="nav-icon" viewBox="0 0 24 24" style="stroke:#ef4444"><path d="M9 3h6v4"/><path d="M9 21h6v-4"/><path d="M16 12H3"/><path d="M12 8l4 4-4 4"/></svg>
                  <span class="nav-text">Logout</span>
              </a>
