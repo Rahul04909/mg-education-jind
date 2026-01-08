@@ -340,25 +340,53 @@ include __DIR__ . '/../../includes/header.php';
     }
 
     /* List View Overrides */
+    .course-list-view .course-grid {
+        display: flex;
+        flex-direction: column;
+    }
+
     .course-list-view .course-card {
         flex-direction: row;
-        height: 180px;
+        height: auto; /* Allow content to dictate height */
+        min-height: 200px;
+        align-items: stretch;
     }
     .course-list-view .card-thumb {
-        width: 260px;
-        height: 100%;
+        width: 300px;
+        height: auto; /* Match parent height */
         flex-shrink: 0;
+        min-height: 100%;
+        position: relative;
+    }
+    .course-list-view .card-thumb img {
+        position: absolute;
+        top:0; left:0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
     .course-list-view .card-body {
-        padding: 20px;
-        justify-content: center;
+        padding: 24px;
+        justify-content: flex-start; /* Align top */
     }
     .course-list-view .course-desc {
-        -webkit-line-clamp: 2;
-        margin-bottom: 10px;
+        -webkit-line-clamp: 3; /* Show more text in list view */
+        margin-bottom: 16px;
+        font-size: 14px;
+        display: -webkit-box;
     }
     .course-list-view .course-title {
-        font-size: 18px;
+        font-size: 20px;
+        margin-bottom: 10px;
+        -webkit-line-clamp: 2; /* Ensure longer titles wrap nicely */
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .course-list-view .course-footer {
+        margin-top: auto;
+        border-top: none;
+        padding-top: 0;
     }
 
     @media (max-width: 992px) {
@@ -367,14 +395,16 @@ include __DIR__ . '/../../includes/header.php';
         }
         .sidebar {
             width: 100%;
+            margin-bottom: 24px;
         }
+        /* Keep list view stack on mobile */
         .course-list-view .course-card {
             flex-direction: column;
-            height: auto;
         }
         .course-list-view .card-thumb {
             width: 100%;
-            height: 180px;
+            height: 200px;
+            position: relative;
         }
     }
 </style>
@@ -466,7 +496,8 @@ include __DIR__ . '/../../includes/header.php';
                     <div class="card-thumb">
                         <img src="../../<?php echo !empty($course['featured_image']) ? $course['featured_image'] : 'assets/images/placeholder-course.jpg'; ?>" 
                              alt="<?php echo htmlspecialchars($course['title']); ?>"
-                             onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+                             loading="lazy"
+                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgNDAwIDMwMCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2YxZjVmOSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iYXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiM2NDc0OGIiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=='">
                     </div>
                     <div class="card-body">
                         <span class="course-badge"><?php echo htmlspecialchars($cat_name); ?></span>
