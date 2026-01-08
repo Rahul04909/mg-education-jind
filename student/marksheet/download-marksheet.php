@@ -308,7 +308,7 @@ $qr_result = (new Builder(
 
 $qr_data_uri = $qr_result->getDataUri();
 
-$html .= '       <tr style="background-color: #f0f9ff;">
+$html .= '       <tr style="background-color: none">
                     <td colspan="2" style="text-align: right; padding-right: 10px; font-weight: bold;">GRAND TOTAL</td>
                     <td>'.$grand_total_max.'</td>
                     <td>'.$internal_marks.'</td>
