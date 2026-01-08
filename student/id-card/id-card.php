@@ -11,8 +11,11 @@ if (!isset($_SESSION['student_id'])) {
 $conn = getDbConnection();
 $student_id = $_SESSION['student_id'];
 
-// Fetch Student Details
-$sql = "SELECT * FROM admissions WHERE id = $student_id";
+// Fetch Student Details with Center Name
+$sql = "SELECT a.*, c.center_name 
+        FROM admissions a 
+        LEFT JOIN centers c ON a.center_id = c.id 
+        WHERE a.id = $student_id";
 $result = $conn->query($sql);
 
 if ($result->num_rows == 0) {
@@ -21,6 +24,12 @@ if ($result->num_rows == 0) {
 }
 
 $student = $result->fetch_assoc();
+
+// Determine Center Name
+$display_center_name = "MG Education & Social Development Organisation";
+if (!empty($student['center_name'])) {
+    $display_center_name = $student['center_name'];
+}
 
 // Format address
 $address_parts = [
@@ -86,25 +95,26 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
             position: absolute;
             top: 175px; 
             left: 240px; 
-            width: 280px;
+            width: 320px; /* Increased width for center name */
             color: #0f172a;
             font-size: 14px;
             font-weight: 600;
-            line-height: 1.8;
+            line-height: 1.6;
             text-align: left;
         }
 
         .data-row {
             display: flex;
-            margin-bottom: 8px;
+            margin-bottom: 5px; /* Reduced spacing to fit Center Name */
         }
         .data-label {
             width: 70px; 
             font-weight: 700;
             color: #334155;
             text-transform: uppercase;
-            font-size: 12px;
+            font-size: 11px;
             flex-shrink: 0;
+            padding-top: 2px;
         }
         .data-value {
             flex: 1;
@@ -113,6 +123,7 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-size: 13px;
         }
 
         .user-photo-box {
@@ -204,6 +215,12 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
                     <div class="data-label">NAME :</div>
                     <div class="data-value"><?php echo htmlspecialchars($student['full_name']); ?></div>
                 </div>
+                 <div class="data-row">
+                    <div class="data-label">CENTER :</div>
+                    <div class="data-value" style="font-size:12px; white-space:normal; line-height:1.2;">
+                        <?php echo htmlspecialchars($display_center_name); ?>
+                    </div>
+                </div>
                 <div class="data-row">
                     <div class="data-label">DOB :</div>
                     <div class="data-value"><?php 
@@ -212,11 +229,11 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
                 </div>
                 <div class="data-row">
                     <div class="data-label">ADDRESS :</div>
-                    <div class="data-value" style="font-size:12px; line-height:1.4; white-space:normal;">
+                    <div class="data-value" style="font-size:11px; line-height:1.3; white-space:normal;">
                         <?php echo htmlspecialchars($full_address); ?>
                     </div>
                 </div>
-                <div class="data-row" style="margin-top:5px;">
+                <div class="data-row" style="margin-top:2px;">
                     <div class="data-label">ID NO :</div>
                     <div class="data-value"><?php echo htmlspecialchars($student['enrollment_no']); ?></div>
                 </div>
@@ -227,10 +244,9 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
             </div>
             
             <!-- Authorized Signatory -->
-            <div class="signatory" style="position: absolute; bottom: 30px; right: 30px; text-align: center;">
-                <!-- <img src="../../assets/images/sign.png" style="width: 80px; display: block; margin: 0 auto 5px;"> -->
-                 <!-- Placeholder for Sign if needed, or just text -->
-                <div style="font-size: 11px; font-weight: 700; color: #0f172a; text-transform: uppercase;">Authorized Signatory</div>
+            <div class="signatory" style="position: absolute; bottom: 25px; right: 30px; text-align: center;">
+                 <img src="mg-sign.png" style="width: 100px; display: block; margin: 0 auto 2px;">
+                <div style="font-size: 10px; font-weight: 700; color: #0f172a; text-transform: uppercase;">Authorized Signatory</div>
             </div>
         </div>
 
