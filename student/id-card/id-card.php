@@ -11,8 +11,8 @@ if (!isset($_SESSION['student_id'])) {
 $conn = getDbConnection();
 $student_id = $_SESSION['student_id'];
 
-// Fetch Student Details with Center Name
-$sql = "SELECT a.*, c.center_name 
+// Fetch Student Details with Center Name and Mobile
+$sql = "SELECT a.*, c.center_name, c.mobile as center_mobile 
         FROM admissions a 
         LEFT JOIN centers c ON a.center_id = c.id 
         WHERE a.id = $student_id";
@@ -25,10 +25,16 @@ if ($result->num_rows == 0) {
 
 $student = $result->fetch_assoc();
 
-// Determine Center Name
+// Determine Center Name & Contact
 $display_center_name = "MG Education & Social Development Organisation";
+$emergency_contact = "+91 9813354588";
+
 if (!empty($student['center_name'])) {
     $display_center_name = $student['center_name'];
+}
+
+if (!empty($student['center_mobile'])) {
+    $emergency_contact = $student['center_mobile'];
 }
 
 // Format address
@@ -255,11 +261,16 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
             <img src="id-card-back.png" class="card-img" alt="ID Card Back">
             
             <!-- Barcode on Back Bottom Middle -->
-            <div class="barcode-area" style="position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); background: white; padding: 5px; border-radius: 4px;">
+            <div class="barcode-area" style="position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); background: white; padding: 5px; border-radius: 4px;">
                 <?php
                     $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
                     echo '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($student['enrollment_no'], $generator::TYPE_CODE_128, 2, 30)) . '">';
                 ?>
+            </div>
+            
+            <!-- Emergency Contact -->
+            <div style="position: absolute; bottom: 25px; width: 100%; text-align: center; color: #0f172a; font-size: 13px; font-weight: 700;">
+                Emergency Contact: <?php echo htmlspecialchars($emergency_contact); ?>
             </div>
         </div>
     </div>
