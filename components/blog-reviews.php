@@ -64,7 +64,7 @@ if ($rev_result && $rev_result->num_rows > 0) {
 .star-icon:hover { transform: scale(1.1); }
 .star-icon.active { fill: #fbbf24; }
 
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px; }
+.rev-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 20px; }
 .form-group { margin-bottom: 0; } /* Reset margin since row handles gap */
 .form-input { 
     width: 100%; 
@@ -81,7 +81,7 @@ if ($rev_result && $rev_result->num_rows > 0) {
 .form-input:focus { outline: none; border-color: #6366f1; background: #fff; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
 .form-input::placeholder { color: #94a3b8; }
 /* Use a constrained width for the Name/Email row to avoid super wide inputs */
-.form-row .form-input { width: 100%; }
+.rev-form-row .form-input { width: 100%; }
 .rev-form-wrap form { max-width: 700px; } /* Constrain the inner form width */
 
 .form-textarea { margin-bottom: 24px; resize: vertical; min-height: 120px; }
@@ -103,7 +103,7 @@ if ($rev_result && $rev_result->num_rows > 0) {
 @media(max-width: 600px) {
     .stats-box { grid-template-columns: 1fr; gap: 20px; text-align: center; }
     .rating-bars { padding: 0 10px; }
-    .form-row { grid-template-columns: 1fr; gap: 16px; }
+    .rev-form-row { grid-template-columns: 1fr; gap: 16px; }
     .rev-form-wrap { padding: 20px; }
 }
 </style>
@@ -127,7 +127,7 @@ if ($rev_result && $rev_result->num_rows > 0) {
                 <?php endfor; ?>
             </div>
 
-            <div class="form-row">
+            <div class="rev-form-row">
                 <div class="form-group">
                     <input type="text" name="name" class="form-input" placeholder="Your Name" required>
                 </div>
