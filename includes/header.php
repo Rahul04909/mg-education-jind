@@ -58,7 +58,7 @@ body.noscroll{overflow:hidden}
     </a>
 
     <div class="actions">
-      <a href="/donate" class="btn btn-outline" style="border-color: #eab308; color: #ca8a04; background: #fefce8;">
+      <a href="../../pages/donate-now/index.php" class="btn btn-outline" style="border-color: #eab308; color: #ca8a04; background: #fefce8;">
         <svg class="icon" viewBox="0 0 24 24" style="stroke: #ca8a04;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
         DONATE NOW
       </a>
