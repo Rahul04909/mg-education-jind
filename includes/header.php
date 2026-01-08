@@ -63,7 +63,8 @@ body.noscroll{overflow:hidden}
         DONATE NOW
       </a>
       <a href="/register" class="btn btn-primary">REGISTER</a>
-      <a href="/login" class="btn btn-light">LOGIN</a>
+      <a href="../../admin" class="btn btn-light">Admin Login</a>
+      <a href="../../student" class=" btn btn-light"> Student Login</a>
     </div>
   </div>
   <div class="container header-nav" role="navigation" aria-label="Secondary">
@@ -96,9 +97,7 @@ body.noscroll{overflow:hidden}
       </nav>
       <div class="drawer-ctas">
         <a href="../../pages/join-as-a-volunteer" class="btn btn-primary btn-block">REGISTER</a>
-        <a href="https://mgedu.in/admin" class="btn btn-light btn-block">Admin Login</a>
         <a href="https://mgedu.in/student" class="btn btn-light btn-block">Student Login</a>
-        <a href="https://mgedu.in/center" class="btn btn-light btn-block">Franchise Login</a>
       </div>
     </div>
   </div>
