@@ -95,8 +95,10 @@ body.noscroll{overflow:hidden}
         <a class="drawer-link" href="/soar">AI SOAR</a>
       </nav>
       <div class="drawer-ctas">
-        <a href="/register" class="btn btn-primary btn-block">REGISTER</a>
-        <a href="/login" class="btn btn-light btn-block">LOGIN</a>
+        <a href="../../pages/join-as-a-volunteer" class="btn btn-primary btn-block">REGISTER</a>
+        <a href="https://mgedu.in/admin" class="btn btn-light btn-block">Admin Login</a>
+        <a href="https://mgedu.in/student" class="btn btn-light btn-block">Student Login</a>
+        <a href="https://mgedu.in/center" class="btn btn-light btn-block">Franchise Login</a>
       </div>
     </div>
   </div>
