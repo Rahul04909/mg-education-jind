@@ -1,3 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate Now - MG Skill</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .page-wrapper { min-height: 80vh; padding-top: 20px; }
+        .card { border: none; border-radius: 15px; }
+        .card-header { border-radius: 15px 15px 0 0 !important; background: linear-gradient(90deg, #1358db 0%, #5b61ff 100%); }
+        .btn-primary { background-color: #1358db; border-color: #1358db; }
+        .btn-primary:hover { background-color: #0b45b0; border-color: #0b45b0; }
+        .amount-btn.active { background-color: #1358db !important; border-color: #1358db !important; color: white !important; }
+        .amount-btn:hover { background-color: #eef6ff; color: #1358db; border-color: #1358db; }
+        .amount-btn.active:hover { background-color: #0b45b0; color: white; }
+    </style>
+</head>
+<body>
+
 <?php
 include '../../includes/header.php';
 ?>
@@ -205,3 +229,5 @@ $(document).ready(function() {
 <?php
 include '../../includes/footer.php';
 ?>
+</body>
+</html>

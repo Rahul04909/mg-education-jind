@@ -1,3 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Successful - MG Skill</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .page-wrapper { min-height: 80vh; padding-top: 20px; }
+        .card { border: none; border-radius: 15px; }
+        .btn-primary { background-color: #1358db; border-color: #1358db; }
+        .btn-primary:hover { background-color: #0b45b0; border-color: #0b45b0; }
+        .text-success { color: #15803d !important; }
+    </style>
+</head>
+<body>
 <?php
 include '../../includes/header.php';
 require_once __DIR__ . '/../../database/db-config.php';
@@ -54,3 +74,5 @@ $data = $res->fetch_assoc();
 include '../../includes/footer.php';
 $conn->close();
 ?>
+</body>
+</html>
