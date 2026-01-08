@@ -258,7 +258,7 @@ $full_address = ($student['address'] ?? '') . ' ' . $address;
 
         <!-- Back Side -->
         <div class="id-card-wrapper" id="card-back">
-            <img src="id-card-back.png" class="card-img" alt="ID Card Back">
+            <img src="back-side.png" class="card-img" alt="ID Card Back">
             
             <!-- Barcode on Back Bottom Middle -->
             <div class="barcode-area" style="position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); background: white; padding: 5px; border-radius: 4px;">
