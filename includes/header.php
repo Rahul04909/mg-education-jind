@@ -71,7 +71,7 @@ body.noscroll{overflow:hidden}
     <a href="../../pages/join-as-a-volunteer/index.php" class="nav-link">Join As a Volunteer</a>
     <a href="../../online-admisson" class="nav-link">Online Admission</a>
     <a href="../../pages/course-listings/" class="nav-link">Our Courses</a>
-    <a href="/courses" class="nav-link">Skill Courses</a>
+    <a href="../../pages/blogs" class="nav-link">Our Blogs</a>
     <a href="/jobs" class="nav-link">Job Exchange</a>
     <a href="/skill-centre" class="nav-link">Skill Centre</a>
     <a href="/soar" class="nav-link pill">MG EDU AI<span class="pill-badge">New</span></a>
