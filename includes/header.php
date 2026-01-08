@@ -87,7 +87,7 @@ body.noscroll{overflow:hidden}
       <nav class="drawer-nav" aria-label="Mobile Navigation">
         <a class="drawer-link" href="/dashboards">Dashboards</a>
         <a class="drawer-link" href="../../pages/join-as-a-volunteer/index.php">Join As a Volunteer</a>
-        <a class="drawer-link" href="/schemes">Schemes/Programs</a>
+        <a class="drawer-link" href="../../online-admission">Online Admission</a>
         <a class="drawer-link" href="/recommendations">Recommendation</a>
         <a class="drawer-link" href="/courses">Skill Courses</a>
         <a class="drawer-link" href="/jobs">Job Exchange</a>
