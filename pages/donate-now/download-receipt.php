@@ -72,9 +72,9 @@ $html = '
 
 <div class="container">
     <div class="header">
-        <h1>MG Education & Social Development Organization</h1>
-        <p>Navjeevan Colony, Behind Chhola Dussehra Ground, Bhopal (462010), M.P.</p>
-        <p>Email: info@mgskill.com | Phone: +91 12345 67890</p>
+        <h1>MG Education & Social Development Organisation</h1>
+        <p>H.N. 2102, Urban Estate, Jind, Haryana (126102), India</p>
+        <p>Email: info@mgedu.in | Phone: +91 9813354588</p>
     </div>
 
     <div style="text-align:center;">
@@ -122,7 +122,7 @@ $html = '
     </table>
 
     <div class="amount-box">
-        Amount Received: ₹' . number_format($data['amount'], 2) . '<br>
+        Amount Received: Rs. ' . number_format($data['amount'], 2) . '<br>
         <span style="font-size: 14px; font-weight: normal; color: #333;">(' . $amount_words . ' Rupees Only)</span>
     </div>
 

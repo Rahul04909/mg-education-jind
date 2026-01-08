@@ -50,7 +50,7 @@ $data = $res->fetch_assoc();
                         <p class="lead">Dear <strong><?php echo htmlspecialchars($data['full_name']); ?></strong>, your generosity helps us make a difference.</p>
                         
                         <div class="alert alert-success d-inline-block px-5 py-3 mt-3">
-                            <h4 class="mb-0">Amount donated: ₹<?php echo number_format($data['amount'], 2); ?></h4>
+                            <h4 class="mb-0">Amount donated: Rs. <?php echo number_format($data['amount'], 2); ?></h4>
                         </div>
 
                         <div class="mt-4">
