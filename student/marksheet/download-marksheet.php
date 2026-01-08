@@ -3,8 +3,19 @@ session_start();
 require_once __DIR__ . '/../../database/db-config.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+// Enable Error Reporting for Debugging
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
+
 use Dompdf\Dompdf;
 use Dompdf\Options;
+
+// QR Code Imports
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Writer\PngWriter;
 
 if (!isset($_SESSION['student_id'])) {
     die("Access Denied");
@@ -276,15 +287,6 @@ $options = new Options();
 $options->set('isRemoteEnabled', true);
 $dompdf = new Dompdf($options);
 
-// QR Code Generation
-use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\Label\LabelAlignment;
-use Endroid\QrCode\Label\Font\NotoSans;
-use Endroid\QrCode\RoundBlockSizeMode;
-use Endroid\QrCode\Writer\PngWriter;
-
 // Build QR Data
 $qr_content = "Name: " . $data['full_name'] . "\n";
 $qr_content .= "Enrollment No: " . $data['enrollment_no'] . "\n";
@@ -293,16 +295,16 @@ $qr_content .= "Session: " . $data['session_name'] . "\n";
 $qr_content .= "Total Marks: " . $grand_total_obtained . "/" . $grand_total_max . "\n";
 $qr_content .= "Result: " . $status_result;
 
-$qr_result = Builder::create()
-    ->writer(new PngWriter())
-    ->writerOptions([])
-    ->data($qr_content)
-    ->encoding(new Encoding('UTF-8'))
-    ->errorCorrectionLevel(ErrorCorrectionLevel::High)
-    ->size(100)
-    ->margin(0)
-    ->validateResult(false)
-    ->build();
+$qr_result = (new Builder(
+    writer: new PngWriter(),
+    writerOptions: [],
+    validateResult: false,
+    data: $qr_content,
+    encoding: new Encoding('UTF-8'),
+    errorCorrectionLevel: ErrorCorrectionLevel::High,
+    size: 100,
+    margin: 0
+))->build();
 
 $qr_data_uri = $qr_result->getDataUri();
 
