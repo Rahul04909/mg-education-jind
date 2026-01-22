@@ -126,8 +126,8 @@ $result = $conn->query($sql);
     .vol-role {
         font-size: 13px;
         font-weight: 600;
-        color: #ffffff; /* Sky 700 */
-        background: #e0f2fe; /* Light blue */
+        color: #000000; /* Sky 700 */
+        background: #ffffff; /* Light blue */
         padding: 4px 10px;
         border-radius: 20px;
         display: inline-block;
@@ -135,7 +135,7 @@ $result = $conn->query($sql);
     }
     
     .vol-card:hover .vol-role {
-        background: #f0f9ff;
+        background: none;
     }
     
     .loc-icon {
