@@ -9,7 +9,7 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fa; }
+        body { background-color: #f8f9fa; overflow-x: hidden; }
         .page-wrapper { min-height: 80vh; padding-top: 20px; }
         .card { border: none; border-radius: 15px; }
         .card-header { border-radius: 15px 15px 0 0 !important; background: linear-gradient(90deg, #1358db 0%, #5b61ff 100%); }
@@ -67,7 +67,7 @@ include '../../includes/header.php';
 ?>
 
 <div class="page-wrapper">
-    <div class="content">
+    <div class="content container">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="card shadow-lg border-0 rounded-lg mt-5 mb-5">
