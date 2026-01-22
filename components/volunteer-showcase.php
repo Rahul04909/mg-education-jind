@@ -17,7 +17,7 @@ $result = $conn->query($sql);
 <style>
     /* Scoped-like styles for Volunteer Showcase */
     .vol-section {
-        background-color: #e0f2fe; /* Light blue (Tailwind sky-100 approx) */
+        background-color: #0a87b5; /* Light blue (Tailwind sky-100 approx) */
         padding: 60px 0;
         margin-top: 40px;
         margin-bottom: 40px;
