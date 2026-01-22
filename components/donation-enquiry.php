@@ -19,6 +19,8 @@
         padding: 60px 16px;
         color: #fff;
         overflow: hidden;
+        border-radius: 24px;
+        margin: 40px 16px;
     }
 
     /* Overlay */
