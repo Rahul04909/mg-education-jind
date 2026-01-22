@@ -47,6 +47,7 @@ $ogImage=$origin.'assets/images/mg-logo.jpg';
 </head>
 <body>
   <?php require_once __DIR__.'/includes/header.php'; ?>
+  <?php require_once __DIR__.'/components/news-ticker.php'; ?>
   <?php require_once __DIR__.'/components/hero-slider.php'; ?>
   <?php require_once __DIR__.'/components/courses-grid.php'; ?>
   <?php require_once __DIR__.'/components/blog-component.php'; ?>
