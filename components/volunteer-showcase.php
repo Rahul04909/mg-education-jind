@@ -108,7 +108,7 @@ $result = $conn->query($sql);
     .vol-name {
         font-size: 18px;
         font-weight: 700;
-        color: #1e293b; /* Slate 800 */
+        color: #ffffff; /* Slate 800 */
         margin: 0 0 6px 0;
     }
 
@@ -126,7 +126,7 @@ $result = $conn->query($sql);
     .vol-role {
         font-size: 13px;
         font-weight: 600;
-        color: #0369a1; /* Sky 700 */
+        color: #ffffff; /* Sky 700 */
         background: #e0f2fe; /* Light blue */
         padding: 4px 10px;
         border-radius: 20px;
