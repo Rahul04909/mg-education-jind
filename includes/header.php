@@ -64,6 +64,7 @@ body.noscroll{overflow:hidden}
       </a>
       <a href="/register" class="btn btn-primary">REGISTER</a>
       <a href="../../admin" class="btn btn-light">Admin Login</a>
+      <a href="../../center" class="btn btn-light">Center Login</a>
       <a href="../../student" class=" btn btn-light"> Student Login</a>
     </div>
   </div>
