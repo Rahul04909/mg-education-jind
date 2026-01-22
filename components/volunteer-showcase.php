@@ -47,7 +47,7 @@ $result = $conn->query($sql);
 
     .vol-subtitle {
         font-size: 16px;
-        color: #64748b; /* Slate 500 */
+        color: #ffffff; /* Slate 500 */
         max-width: 600px;
         margin: 0 auto;
         line-height: 1.6;
