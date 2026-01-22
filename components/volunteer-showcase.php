@@ -40,7 +40,7 @@ $result = $conn->query($sql);
     .vol-title {
         font-size: 32px;
         font-weight: 800;
-        color: #0f172a; /* Slate 900 */
+        color: #ffffff; /* Slate 900 */
         margin: 0 0 10px 0;
         letter-spacing: -0.5px;
     }
@@ -115,7 +115,7 @@ $result = $conn->query($sql);
     .vol-location {
         font-size: 14px;
         font-weight: 500;
-        color: #64748b; /* Slate 500 */
+        color: #ffffff; /* Slate 500 */
         margin: 0 0 8px 0;
         display: flex;
         align-items: center;
