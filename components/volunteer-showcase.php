@@ -78,6 +78,7 @@ $result = $conn->query($sql);
         transform: translateY(-5px);
         background: none;
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
+        border: "1px solid black"
     }
 
     /* Image Wrapper */
