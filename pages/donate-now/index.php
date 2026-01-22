@@ -15,9 +15,49 @@
         .card-header { border-radius: 15px 15px 0 0 !important; background: linear-gradient(90deg, #1358db 0%, #5b61ff 100%); }
         .btn-primary { background-color: #1358db; border-color: #1358db; }
         .btn-primary:hover { background-color: #0b45b0; border-color: #0b45b0; }
-        .amount-btn.active { background-color: #1358db !important; border-color: #1358db !important; color: white !important; }
-        .amount-btn:hover { background-color: #eef6ff; color: #1358db; border-color: #1358db; }
-        .amount-btn.active:hover { background-color: #0b45b0; color: white; }
+        /* Amount Button Styles */
+        .amount-btn {
+            min-width: 140px;
+            padding: 15px 20px;
+            border: 2px solid #1358db; /* Solid border */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background-color: white;
+            color: #1358db;
+            position: relative;
+            overflow: hidden;
+        }
+        .amount-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(19, 88, 219, 0.15);
+            background-color: #f8f9fa;
+            border-color: #1358db;
+            color: #1358db;
+        }
+        .amount-btn.active {
+            background-color: #1358db !important;
+            border-color: #1358db !important;
+            color: white !important;
+            box-shadow: 0 5px 15px rgba(19, 88, 219, 0.3);
+        }
+        .amount-btn.active:hover {
+            transform: translateY(-2px);
+            background-color: #0b45b0 !important;
+        }
+        .amount-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .purpose-text {
+            font-size: 0.85rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body>
@@ -41,11 +81,26 @@ include '../../includes/header.php';
                             <div class="form-group mb-4">
                                 <label class="h5 mb-3">Select Donation Amount</label>
                                 <div class="d-flex flex-wrap gap-2 justify-content-center" id="amount-buttons">
-                                    <button type="button" class="btn btn-outline-primary btn-lg amount-btn" data-amount="101" data-purpose="Support a cause">₹101</button>
-                                    <button type="button" class="btn btn-outline-primary btn-lg amount-btn" data-amount="501" data-purpose="Education & awareness support">₹501</button>
-                                    <button type="button" class="btn btn-outline-primary btn-lg amount-btn" data-amount="1001" data-purpose="Student learning assistance">₹1,001</button>
-                                    <button type="button" class="btn btn-outline-primary btn-lg amount-btn" data-amount="2100" data-purpose="Event / campaign support">₹2,100</button>
-                                    <button type="button" class="btn btn-outline-primary btn-lg amount-btn" data-amount="5100" data-purpose="Sponsor a social initiative">₹5,100+</button>
+                                    <button type="button" class="btn btn-outline-primary amount-btn" data-amount="101" data-purpose="Support a cause">
+                                        <span class="amount-value">₹101</span>
+                                        <span class="purpose-text">Support a cause</span>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary amount-btn" data-amount="501" data-purpose="Education & awareness support">
+                                        <span class="amount-value">₹501</span>
+                                        <span class="purpose-text">Education & awareness</span>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary amount-btn" data-amount="1001" data-purpose="Student learning assistance">
+                                        <span class="amount-value">₹1,001</span>
+                                        <span class="purpose-text">Student learning</span>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary amount-btn" data-amount="2100" data-purpose="Event / campaign support">
+                                        <span class="amount-value">₹2,100</span>
+                                        <span class="purpose-text">Event / campaign</span>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary amount-btn" data-amount="5100" data-purpose="Sponsor a social initiative">
+                                        <span class="amount-value">₹5,100+</span>
+                                        <span class="purpose-text">Sponsor initiative</span>
+                                    </button>
                                 </div>
                                 <div class="mt-3">
                                     <label>Or Enter Custom Amount (₹)</label>
@@ -222,7 +277,7 @@ $(document).ready(function() {
 </script>
 
 <style>
-.amount-btn { min-width: 100px; }
+
 .gap-2 { gap: 0.5rem; }
 </style>
 
