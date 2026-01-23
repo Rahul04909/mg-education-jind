@@ -5,7 +5,7 @@ $sql = "SELECT * FROM courses WHERE is_active = 1 ORDER BY created_at DESC";
 $result = $conn->query($sql);
 ?>
 <style>
-.courses{background:#fff}
+.courses{background:#fff;background-image:url('assets/images/backgronds/953979084540.jpg');background-size:cover;background-position:center;background-repeat:no-repeat}
 .courses-wrap{max-width:1200px;margin:0 auto;padding:16px 16px 18px}
 .courses-head{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:12px}
 .courses-title{margin:0;color:#0b1020;line-height:1.06;font-size:28px;font-weight:800}
