@@ -298,7 +298,7 @@
                     <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </a>
                 <ul class="submenu">
-                    <li class="submenu-item"><a href="../../admin/frontend/manage-hero-slides.php">All Landing Page</a></li>
+                    <li class="submenu-item"><a href="../../admin/frontend/manage-hero-slides.php">Hero Slides</a></li>
                </ul>
             </li>
             <!-- Addon to Volunteers menu ends here -->
