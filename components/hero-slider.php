@@ -9,6 +9,16 @@
  * - Mobile responsive
  */
 ?>
+<?php
+require_once __DIR__ . '/../database/db-config.php';
+$conn_slider = getDbConnection();
+$hero_slides = [];
+$res_slider = $conn_slider->query("SELECT * FROM hero_slides ORDER BY created_at DESC");
+while($row_s = $res_slider->fetch_assoc()) {
+    $hero_slides[] = $row_s;
+}
+$conn_slider->close();
+?>
 <style>
     .hero-slider-section {
         position: relative;
@@ -132,39 +142,29 @@
     <div class="hero-container">
         <div class="hero-slider">
             <div class="hero-slides-wrapper">
-                <!-- Slide 1 -->
-                <div class="hero-slide active">
-                    <img src="assets/images/frontend/hkcl-banner.jpg" alt="Slide 1">
-                </div>
-                
-                <!-- Slide 2 -->
-                <div class="hero-slide">
-                    <img src="assets/images/frontend/dr.midda.jpg" alt="Slide 2">
-                </div>
-
-                <!-- Slide 3 -->
-                <div class="hero-slide">
-                    <img src="assets/images/frontend/student-banner.png" alt="Slide 3">
-                </div>
-                
-                <!-- Slide 4 -->
-                <div class="hero-slide">
-                    <img src="assets/images/frontend/student-banner.png" alt="Slide 4">
-                </div>
-                
-                <!-- Slide 5 -->
-                <div class="hero-slide">
-                    <img src="assets/images/frontend/student-banner.png" alt="Slide 5">
-                </div>
+                <?php if(!empty($hero_slides)): ?>
+                    <?php foreach($hero_slides as $index => $slide): ?>
+                        <div class="hero-slide <?php echo $index === 0 ? 'active' : ''; ?>">
+                            <img src="<?php echo htmlspecialchars($slide['image_path']); ?>" alt="Slide <?php echo $index + 1; ?>">
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <!-- Fallback / Default Slides if DB is empty -->
+                    <div class="hero-slide active">
+                        <img src="assets/images/frontend/hkcl-banner.jpg" alt="Default Slide 1">
+                    </div>
+                <?php endif; ?>
             </div>
 
             <!-- Dots -->
             <div class="slider-dots">
-                <div class="dot active" onclick="goToSlide(0)"></div>
-                <div class="dot" onclick="goToSlide(1)"></div>
-                <div class="dot" onclick="goToSlide(2)"></div>
-                <div class="dot" onclick="goToSlide(3)"></div>
-                <div class="dot" onclick="goToSlide(4)"></div>
+                <?php if(!empty($hero_slides)): ?>
+                    <?php foreach($hero_slides as $index => $slide): ?>
+                        <div class="dot <?php echo $index === 0 ? 'active' : ''; ?>" onclick="goToSlide(<?php echo $index; ?>)"></div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                     <div class="dot active" onclick="goToSlide(0)"></div>
+                <?php endif; ?>
             </div>
 
             <!-- Navigation -->
@@ -189,6 +189,14 @@
         const sliderSection = document.getElementById('heroSlider');
         const wrapper = document.querySelector('.hero-slides-wrapper');
         
+        // Hide nav if 0 or 1 slide
+        if (slides.length <= 1) {
+            if(prevBtn) prevBtn.style.display = 'none';
+            if(nextBtn) nextBtn.style.display = 'none';
+            if(document.querySelector('.slider-dots')) document.querySelector('.slider-dots').style.display = 'none';
+            return; // No sliding needed
+        }
+
         let currentSlide = 0;
         let slideInterval;
         const intervalTime = 5000; // 5 seconds
@@ -201,6 +209,9 @@
 
             // Update wrapper transform
             if(wrapper) {
+                // Ensure slides are laid out horizontally in the wrapper: flex
+                // Translate percentage based on number of slides or 100% per slide?
+                // The CSS sets .hero-slide min-width: 100%. So translateX(-100% * index) is correct.
                 wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
             }
 
@@ -255,8 +266,10 @@
             resetTimer();
         });
 
-        sliderSection.addEventListener('mouseenter', stopTimer);
-        sliderSection.addEventListener('mouseleave', startTimer);
+        if(sliderSection) {
+            sliderSection.addEventListener('mouseenter', stopTimer);
+            sliderSection.addEventListener('mouseleave', startTimer);
+        }
 
         // Initialize
         startTimer();
