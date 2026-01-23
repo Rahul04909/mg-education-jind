@@ -6,18 +6,32 @@
 ?>
 <style>
     .logo-slider-section {
-        padding: 40px 0;
+        padding: 30px 20px;
         background: #fff;
         border-bottom: 1px solid #f1f5f9;
         overflow: hidden;
     }
 
+    .logo-container-box {
+        background: #f8fafc;
+        border-radius: 24px;
+        padding: 50px 0;
+        margin: 0 auto;
+        max-width: 1600px;
+        width: 100%;
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+        position: relative;
+    }
+
     .logo-header {
         display: flex;
         align-items: center;
+        justify-content: center; /* Centered title */
         gap: 12px;
-        margin-bottom: 30px;
+        margin-bottom: 40px;
         position: relative;
+        padding: 0 20px;
     }
     
     /* "With Registration" styling based on user image */
@@ -38,8 +52,8 @@
         position: relative;
         width: 100%;
         overflow: hidden;
-        mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-        -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
     }
 
     .logo-track {
@@ -59,14 +73,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        filter: grayscale(100%);
-        opacity: 0.7;
+        /* Removed grayscale/opacity for full color */
         transition: all 0.3s;
     }
 
     .logo-item:hover {
-        filter: grayscale(0%);
-        opacity: 1;
         transform: scale(1.05);
     }
 
@@ -86,12 +97,12 @@
         .logo-track { gap: 40px; }
         .logo-item { height: 45px; }
         .reg-title { font-size: 20px; }
-        .logo-slider-section { padding: 30px 0; }
+        .logo-container-box { padding: 30px 0; border-radius: 16px; }
     }
 </style>
 
 <section class="logo-slider-section">
-    <div class="container">
+    <div class="logo-container-box">
         <div class="logo-header">
             <h2 class="reg-title">WITH <span class="reg-highlight">REGISTRATION</span></h2>
         </div>
@@ -99,20 +110,20 @@
         <div class="logo-track-container">
             <div class="logo-track">
                 <!-- Original Set of Logos -->
-                <div class="logo-item"><img src="../assets/images/logos/skill-india.jpg" class="logo-img" alt="Ministry of IT" onerror="this.src='https://via.placeholder.com/150x60?text=Govt+Logo+1'"></div>
-                <div class="logo-item"><img src="../assets/images/logos/digital-india.png" class="logo-img" alt="MHRD" onerror="this.src='https://via.placeholder.com/150x60?text=MHRD'"></div>
-                <div class="logo-item"><img src="../assets/images/logos/nsdc-logo.webp" class="logo-img" alt="MSME" onerror="this.src='https://via.placeholder.com/150x60?text=MSME'"></div>
-                <div class="logo-item"><img src="../assets/images/logos/iso.png" class="logo-img" alt="IAF" onerror="this.src='https://via.placeholder.com/150x60?text=IAF'"></div>
-                <div class="logo-item"><img src="../assets/images/logos/msme.png" class="logo-img" alt="UAF" onerror="this.src='https://via.placeholder.com/150x60?text=UAF'"></div>
-                <div class="logo-item"><img src="../assets/images/logos/mha.png" class="logo-img" alt="ISO" onerror="this.src='https://via.placeholder.com/150x60?text=ISO'"></div>
+                <div class="logo-item"><img src="assets/images/logos/skill-india.jpg" class="logo-img" alt="Ministry of IT" onerror="this.src='https://via.placeholder.com/150x60?text=Govt+Logo+1'"></div>
+                <div class="logo-item"><img src="assets/images/logos/digital-india.png" class="logo-img" alt="MHRD" onerror="this.src='https://via.placeholder.com/150x60?text=MHRD'"></div>
+                <div class="logo-item"><img src="assets/images/logos/nsdc-logo.webp" class="logo-img" alt="MSME" onerror="this.src='https://via.placeholder.com/150x60?text=MSME'"></div>
+                <div class="logo-item"><img src="assets/images/logos/iso.png" class="logo-img" alt="IAF" onerror="this.src='https://via.placeholder.com/150x60?text=IAF'"></div>
+                <div class="logo-item"><img src="assets/images/logos/msme.png" class="logo-img" alt="UAF" onerror="this.src='https://via.placeholder.com/150x60?text=UAF'"></div>
+                <div class="logo-item"><img src="assets/images/logos/mha.png" class="logo-img" alt="ISO" onerror="this.src='https://via.placeholder.com/150x60?text=ISO'"></div>
                 
                 <!-- Duplicate Set for Infinite Loop logic (must match exactly)-->
-                <div class="logo-item"><img src="../assets/images/logos/skill-india.jpg" class="logo-img" alt="Ministry of IT" onerror="this.src='https://via.placeholder.com/150x60?text=Govt+Logo+1'"></div>
-                <div class="logo-item"><img src="../assets/images/logos/digital-india.png" class="logo-img" alt="MHRD" onerror="this.src='https://via.placeholder.com/150x60?text=MHRD'"></div>
-                <div class="logo-item"><img src="../assets/images/logos/nsdc-logo.webp" class="logo-img" alt="MSME" onerror="this.src='https://via.placeholder.com/150x60?text=MSME'"></div>
-                <div class="logo-item"><img src="../assets/images/logos/iso.png" class="logo-img" alt="IAF" onerror="this.src='https://via.placeholder.com/150x60?text=IAF'"></div>
-                <div class="logo-item"><img src="../assets/images/logos/msme.png" class="logo-img" alt="UAF" onerror="this.src='https://via.placeholder.com/150x60?text=UAF'"></div>
-                <div class="logo-item"><img src="../assets/images/logos/mha.png" class="logo-img" alt="ISO" onerror="this.src='https://via.placeholder.com/150x60?text=ISO'"></div>
+                <div class="logo-item"><img src="assets/images/logos/skill-india.jpg" class="logo-img" alt="Ministry of IT" onerror="this.src='https://via.placeholder.com/150x60?text=Govt+Logo+1'"></div>
+                <div class="logo-item"><img src="assets/images/logos/digital-india.png" class="logo-img" alt="MHRD" onerror="this.src='https://via.placeholder.com/150x60?text=MHRD'"></div>
+                <div class="logo-item"><img src="assets/images/logos/nsdc-logo.webp" class="logo-img" alt="MSME" onerror="this.src='https://via.placeholder.com/150x60?text=MSME'"></div>
+                <div class="logo-item"><img src="assets/images/logos/iso.png" class="logo-img" alt="IAF" onerror="this.src='https://via.placeholder.com/150x60?text=IAF'"></div>
+                <div class="logo-item"><img src="assets/images/logos/msme.png" class="logo-img" alt="UAF" onerror="this.src='https://via.placeholder.com/150x60?text=UAF'"></div>
+                <div class="logo-item"><img src="assets/images/logos/mha.png" class="logo-img" alt="ISO" onerror="this.src='https://via.placeholder.com/150x60?text=ISO'"></div>
             </div>
         </div>
     </div>
