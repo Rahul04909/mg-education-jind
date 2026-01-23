@@ -290,6 +290,19 @@
                </ul>
             </li>
             <!-- Addon to Volunteers menu ends here -->
+             <!-- Addon to Volunteers menu start here -->
+             <li class="nav-item">
+                <a href="#" class="nav-link" onclick="toggleMenu(this)">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    <span class="nav-text">Landing Page</span>
+                    <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </a>
+                <ul class="submenu">
+                    <li class="submenu-item"><a href="../../admin/frontend/manage-hero-slides.php">All Landing Page</a></li>
+               </ul>
+            </li>
+            <!-- Addon to Volunteers menu ends here -->
+
 
              <li class="nav-item">
                 <a href="#" class="nav-link" onclick="toggleMenu(this)">
