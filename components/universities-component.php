@@ -93,8 +93,7 @@ if (empty($universities)) {
         align-items: center;
         justify-content: center;
         transition: all 0.3s;
-        filter: grayscale(100%);
-        opacity: 0.8;
+        /* Removed grayscale and opacity */
     }
 
     .uni-item:hover {
