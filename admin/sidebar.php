@@ -299,6 +299,7 @@
                 </a>
                 <ul class="submenu">
                     <li class="submenu-item"><a href="../../admin/frontend/manage-hero-slides.php">Hero Slides</a></li>
+                    <li class="submenu-item"><a href="../../admin/frontend/manage-news.php">News Ticker</a></li>
                </ul>
             </li>
             <!-- Addon to Volunteers menu ends here -->
