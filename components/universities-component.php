@@ -28,15 +28,26 @@ if (empty($universities)) {
 <?php if(!empty($universities)): ?>
 <style>
     .uni-slider-section {
-        padding: 60px 0;
+        padding: 30px 20px; /* Outer spacing */
+        background: #fff;
+    }
+
+    .uni-container-box {
         background: #f8fafc;
-        border-bottom: 1px solid #e2e8f0;
+        border-radius: 24px; /* Rounded borders */
+        padding: 50px 0;
+        margin: 0 auto;
+        max-width: 1600px; /* Limit width */
+        width: 100%;
+        border: 1px solid #e2e8f0;
         overflow: hidden;
+        position: relative;
     }
 
     .uni-header {
         text-align: center;
         margin-bottom: 40px;
+        padding: 0 20px;
     }
     
     .uni-title {
@@ -99,11 +110,6 @@ if (empty($universities)) {
         max-width: 200px;
     }
     
-    .uni-name-tooltip {
-        /* Optional: show name on hover or below */
-        display: none; 
-    }
-
     @keyframes uniScroll {
         0% { transform: translateX(0); }
         100% { transform: translateX(calc(-50% - 30px)); } /* Adjust based ongap */
@@ -113,11 +119,12 @@ if (empty($universities)) {
         .uni-track { gap: 40px; }
         .uni-item { height: 60px; }
         .uni-title { font-size: 22px; }
+        .uni-container-box { border-radius: 16px; padding: 30px 0; }
     }
 </style>
 
 <section class="uni-slider-section">
-    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+    <div class="uni-container-box">
         <div class="uni-header">
             <h2 class="uni-title">Universities Joined with <span style="color:#d97706">MG Education</span></h2>
             <p class="uni-subtitle">Partnering for Social Development & Educational Excellence</p>
