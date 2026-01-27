@@ -50,6 +50,7 @@ $ogImage=$origin.'assets/images/mg-logo.jpg';
   <?php require_once __DIR__.'/components/news-ticker.php'; ?>
   <?php require_once __DIR__.'/components/hero-slider.php'; ?>
   <?php require_once __DIR__.'/components/courses-grid.php'; ?>
+  <?php require_once __DIR__.'/components/internship-list.php'; ?>
   <?php require_once __DIR__.'/components/blog-component.php'; ?>
   <?php require_once __DIR__.'/components/volunteer-showcase.php'; ?>
   <?php require_once __DIR__.'/components/universities-component.php'; ?>
