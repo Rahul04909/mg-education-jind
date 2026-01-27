@@ -209,6 +209,18 @@
 
             <li class="nav-item">
                 <a href="#" class="nav-link" onclick="toggleMenu(this)">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    <span class="nav-text">Internships</span>
+                    <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </a>
+                <ul class="submenu">
+                    <li class="submenu-item"><a href="../../admin/internships/index.php">All Internships</a></li>
+                    <li class="submenu-item"><a href="../../admin/internships/add-internship.php">Add Internship</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="toggleMenu(this)">
                     <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg>
                     <span class="nav-text">Students</span>
                     <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
