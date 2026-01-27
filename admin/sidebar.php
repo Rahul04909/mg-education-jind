@@ -221,6 +221,18 @@
 
             <li class="nav-item">
                 <a href="#" class="nav-link" onclick="toggleMenu(this)">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    <span class="nav-text">Gallery</span>
+                    <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </a>
+                <ul class="submenu">
+                    <li class="submenu-item"><a href="../../admin/gallery/add-gallery-category.php">Add Category</a></li>
+                    <li class="submenu-item"><a href="../../admin/gallery/manage-gallery-category.php">Manage Categories</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="toggleMenu(this)">
                     <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg>
                     <span class="nav-text">Students</span>
                     <svg class="nav-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
