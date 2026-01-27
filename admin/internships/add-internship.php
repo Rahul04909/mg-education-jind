@@ -84,8 +84,8 @@ include __DIR__ . "/../sidebar.php";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Internship - MG Education</title>
     
-    <!-- CKEditor -->
-    <script src="../../vendor/ckeditor/ckeditor/ckeditor.js"></script>
+    <!-- TinyMCE JS (Cloud) -->
+    <script src="https://cdn.tiny.cloud/1/zzf1ium270xgdjvayd6ocr6p0e7uej8ogum1kdm771lsz41d/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     
     <style>
         :root{--active:#22c55e;--indigo:#6f75ff;--line:#e6e8ee;--text:#0b1020;--muted:#6f7787;--error:#ef4444;--success:#22c55e;--info:#3b82f6}
@@ -149,12 +149,12 @@ include __DIR__ . "/../sidebar.php";
                     </div>
                 </div>
 
-                <!-- Description (CKEditor) -->
+                <!-- Description (TinyMCE) -->
                 <div class="card">
                     <h3 class="section-title">Description & Details</h3>
                     <div class="form-group">
                         <label class="form-label">Description</label>
-                        <textarea name="description" id="editor" rows="10"></textarea>
+                        <textarea name="description" id="description" rows="10"></textarea>
                     </div>
                 </div>
 
@@ -223,8 +223,19 @@ include __DIR__ . "/../sidebar.php";
     </main>
 
     <script>
-        // Init CKEditor
-        CKEDITOR.replace('editor');
+        // Init TinyMCE
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof tinymce !== 'undefined') {
+                tinymce.init({
+                    selector: '#description',
+                    height: 300,
+                    plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
+                    toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help'
+                });
+            } else {
+                console.error("TinyMCE script not loaded.");
+            }
+        });
 
         // Slug Generation
         document.getElementById('title').addEventListener('input', function() {
