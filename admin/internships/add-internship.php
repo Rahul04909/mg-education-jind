@@ -233,6 +233,7 @@ include __DIR__ . "/../sidebar.php";
                     toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help'
                 });
             } else {
+                alert("TinyMCE Failed to load. Check your internet connection or console for errors.");
                 console.error("TinyMCE script not loaded.");
             }
         });
