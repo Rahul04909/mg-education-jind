@@ -7,11 +7,11 @@ $sql = "SELECT * FROM blogs WHERE is_active = 1 ORDER BY created_at DESC LIMIT 1
 $result = $conn->query($sql);
 ?>
 <style>
-.blogs-section{background:#ffffff;padding:40px 0;background-image:url('assets/images/backgronds/8292829.jpg');background-size:cover;background-position:center;background-repeat:no-repeat;}
+.blogs-section{background:#f8fafc;padding:40px 0;}
 .blogs-wrap{max-width:1200px;margin:0 auto;padding:0 16px}
 .blogs-head{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:24px}
-.blogs-title{margin:0;color:#ffffff;line-height:1.2;font-size:28px;font-weight:800}
-.blogs-subtitle{font-size:16px;color:#ffffff;margin-top:8px;font-weight:500;}
+.blogs-title{margin:0;color:#0b1020;line-height:1.2;font-size:28px;font-weight:800}
+.blogs-subtitle{font-size:16px;color:#64748b;margin-top:8px;font-weight:500;}
 .accent-text{color:#3b82f6;}
 
 .blogs-shell{position:relative;overflow:hidden}

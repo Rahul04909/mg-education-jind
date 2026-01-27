@@ -5,10 +5,10 @@ $sql = "SELECT * FROM courses WHERE is_active = 1 ORDER BY created_at DESC";
 $result = $conn->query($sql);
 ?>
 <style>
-.courses{background:#fff;background-image:url('assets/images/backgronds/953979084540.jpg');background-size:cover;background-position:center;background-repeat:no-repeat}
+.courses{background:#f8fafc;padding:40px 0}
 .courses-wrap{max-width:1200px;margin:0 auto;padding:16px 16px 18px}
 .courses-head{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:12px}
-.courses-title{margin:0;color:#ffffff;line-height:1.06;font-size:28px;font-weight:800}
+.courses-title{margin:0;color:#0b1020;line-height:1.06;font-size:28px;font-weight:800}
 .accent-gradient{background:linear-gradient(90deg,#1358db 0%,#5b61ff 60%,#7c83ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .courses-cta{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;background:#0f1419;color:#fff;font-weight:700}
 .courses-shell{position:relative}
