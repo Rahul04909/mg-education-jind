@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7561611d6923b2155e2eababcfe4877",
+    "content-hash": "fcca9b58b82b3f6ba974863aad10793b",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -63,16 +63,16 @@
         },
         {
             "name": "ckeditor/ckeditor",
-            "version": "4.25.1",
+            "version": "4.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ckeditor/ckeditor4-releases.git",
-                "reference": "3fa1987d35342526e4eb2e64f6ec7172561b7328"
+                "reference": "0d51138b0a258165ac09724e8f5cda67cf9126a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ckeditor/ckeditor4-releases/zipball/3fa1987d35342526e4eb2e64f6ec7172561b7328",
-                "reference": "3fa1987d35342526e4eb2e64f6ec7172561b7328",
+                "url": "https://api.github.com/repos/ckeditor/ckeditor4-releases/zipball/0d51138b0a258165ac09724e8f5cda67cf9126a3",
+                "reference": "0d51138b0a258165ac09724e8f5cda67cf9126a3",
                 "shasum": ""
             },
             "type": "library",
@@ -107,7 +107,7 @@
                 "source": "https://github.com/ckeditor/ckeditor4",
                 "wiki": "https://ckeditor.com/docs/ckeditor4/latest/"
             },
-            "time": "2025-02-05T12:32:07+00:00"
+            "time": "2023-06-30T13:35:30+00:00"
         },
         {
             "name": "dasprid/enum",

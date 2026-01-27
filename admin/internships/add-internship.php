@@ -84,8 +84,8 @@ include __DIR__ . "/../sidebar.php";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Internship - MG Education</title>
     
-    <!-- TinyMCE JS (Cloud) -->
-    <script src="https://cdn.tiny.cloud/1/zzf1ium270xgdjvayd6ocr6p0e7uej8ogum1kdm771lsz41d/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <!-- CKEditor -->
+    <script src="../../vendor/ckeditor/ckeditor/ckeditor.js"></script>
     
     <style>
         :root{--active:#22c55e;--indigo:#6f75ff;--line:#e6e8ee;--text:#0b1020;--muted:#6f7787;--error:#ef4444;--success:#22c55e;--info:#3b82f6}
@@ -149,7 +149,7 @@ include __DIR__ . "/../sidebar.php";
                     </div>
                 </div>
 
-                <!-- Description (TinyMCE) -->
+                <!-- Description (CKEditor) -->
                 <div class="card">
                     <h3 class="section-title">Description & Details</h3>
                     <div class="form-group">
@@ -223,20 +223,8 @@ include __DIR__ . "/../sidebar.php";
     </main>
 
     <script>
-        // Init TinyMCE
-        document.addEventListener("DOMContentLoaded", function() {
-            if (typeof tinymce !== 'undefined') {
-                tinymce.init({
-                    selector: '#description',
-                    height: 300,
-                    plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
-                    toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help'
-                });
-            } else {
-                alert("TinyMCE Failed to load. Check your internet connection or console for errors.");
-                console.error("TinyMCE script not loaded.");
-            }
-        });
+        // Init CKEditor
+        CKEDITOR.replace('description');
 
         // Slug Generation
         document.getElementById('title').addEventListener('input', function() {

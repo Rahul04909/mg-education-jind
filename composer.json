@@ -3,9 +3,9 @@
         "phpmailer/phpmailer": "^7.0",
         "razorpay/razorpay": "^2.9",
         "summernote/summernote": "^0.8.8",
-        "ckeditor/ckeditor": "^4.25",
         "picqer/php-barcode-generator": "^3.2",
         "dompdf/dompdf": "^3.1",
-        "endroid/qr-code": "^6.0"
+        "endroid/qr-code": "^6.0",
+        "ckeditor/ckeditor": "~4.22.1"
     }
 }
