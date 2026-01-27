@@ -228,6 +228,8 @@
                 <ul class="submenu">
                     <li class="submenu-item"><a href="../../admin/gallery/add-gallery-category.php">Add Category</a></li>
                     <li class="submenu-item"><a href="../../admin/gallery/manage-gallery-category.php">Manage Categories</a></li>
+                    <li class="submenu-item"><a href="../../admin/gallery/add-gallery-images.php">Add Image</a></li>
+                    <li class="submenu-item"><a href="../../admin/gallery/manage-gallery-image.php">Manage Images</a></li>
                 </ul>
             </li>
 
