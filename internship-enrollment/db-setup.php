@@ -61,9 +61,10 @@ function createInternshipEnrollmentTable() {
     )";
 
     if ($conn->query($sql) === TRUE) {
-        echo "Table 'internship_enrollments' checked/created successfully";
+        // echo "Table 'internship_enrollments' checked/created successfully";
     } else {
-        echo "Error creating table: " . $conn->error;
+        // echo "Error creating table: " . $conn->error;
+        error_log("Error creating table: " . $conn->error);
     }
     
     $conn->close();
