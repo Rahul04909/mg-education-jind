@@ -216,6 +216,7 @@
                 <ul class="submenu">
                     <li class="submenu-item"><a href="../../admin/internships/index.php">All Internships</a></li>
                     <li class="submenu-item"><a href="../../admin/internships/add-internship.php">Add Internship</a></li>
+                    <li class="submenu-item"><a href="../../admin/internships/enroll-student.php">Enroll Student</a></li>
                 </ul>
             </li>
 
