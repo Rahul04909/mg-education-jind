@@ -65,6 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Inputs
     $internship_id = intval($_POST['internship_id']);
+    $session_id = isset($_POST['session_id']) ? intval($_POST['session_id']) : NULL;
     
     $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
     $father_name = mysqli_real_escape_string($conn, $_POST['father_name']);
@@ -107,8 +108,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     $payment_status = ($course_fee > 0) ? 'success' : 'success'; // Treat free as success too
 
+    // Insert Data
     $sql = "INSERT INTO internship_enrollments (
-        enrollment_no, internship_id, full_name, father_name, mother_name, dob, category,
+        enrollment_no, internship_id, session_id,
+        full_name, father_name, mother_name, dob, category,
         student_photo, student_sign, mobile, alt_mobile, email,
         pincode, country, state, city, address,
         highest_qual, school_name, board_university, passing_year, percentage,
@@ -116,7 +119,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         aadhar_no, aadhar_file, edu_cert_file,
         course_fee, payment_status, razorpay_payment_id, razorpay_order_id
     ) VALUES (
-        '$enrollment_no', $internship_id, '$full_name', '$father_name', '$mother_name', '$dob', '$category',
+        '$enrollment_no', $internship_id, " . ($session_id ? $session_id : "NULL") . ",
+        '$full_name', '$father_name', '$mother_name', '$dob', '$category',
         '$photo_path', '$sign_path', '$mobile', '$alt_mobile', '$email',
         '$pincode', '$country', '$state', '$city', '$address',
         '$highest_qual', '$school_name', '$board', $passing_year, '$percentage',

@@ -8,6 +8,7 @@ function createInternshipEnrollmentTable() {
         id INT(11) AUTO_INCREMENT PRIMARY KEY,
         enrollment_no VARCHAR(20) UNIQUE,
         internship_id INT(11) NOT NULL,
+        session_id INT(11) DEFAULT NULL,
         
         -- Basic Details
         full_name VARCHAR(255) NOT NULL,
@@ -60,11 +61,17 @@ function createInternshipEnrollmentTable() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )";
 
-    if ($conn->query($sql) === TRUE) {
+        if ($conn->query($sql) === TRUE) {
         // echo "Table 'internship_enrollments' checked/created successfully";
     } else {
         // echo "Error creating table: " . $conn->error;
         error_log("Error creating table: " . $conn->error);
+    }
+    
+    // Add session_id column if not exists
+    $check_col = $conn->query("SHOW COLUMNS FROM internship_enrollments LIKE 'session_id'");
+    if($check_col->num_rows == 0) {
+        $conn->query("ALTER TABLE internship_enrollments ADD COLUMN session_id INT(11) DEFAULT NULL AFTER internship_id");
     }
 
     // Internship Sessions Table

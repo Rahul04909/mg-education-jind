@@ -124,6 +124,12 @@ if ($result->num_rows > 0) {
                         <?php endforeach; ?>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label>Select Session *</label>
+                    <select name="session_id" id="session_select" required>
+                        <option value="">-- First Select Internship --</option>
+                    </select>
+                </div>
             </div>
             
             <div id="feeBox" class="fee-card" style="display:none">
@@ -370,6 +376,25 @@ if ($result->num_rows > 0) {
             document.getElementById('feeBox').style.display = 'none';
             document.getElementById('course_fee').value = 0;
             document.getElementById('payBtn').innerText = 'Proceed';
+        }
+        
+        // Fetch Sessions
+        if(sel.value) {
+            fetch('get-sessions.php?internship_id=' + sel.value)
+            .then(res => res.json())
+            .then(data => {
+                let sessSelect = document.getElementById('session_select');
+                sessSelect.innerHTML = '<option value="">-- Select Session --</option>';
+                if(data.status === 'success' && data.data.length > 0) {
+                    data.data.forEach(sess => {
+                        sessSelect.innerHTML += `<option value="${sess.id}">${sess.session_name}</option>`;
+                    });
+                } else {
+                    sessSelect.innerHTML = '<option value="">No Active Sessions</option>';
+                }
+            });
+        } else {
+            document.getElementById('session_select').innerHTML = '<option value="">-- First Select Internship --</option>';
         }
     }
 
