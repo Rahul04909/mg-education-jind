@@ -66,6 +66,25 @@ function createInternshipEnrollmentTable() {
         // echo "Error creating table: " . $conn->error;
         error_log("Error creating table: " . $conn->error);
     }
+
+    // Internship Sessions Table
+    $sess_sql = "CREATE TABLE IF NOT EXISTS internship_sessions (
+        id INT(11) AUTO_INCREMENT PRIMARY KEY,
+        internship_id INT(11) NOT NULL,
+        session_name VARCHAR(100) NOT NULL,
+        start_month VARCHAR(20) NOT NULL,
+        start_year INT(4) NOT NULL,
+        end_month VARCHAR(20) NOT NULL,
+        end_year INT(4) NOT NULL,
+        is_active TINYINT(1) DEFAULT 1,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )";
+
+    if ($conn->query($sess_sql) === TRUE) {
+        // Success
+    } else {
+        error_log("Error creating table internship_sessions: " . $conn->error);
+    }
     
     $conn->close();
 }

@@ -218,6 +218,7 @@
                     <li class="submenu-item"><a href="../../admin/internships/add-internship.php">Add Internship</a></li>
                     <li class="submenu-item"><a href="../../admin/internships/enroll-student.php">Enroll Student</a></li>
                     <li class="submenu-item"><a href="../../admin/internships/student-list.php">Student List</a></li>
+                    <li class="submenu-item"><a href="../../admin/internships/manage-internship-sessions.php">Manage Sessions</a></li>
                 </ul>
             </li>
 
