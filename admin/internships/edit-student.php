@@ -51,6 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Inputs
     $internship_id = intval($_POST['internship_id']);
+    $session_id = isset($_POST['session_id']) ? intval($_POST['session_id']) : NULL;
     
     $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
     $father_name = mysqli_real_escape_string($conn, $_POST['father_name']);
@@ -107,6 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Update Query
     $sql = "UPDATE internship_enrollments SET 
             internship_id = $internship_id,
+            session_id = " . ($session_id ? $session_id : "NULL") . ",
             full_name = '$full_name',
             father_name = '$father_name',
             mother_name = '$mother_name',
@@ -214,7 +216,7 @@ include __DIR__ . '/../sidebar.php';
                     <h3 class="section-title">Internship Selection</h3>
                     <div class="form-group">
                         <label class="form-label">Select Internship *</label>
-                        <select name="internship_id" class="form-select" required>
+                        <select name="internship_id" id="internship_select" class="form-select" required onchange="fetchSessions()">
                             <option value="">-- Choose Internship --</option>
                             <?php foreach($internships as $i): ?>
                                 <option value="<?php echo $i['id']; ?>" <?php echo ($student['internship_id'] == $i['id']) ? 'selected' : ''; ?>>
@@ -222,6 +224,13 @@ include __DIR__ . '/../sidebar.php';
                                 </option>
                             <?php endforeach; ?>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Select Session</label>
+                        <select name="session_id" id="session_select" class="form-select">
+                            <option value="">-- Select Session --</option>
+                        </select>
+                        <input type="hidden" id="current_session_id" value="<?php echo htmlspecialchars($student['session_id']); ?>">
                     </div>
                 </div>
 
@@ -396,6 +405,33 @@ include __DIR__ . '/../sidebar.php';
             });
         }
     });
+
+    function fetchSessions() {
+        let sel = document.getElementById('internship_select');
+        let currentSess = document.getElementById('current_session_id').value;
+        
+        if(sel.value) {
+            fetch('../../internship-enrollment/get-sessions.php?internship_id=' + sel.value)
+            .then(res => res.json())
+            .then(data => {
+                let sessSelect = document.getElementById('session_select');
+                sessSelect.innerHTML = '<option value="">-- Select Session --</option>';
+                if(data.status === 'success' && data.data.length > 0) {
+                    data.data.forEach(sess => {
+                        let selected = (sess.id == currentSess) ? 'selected' : '';
+                        sessSelect.innerHTML += `<option value="${sess.id}" ${selected}>${sess.session_name}</option>`;
+                    });
+                } else {
+                    sessSelect.innerHTML = '<option value="">No Active Sessions</option>';
+                }
+            });
+        } else {
+            document.getElementById('session_select').innerHTML = '<option value="">-- Select Session --</option>';
+        }
+    }
+
+    // Call on load
+    document.addEventListener('DOMContentLoaded', fetchSessions);
     </script>
 </body>
 </html>

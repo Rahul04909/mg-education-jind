@@ -48,6 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Inputs
     $internship_id = intval($_POST['internship_id']);
+    $session_id = isset($_POST['session_id']) ? intval($_POST['session_id']) : NULL;
     
     $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
     $father_name = mysqli_real_escape_string($conn, $_POST['father_name']);
@@ -101,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $payment_status = 'success'; // Admin enrollment implies confirmed receipt or waiver
 
     $sql = "INSERT INTO internship_enrollments (
-        enrollment_no, internship_id, full_name, father_name, mother_name, dob, category, admission_mode,
+        enrollment_no, internship_id, session_id, full_name, father_name, mother_name, dob, category, admission_mode,
         student_photo, student_sign, mobile, alt_mobile, email,
         pincode, country, state, city, address,
         highest_qual, school_name, board_university, passing_year, percentage,
@@ -109,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         aadhar_no, aadhar_file, edu_cert_file,
         course_fee, payment_status, razorpay_payment_id
     ) VALUES (
-        '$enrollment_no', $internship_id, '$full_name', '$father_name', '$mother_name', '$dob', '$category', '$admission_mode',
+        '$enrollment_no', $internship_id, " . ($session_id ? $session_id : "NULL") . ", '$full_name', '$father_name', '$mother_name', '$dob', '$category', '$admission_mode',
         '$photo_path', '$sign_path', '$mobile', '$alt_mobile', '$email',
         '$pincode', '$country', '$state', '$city', '$address',
         '$highest_qual', '$school_name', '$board', $passing_year, '$percentage',
@@ -209,6 +210,13 @@ include __DIR__ . '/../sidebar.php';
                                     <?php echo htmlspecialchars($i['title']); ?>
                                 </option>
                             <?php endforeach; ?>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Select Session *</label>
+                        <select name="session_id" id="session_select" class="form-select" required>
+                            <option value="">-- First Select Internship --</option>
                         </select>
                     </div>
 
@@ -383,6 +391,23 @@ include __DIR__ . '/../sidebar.php';
     </main>
 
     <script>
+    // Pincode Logic
+    document.getElementById('pincode').addEventListener('blur', function() {
+        let pin = this.value;
+        if(pin.length === 6) {
+            fetch('https://api.postalpincode.in/pincode/' + pin)
+            .then(res => res.json())
+            .then(data => {
+                if(data[0].Status === 'Success') {
+                    let po = data[0].PostOffice[0];
+                    document.getElementById('city').value = po.District;
+                    document.getElementById('state').value = po.State;
+                    document.getElementById('country').value = po.Country;
+                }
+            });
+        }
+    });
+
     function calculateFee() {
         let sel = document.getElementById('internship_select');
         let opt = sel.options[sel.selectedIndex];
@@ -394,7 +419,7 @@ include __DIR__ . '/../sidebar.php';
         if(base > 0) {
             document.getElementById('feeBox').style.display = 'block';
         } else {
-            document.getElementById('feeBox').style.display = 'none'; // Optional, or keep visible saying Free
+            document.getElementById('feeBox').style.display = 'none'; 
         }
 
         let isFree = document.getElementById('is_free').checked;
@@ -418,24 +443,27 @@ include __DIR__ . '/../sidebar.php';
 
         document.getElementById('finalFeeDisplay').innerText = '₹' + final;
         document.getElementById('final_fee').value = final;
-    }
-    
-    // Pincode Logic
-    document.getElementById('pincode').addEventListener('blur', function() {
-        let pin = this.value;
-        if(pin.length === 6) {
-            fetch('https://api.postalpincode.in/pincode/' + pin)
+
+        // Fetch Sessions
+        if(sel.value) {
+            // Adjust path to point to frontend folder
+            fetch('../../internship-enrollment/get-sessions.php?internship_id=' + sel.value)
             .then(res => res.json())
             .then(data => {
-                if(data[0].Status === 'Success') {
-                    let po = data[0].PostOffice[0];
-                    document.getElementById('city').value = po.District;
-                    document.getElementById('state').value = po.State;
-                    document.getElementById('country').value = po.Country;
+                let sessSelect = document.getElementById('session_select');
+                sessSelect.innerHTML = '<option value="">-- Select Session --</option>';
+                if(data.status === 'success' && data.data.length > 0) {
+                    data.data.forEach(sess => {
+                        sessSelect.innerHTML += `<option value="${sess.id}">${sess.session_name}</option>`;
+                    });
+                } else {
+                    sessSelect.innerHTML = '<option value="">No Active Sessions</option>';
                 }
             });
+        } else {
+            document.getElementById('session_select').innerHTML = '<option value="">-- First Select Internship --</option>';
         }
-    });
+    }
     </script>
 </body>
 </html>
