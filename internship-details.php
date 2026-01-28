@@ -246,7 +246,7 @@ $duration = $internship['duration_value'] . ' ' . $internship['duration_type'];
                 </div>
                 <?php endif; ?>
 
-                <a href="/register?type=internship&id=<?php echo $internship['id']; ?>" class="apply-btn">Register Now</a>
+                <a href="/internship-enrollment/index.php?internship_id=<?php echo $internship['id']; ?>" class="apply-btn">Register Now</a>
 
                 <!-- Request Callback -->
                 <div class="cb-form">
