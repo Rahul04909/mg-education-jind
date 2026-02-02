@@ -11,36 +11,84 @@ if (!isset($_SESSION['student_id'])) {
 $conn = getDbConnection();
 $student_id = $_SESSION['student_id'];
 
-// 1. Fetch Student Details
-$sql_s = "SELECT s.*, c.title as course_name 
-          FROM admissions s 
-          LEFT JOIN courses c ON s.course_id = c.id 
-          WHERE s.id = $student_id";
-$res_s = $conn->query($sql_s);
-$student = $res_s->fetch_assoc();
-
-// 2. Fetch Exam Schedule
+// 1. Determine Student Type
+$student_type = $_SESSION['student_type'] ?? 'course';
+$student = [];
 $exams = [];
-$session_id = $student['session_id'];
-
-if ($session_id > 0) {
-    $sql_e = "SELECT es.*, s.name as subject_name 
-              FROM exam_schedules es 
-              JOIN subjects s ON es.subject_id = s.id 
-              WHERE es.session_id = $session_id 
-              ORDER BY es.exam_date ASC, es.start_time ASC";
-    $res_e = $conn->query($sql_e);
-    while($row = $res_e->fetch_assoc()) {
-        $exams[] = $row;
-    }
-}
-
-// 3. Fetch Attempted Exams
 $attempted_map = [];
-$att_sql = "SELECT exam_schedule_id, status, obtained_marks, total_marks FROM exam_results WHERE student_id = $student_id";
-$att_res = $conn->query($att_sql);
-while($row = $att_res->fetch_assoc()) {
-    $attempted_map[$row['exam_schedule_id']] = $row;
+
+if ($student_type === 'course') {
+    // 1. Fetch Student Details
+    $sql_s = "SELECT s.*, c.title as course_name 
+              FROM admissions s 
+              LEFT JOIN courses c ON s.course_id = c.id 
+              WHERE s.id = $student_id";
+    $res_s = $conn->query($sql_s);
+    $student = $res_s->fetch_assoc();
+
+    // 2. Fetch Exam Schedule
+    $session_id = $student['session_id'];
+    if ($session_id > 0) {
+        $sql_e = "SELECT es.*, es.id as exam_id, s.name as subject_name 
+                  FROM exam_schedules es 
+                  JOIN subjects s ON es.subject_id = s.id 
+                  WHERE es.session_id = $session_id 
+                  ORDER BY es.exam_date ASC, es.start_time ASC";
+        $res_e = $conn->query($sql_e);
+        while($row = $res_e->fetch_assoc()) {
+            $row['type'] = 'course';
+            $exams[] = $row;
+        }
+    }
+
+    // 3. Fetch Attempted Exams
+    $att_sql = "SELECT exam_schedule_id as exam_id, status, obtained_marks, total_marks FROM exam_results WHERE student_id = $student_id";
+    $att_res = $conn->query($att_sql);
+    while($row = $att_res->fetch_assoc()) {
+        $attempted_map[$row['exam_id']] = $row;
+    }
+
+} else {
+    // INTERNSHIP STUDENT
+    // 1. Fetch Student Details
+    $sql_s = "SELECT s.*, i.title as course_name 
+              FROM internship_enrollments s 
+              LEFT JOIN internships i ON s.internship_id = i.id 
+              WHERE s.id = $student_id";
+    $res_s = $conn->query($sql_s);
+    $student = $res_s->fetch_assoc();
+
+    // 2. Fetch Exam Schedule (Question Papers)
+    $internship_id = $student['internship_id'];
+    // Assuming session_id is also used for internships, if not, remove the filter or check if column exists
+    $session_id = $student['session_id']; 
+    
+    // Check if session_id is relevant. If null, maybe show all for that internship?
+    // Using session_id filter if it's not 0/NULL
+    $session_filter = ($session_id) ? "AND qp.session_id = $session_id" : "";
+
+    $sql_e = "SELECT qp.*, qp.id as exam_id, i.title as subject_name 
+              FROM internship_question_papers qp 
+              JOIN internships i ON qp.internship_id = i.id 
+              WHERE qp.internship_id = $internship_id $session_filter
+              ORDER BY qp.exam_date ASC, qp.start_time ASC";
+    
+    $res_e = $conn->query($sql_e);
+    if($res_e) {
+        while($row = $res_e->fetch_assoc()) {
+            $row['type'] = 'internship';
+            $exams[] = $row;
+        }
+    }
+
+    // 3. Fetch Attempted Exams
+    $att_sql = "SELECT internship_paper_id as exam_id, status, obtained_marks, total_marks FROM internship_results WHERE student_id = $student_id";
+    $att_res = $conn->query($att_sql);
+    if($att_res) {
+        while($row = $att_res->fetch_assoc()) {
+            $attempted_map[$row['exam_id']] = $row;
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -212,7 +260,8 @@ while($row = $att_res->fetch_assoc()) {
                         }
 
                         // Check if already attempted/submitted
-                        $is_attempted = isset($attempted_map[$ex['id']]);
+                        $exam_id = $ex['exam_id'];
+                        $is_attempted = isset($attempted_map[$exam_id]);
                         if ($is_attempted) {
                             $status = 'completed';
                             $status_label = 'Submitted';
@@ -223,19 +272,19 @@ while($row = $att_res->fetch_assoc()) {
                         $btn_text = "Start Exam";
                         $btn_href = "#";
 
+                        $is_internship = (isset($ex['type']) && $ex['type'] === 'internship');
+                        $start_url = $is_internship ? "start-internship-exam.php?exam_id=" . $exam_id : "start-exam.php?exam_id=" . $exam_id;
+                        $result_url = $is_internship ? "internship-result.php?exam_id=" . $exam_id : "result.php?exam_id=" . $exam_id;
+
                         if ($status == 'live') {
                             $btn_class = "btn-exam btn-start";
-                            $btn_href = "start-exam.php?exam_id=" . $ex['id'];
+                            $btn_href = $start_url;
                         } elseif ($status == 'completed') {
                             $btn_class = "btn-exam";
                             $btn_text = "View Result";
-                            $btn_href = "result.php?exam_id=" . $ex['id'];
+                            $btn_href = $result_url;
                             
-                            // If just completed but not attempted (time over), maybe shouldn't view result?
-                            // But requirement says "When user successfully submitted... show View Result"
-                            // So if is_attempted is true, show View Result.
                             if (!$is_attempted && $now_ts > $end_ts) {
-                                // Time over, but not submitted? Treat as Missed?
                                 $btn_text = "Expired";
                                 $btn_class = "btn-exam btn-disabled";
                                 $btn_href = "#";

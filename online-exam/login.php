@@ -14,32 +14,56 @@ $success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
+    // Helper: Find User in both tables
+    function findUser($conn, $identifier) {
+        $identifier = mysqli_real_escape_string($conn, $identifier);
+        
+        // 1. Check Admissions (Course Students)
+        $sql1 = "SELECT id, full_name, email, enrollment_no, password, otp, otp_expiry FROM admissions WHERE email = '$identifier' OR enrollment_no = '$identifier' OR mobile = '$identifier' LIMIT 1";
+        $res1 = $conn->query($sql1);
+        if ($res1 && $res1->num_rows > 0) {
+            $row = $res1->fetch_assoc();
+            $row['type'] = 'course';
+            $row['table'] = 'admissions';
+            return $row;
+        }
+
+        // 2. Check Internship Enrollments
+        $sql2 = "SELECT id, full_name, email, enrollment_no, password, otp, otp_expiry FROM internship_enrollments WHERE email = '$identifier' OR enrollment_no = '$identifier' OR mobile = '$identifier' LIMIT 1";
+        $res2 = $conn->query($sql2);
+        if ($res2 && $res2->num_rows > 0) {
+            $row = $res2->fetch_assoc();
+            $row['type'] = 'internship';
+            $row['table'] = 'internship_enrollments';
+            return $row;
+        }
+
+        return null; // Not found
+    }
+
     // 1. Send OTP
     if ($action === 'send_otp') {
         header('Content-Type: application/json');
-        $identifier = mysqli_real_escape_string($conn, $_POST['identifier']); // Email or Enrollment
+        
+        $user = findUser($conn, $_POST['identifier']);
 
-        // Find student
-        $sql = "SELECT id, full_name, email FROM admissions WHERE email = '$identifier' OR enrollment_no = '$identifier' OR mobile = '$identifier' LIMIT 1";
-        $res = $conn->query($sql);
-
-        if ($res && $res->num_rows > 0) {
-            $student = $res->fetch_assoc();
-            $email = $student['email'];
-            $full_name = $student['full_name'];
+        if ($user) {
+            $email = $user['email'];
+            $full_name = $user['full_name'];
             
             // Generate OTP
             $otp = rand(100000, 999999);
-            // Use DB time for expiry to avoid timezone mismatches
-            $upd = "UPDATE admissions SET otp = '$otp', otp_expiry = (NOW() + INTERVAL 10 MINUTE) WHERE id = " . $student['id'];
+            // Use DB time
+            $table = $user['table'];
+            $id = $user['id'];
+            $upd = "UPDATE $table SET otp = '$otp', otp_expiry = (NOW() + INTERVAL 10 MINUTE) WHERE id = $id";
             $conn->query($upd);
 
             // Send Email
-            // Fetch SMTP
             $smtp_sql = "SELECT * FROM smtp_settings WHERE id = 1 AND is_active = 1";
             $smtp_res = $conn->query($smtp_sql);
             
-            if ($smtp_res->num_rows > 0) {
+            if ($smtp_res && $smtp_res->num_rows > 0) {
                 $smtp = $smtp_res->fetch_assoc();
                 $mail = new PHPMailer(true);
                 try {
@@ -83,22 +107,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $identifier = mysqli_real_escape_string($conn, $_POST['identifier']);
         $otp_input = mysqli_real_escape_string($conn, $_POST['otp']);
 
-        $sql = "SELECT * FROM admissions WHERE (email = '$identifier' OR enrollment_no = '$identifier' OR mobile = '$identifier') AND otp = '$otp_input' AND otp_expiry > NOW() LIMIT 1";
-        $res = $conn->query($sql);
+        $user = findUser($conn, $identifier);
 
-        if ($res && $res->num_rows > 0) {
-            $student = $res->fetch_assoc();
-            $_SESSION['student_id'] = $student['id'];
-            $_SESSION['student_name'] = $student['full_name'];
-            $_SESSION['enrollment_no'] = $student['enrollment_no'];
-            
-            // Clear OTP
-            $conn->query("UPDATE admissions SET otp = NULL, otp_expiry = NULL WHERE id = " . $student['id']);
-            
-            header("Location: index.php");
-            exit;
+        if ($user) {
+            // Check OTP
+            if ($user['otp'] == $otp_input && strtotime($user['otp_expiry']) > time()) {
+                $_SESSION['student_id'] = $user['id'];
+                $_SESSION['student_name'] = $user['full_name'];
+                $_SESSION['enrollment_no'] = $user['enrollment_no'];
+                $_SESSION['student_type'] = $user['type']; // 'course' or 'internship'
+                
+                // Clear OTP
+                $table = $user['table'];
+                $id = $user['id'];
+                $conn->query("UPDATE $table SET otp = NULL, otp_expiry = NULL WHERE id = $id");
+                
+                header("Location: index.php");
+                exit;
+            } else {
+                $error = "Invalid or Expired OTP.";
+            }
         } else {
-            $error = "Invalid or Expired OTP.";
+            $error = "Student not found.";
         }
     }
 
@@ -107,16 +137,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $identifier = mysqli_real_escape_string($conn, $_POST['identifier']);
         $password = $_POST['password'];
 
-        $sql = "SELECT * FROM admissions WHERE email = '$identifier' OR enrollment_no = '$identifier' OR mobile = '$identifier' LIMIT 1";
-        $res = $conn->query($sql);
+        $user = findUser($conn, $identifier);
 
-        if ($res && $res->num_rows > 0) {
-            $student = $res->fetch_assoc();
-            // Verify hash (or plain text if legacy, but ideally hash)
-            if (password_verify($password, $student['password'])) {
-                $_SESSION['student_id'] = $student['id'];
-                $_SESSION['student_name'] = $student['full_name'];
-                $_SESSION['enrollment_no'] = $student['enrollment_no'];
+        if ($user) {
+            // Check Password (Assume Hash)
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['student_id'] = $user['id'];
+                $_SESSION['student_name'] = $user['full_name'];
+                $_SESSION['enrollment_no'] = $user['enrollment_no'];
+                $_SESSION['student_type'] = $user['type']; // 'course' or 'internship'
+
                 header("Location: index.php");
                 exit;
             } else {
