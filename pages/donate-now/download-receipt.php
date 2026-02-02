@@ -32,14 +32,19 @@ $base_dir = __DIR__;
 $sign_image_path = $base_dir . '/mg-sign.png';
 $sign_src = get_image_base64($sign_image_path);
 
-// Logo (Assuming logo exists in assets/img/logo.png, checking relative path)
-// Adjust path as needed based on project structure. Usually ../../assets/img/logo.png
+// Logo
 $logo_path = __DIR__ . '/../../assets/img/logo.png';
 $logo_src = get_image_base64($logo_path);
 
 // Number to Words
-$f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
-$amount_words = ucwords($f->format($data['amount']));
+$amount_words = "";
+if (class_exists("NumberFormatter")) {
+    $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+    $amount_words = ucwords($f->format($data['amount']));
+} else {
+    // Fallback if intl extension is missing
+    $amount_words = $data['amount']; // Just show numbers if we can't convert to words
+}
 
 $html = '
 <!DOCTYPE html>
@@ -143,13 +148,17 @@ $html = '
 </html>
 ';
 
-$options = new Options();
-$options->set('isRemoteEnabled', true);
-$dompdf = new Dompdf($options);
-$dompdf->loadHtml($html);
-$dompdf->setPaper('A4', 'portrait');
-$dompdf->render();
-$dompdf->stream("Donation_Receipt_" . $data['receipt_no'] . ".pdf", ["Attachment" => 1]);
+try {
+    $options = new Options();
+    $options->set('isRemoteEnabled', true);
+    $dompdf = new Dompdf($options);
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+    $dompdf->stream("Donation_Receipt_" . $data['receipt_no'] . ".pdf", ["Attachment" => 1]);
+} catch (Exception $e) {
+    die("Error generating receipt: " . $e->getMessage());
+}
 
 $conn->close();
 ?>

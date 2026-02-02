@@ -25,24 +25,24 @@ $keys = $result->fetch_assoc();
 $key_id = $keys['razorpay_key_id'];
 $key_secret = $keys['razorpay_key_secret'];
 
-$api = new Api($key_id, $key_secret);
-
-// Get Donation Amount
-$amount = isset($_POST['amount']) ? floatval($_POST['amount']) : 0;
-
-if ($amount < 1) { // Minimum 1 Rupee
-    echo json_encode(['status' => 'error', 'message' => 'Invalid Donation Amount']);
-    exit;
-}
-
-$orderData = [
-    'receipt'         => 'don_' . time(),
-    'amount'          => $amount * 100, // Amount in paise
-    'currency'        => 'INR',
-    'payment_capture' => 1 // Auto capture
-];
-
 try {
+    $api = new Api($key_id, $key_secret);
+    
+    // Get Donation Amount
+    $amount = isset($_POST['amount']) ? floatval($_POST['amount']) : 0;
+    
+    if ($amount < 1) { // Minimum 1 Rupee
+        echo json_encode(['status' => 'error', 'message' => 'Invalid Donation Amount']);
+        exit;
+    }
+    
+    $orderData = [
+        'receipt'         => 'don_' . time(),
+        'amount'          => $amount * 100, // Amount in paise
+        'currency'        => 'INR',
+        'payment_capture' => 1 // Auto capture
+    ];
+
     $razorpayOrder = $api->order->create($orderData);
     echo json_encode([
         'status' => 'success',
