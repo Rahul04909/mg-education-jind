@@ -143,7 +143,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         
         // Send Email
         if (!empty($email)) {
-             $smtp_sql = "SELECT * FROM smtp_settings WHERE is_active=1 LIMIT 1";
+             $smtp_sql = "SELECT * FROM smtp_settings WHERE id = 1 AND is_active = 1";
              $smtp_res = $conn->query($smtp_sql);
              if ($smtp_res && $smtp_res->num_rows > 0) {
                  $smtp = $smtp_res->fetch_assoc();
