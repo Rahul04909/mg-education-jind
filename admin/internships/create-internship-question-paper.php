@@ -8,6 +8,30 @@ $conn = getDbConnection();
 $success_message = '';
 $error_message = '';
 
+// Edit Mode Logic
+$edit_id = isset($_GET['edit_id']) ? intval($_GET['edit_id']) : 0;
+$edit_data = null;
+$existing_questions = [];
+
+if ($edit_id > 0) {
+    $stmt = $conn->prepare("SELECT * FROM internship_question_papers WHERE id = ?");
+    $stmt->bind_param("i", $edit_id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    if ($res->num_rows > 0) {
+        $edit_data = $res->fetch_assoc();
+        
+        // Fetch Questions
+        $q_stmt = $conn->prepare("SELECT * FROM internship_questions WHERE paper_id = ? ORDER BY id ASC");
+        $q_stmt->bind_param("i", $edit_id);
+        $q_stmt->execute();
+        $q_res = $q_stmt->get_result();
+        while($q = $q_res->fetch_assoc()) {
+            $existing_questions[] = $q;
+        }
+    }
+}
+
 // Handle Save
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['action'] == 'save_paper') {
     $internship_id = intval($_POST['internship_id']);
@@ -30,9 +54,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['
     $conn->begin_transaction();
     
     try {
-        // Delete old paper if exists
-        $del_sql = "DELETE FROM internship_question_papers WHERE internship_id = $internship_id AND session_id = $session_id";
-        $conn->query($del_sql);
+        // Delete old paper if exists (or the one being edited, to simplify update structure)
+        // If editing, we delete the specific ID or the one matching internship/session to avoid duplicates
+        if ($edit_id > 0) {
+             $del_sql = "DELETE FROM internship_question_papers WHERE id = $edit_id";
+             $conn->query($del_sql);
+        } else {
+             // If creating new, remove any existing for this combo to enforce one paper per session
+             $del_sql = "DELETE FROM internship_question_papers WHERE internship_id = $internship_id AND session_id = $session_id";
+             $conn->query($del_sql);
+        }
         
         // Insert Paper
         $sql_paper = "INSERT INTO internship_question_papers (internship_id, session_id, total_questions, marks_per_question, total_marks, passing_marks, exam_date, exam_duration, start_time, end_time) 
@@ -63,6 +94,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['
         
         $conn->commit();
         $success_message = "Internship Question Paper saved successfully!";
+        // Reset edit mode after save if needed, or redirect
+        if($edit_id > 0) {
+             echo "<script>setTimeout(function(){ window.location.href = 'view-question-papers.php'; }, 1000);</script>";
+        }
         
     } catch (Exception $e) {
         $conn->rollback();
@@ -94,7 +129,7 @@ if ($s_res) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Internship Paper - MG Admin</title>
+    <title><?php echo $edit_id ? 'Edit' : 'Create'; ?> Internship Paper - MG Admin</title>
     <style>
         :root{--active:#22c55e;--indigo:#6f75ff;--line:#e6e8ee;--text:#0b1020;--muted:#6f7787;--error:#ef4444;--success:#22c55e}
         *{margin:0;padding:0;box-sizing:border-box}
@@ -130,9 +165,12 @@ if ($s_res) {
         <div class="page-header">
             <div>
                 <div style="font-size:14px;color:var(--muted);margin-bottom:10px">
-                    <a href="../index.php" style="text-decoration:none;color:var(--indigo)">Dashboard</a> › Internships › Create Paper
+                    <a href="../index.php" style="text-decoration:none;color:var(--indigo)">Dashboard</a> › <a href="view-question-papers.php" style="text-decoration:none;color:var(--indigo)">Internships</a> › <?php echo $edit_id ? 'Edit' : 'Create'; ?> Paper
                 </div>
-                <h1 class="page-title">Create Internship Question Paper</h1>
+                <h1 class="page-title"><?php echo $edit_id ? 'Edit Internship Question Paper' : 'Create Internship Question Paper'; ?></h1>
+            </div>
+            <div>
+                 <a href="view-question-papers.php" class="btn btn-outline">View All Papers</a>
             </div>
         </div>
 
@@ -156,7 +194,9 @@ if ($s_res) {
                         <select name="internship_id" id="internship_id" class="form-select" onchange="populateSessions()" required>
                             <option value="">-- Choose --</option>
                             <?php foreach($internships as $i): ?>
-                                <option value="<?php echo $i['id']; ?>"><?php echo htmlspecialchars($i['title']); ?></option>
+                                <option value="<?php echo $i['id']; ?>" <?php echo ($edit_data && $edit_data['internship_id'] == $i['id']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($i['title']); ?>
+                                </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -177,21 +217,21 @@ if ($s_res) {
                 <div class="grid-3" style="margin-bottom:20px;">
                     <div class="form-group">
                         <label class="form-label">Total Questions</label>
-                        <input type="number" id="totalQuestions" name="total_questions" class="form-input" required oninput="calculateTotals()">
+                        <input type="number" id="totalQuestions" name="total_questions" class="form-input" required oninput="calculateTotals()" value="<?php echo $edit_data['total_questions'] ?? ''; ?>">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Marks per Question</label>
-                        <input type="number" id="marksPerQuestion" name="marks_per_question" class="form-input" required oninput="calculateTotals()">
+                        <input type="number" id="marksPerQuestion" name="marks_per_question" class="form-input" required oninput="calculateTotals()" value="<?php echo $edit_data['marks_per_question'] ?? ''; ?>">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Total Marks (Auto)</label>
-                        <input type="text" id="totalMarks" name="total_marks" class="form-input" readonly style="background:#f8fafc">
+                        <input type="text" id="totalMarks" name="total_marks" class="form-input" readonly style="background:#f8fafc" value="<?php echo $edit_data['total_marks'] ?? ''; ?>">
                     </div>
                 </div>
                 
                 <div class="form-group" style="max-width:33%;">
                     <label class="form-label">Passing Marks</label>
-                    <input type="number" name="passing_marks" class="form-input" required>
+                    <input type="number" name="passing_marks" class="form-input" required value="<?php echo $edit_data['passing_marks'] ?? ''; ?>">
                 </div>
                 
                 <hr style="border:0; border-top:1px solid var(--line); margin:20px 0;">
@@ -199,26 +239,26 @@ if ($s_res) {
                 <div class="grid-2">
                     <div class="form-group">
                         <label class="form-label">Exam Date</label>
-                        <input type="date" name="exam_date" class="form-input" required>
+                        <input type="date" name="exam_date" class="form-input" required value="<?php echo $edit_data['exam_date'] ?? ''; ?>">
                     </div>
                     <div class="grid-3">
                          <div class="form-group">
                             <label class="form-label">Start Time</label>
-                            <input type="time" id="startTime" name="start_time" class="form-input" required onchange="calculateEndTime()">
+                            <input type="time" id="startTime" name="start_time" class="form-input" required onchange="calculateEndTime()" value="<?php echo $edit_data ? date('H:i', strtotime($edit_data['start_time'])) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Duration (Mins)</label>
-                            <input type="number" id="examDuration" name="exam_duration" class="form-input" placeholder="e.g 60" required oninput="calculateEndTime()">
+                            <input type="number" id="examDuration" name="exam_duration" class="form-input" placeholder="e.g 60" required oninput="calculateEndTime()" value="<?php echo $edit_data['exam_duration'] ?? ''; ?>">
                         </div>
                         <div class="form-group">
                             <label class="form-label">End Time (Auto)</label>
-                            <input type="time" id="endTime" name="end_time" class="form-input" readonly style="background:#f8fafc">
+                            <input type="time" id="endTime" name="end_time" class="form-input" readonly style="background:#f8fafc" value="<?php echo $edit_data ? date('H:i', strtotime($edit_data['end_time'])) : ''; ?>">
                         </div>
                     </div>
                 </div>
                 
                 <div style="margin-top:15px">
-                     <button type="button" id="startBtn" class="btn btn-primary" onclick="startBuilding()">Next: Add Questions</button>
+                     <button type="button" id="startBtn" class="btn btn-primary" onclick="startBuilding()"><?php echo $edit_id ? 'Load Questions' : 'Next: Add Questions'; ?></button>
                 </div>
             </div>
 
@@ -237,6 +277,27 @@ if ($s_res) {
     <script>
         const allSessions = <?php echo json_encode($sessions); ?>;
         
+        // Edit Mode Logic in JS
+        const editMode = <?php echo $edit_id ? 'true' : 'false'; ?>;
+        const initialQuestions = <?php echo json_encode($existing_questions); ?>;
+        const initialSessionId = <?php echo $edit_data['session_id'] ?? 'null'; ?>;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            if(editMode) {
+                populateSessions();
+                if(initialSessionId) {
+                    document.getElementById('session_id').value = initialSessionId;
+                }
+                
+                // Auto trigger calculations
+                calculateTotals();
+                calculateEndTime();
+                
+                // If we want to auto-show questions
+                 startBuilding();
+            }
+        });
+
         function populateSessions() {
             const internshipId = document.getElementById('internship_id').value;
             const sessionSelect = document.getElementById('session_id');
@@ -289,28 +350,45 @@ if ($s_res) {
             // Lock Config
             document.getElementById('totalQuestions').readOnly = true;
             
-            if(questionCount === 0) addQuestion();
+            // Populate if empty and we have data
+            if(questionCount === 0) {
+                if(editMode && initialQuestions.length > 0) {
+                    initialQuestions.forEach(q => {
+                        addQuestion(q);
+                    });
+                } else {
+                    addQuestion();
+                }
+            }
         }
         
-        function addQuestion() {
+        function addQuestion(data = null) {
             if (questionCount >= maxQuestions) {
                 alert(`Limit reached: ${maxQuestions} questions.`);
                 return;
             }
             questionCount++;
             
+            // Allow pre-fill
+            const text = data ? data.question_text : '';
+            const a = data ? data.option_a : '';
+            const b = data ? data.option_b : '';
+            const c = data ? data.option_c : '';
+            const d = data ? data.option_d : '';
+            const correct = data ? data.correct_option : '';
+            
             const div = document.createElement('div');
             div.className = 'question-card';
             div.innerHTML = `
                 <div style="font-weight:700; margin-bottom:10px;">Question ${questionCount}</div>
                 <div class="form-group">
-                    <textarea name="questions[${questionCount}][text]" class="form-textarea" rows="2" placeholder="Enter Question Text" required></textarea>
+                    <textarea name="questions[${questionCount}][text]" class="form-textarea" rows="2" placeholder="Enter Question Text" required>${text}</textarea>
                 </div>
                 <div class="q-opt-grid">
-                    <div class="opt-row"><input type="radio" name="questions[${questionCount}][correct]" value="A" required> <input type="text" name="questions[${questionCount}][a]" class="form-input" placeholder="Option A" required></div>
-                    <div class="opt-row"><input type="radio" name="questions[${questionCount}][correct]" value="B"> <input type="text" name="questions[${questionCount}][b]" class="form-input" placeholder="Option B" required></div>
-                    <div class="opt-row"><input type="radio" name="questions[${questionCount}][correct]" value="C"> <input type="text" name="questions[${questionCount}][c]" class="form-input" placeholder="Option C" required></div>
-                    <div class="opt-row"><input type="radio" name="questions[${questionCount}][correct]" value="D"> <input type="text" name="questions[${questionCount}][d]" class="form-input" placeholder="Option D" required></div>
+                    <div class="opt-row"><input type="radio" name="questions[${questionCount}][correct]" value="A" required ${correct=='A'?'checked':''}> <input type="text" name="questions[${questionCount}][a]" class="form-input" placeholder="Option A" required value="${a}"></div>
+                    <div class="opt-row"><input type="radio" name="questions[${questionCount}][correct]" value="B" ${correct=='B'?'checked':''}> <input type="text" name="questions[${questionCount}][b]" class="form-input" placeholder="Option B" required value="${b}"></div>
+                    <div class="opt-row"><input type="radio" name="questions[${questionCount}][correct]" value="C" ${correct=='C'?'checked':''}> <input type="text" name="questions[${questionCount}][c]" class="form-input" placeholder="Option C" required value="${c}"></div>
+                    <div class="opt-row"><input type="radio" name="questions[${questionCount}][correct]" value="D" ${correct=='D'?'checked':''}> <input type="text" name="questions[${questionCount}][d]" class="form-input" placeholder="Option D" required value="${d}"></div>
                 </div>
             `;
             document.getElementById('questionsContainer').appendChild(div);
