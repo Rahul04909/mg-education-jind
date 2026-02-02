@@ -1,6 +1,14 @@
 <?php
 // Include database configuration
 require_once __DIR__ . '/../../database/db-config.php';
+// Ensure schema
+require_once __DIR__ . '/../../database/update_enrollment_password_schema.php';
+// Composer Autoload
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 $conn = getDbConnection();
 
 // Fetch Active Internships
@@ -100,6 +108,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $cert_path = uploadAdminFile($_FILES['edu_cert_file'], 'documents');
     
     $payment_status = 'success'; // Admin enrollment implies confirmed receipt or waiver
+    
+    // Generate Password
+    $password_plain = substr(str_shuffle("abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789"), 0, 8);
+    $password_hash = password_hash($password_plain, PASSWORD_DEFAULT);
 
     $sql = "INSERT INTO internship_enrollments (
         enrollment_no, internship_id, session_id, full_name, father_name, mother_name, dob, category, admission_mode,
@@ -108,7 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         highest_qual, school_name, board_university, passing_year, percentage,
         computer_knowledge, typing_speed, prev_course_done, prev_enroll_no, prev_course_name, prev_course_session,
         aadhar_no, aadhar_file, edu_cert_file,
-        course_fee, payment_status, razorpay_payment_id
+        course_fee, payment_status, razorpay_payment_id, password
     ) VALUES (
         '$enrollment_no', $internship_id, " . ($session_id ? $session_id : "NULL") . ", '$full_name', '$father_name', '$mother_name', '$dob', '$category', '$admission_mode',
         '$photo_path', '$sign_path', '$mobile', '$alt_mobile', '$email',
@@ -116,7 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         '$highest_qual', '$school_name', '$board', $passing_year, '$percentage',
         '$computer_knowledge', '$typing_speed', $prev_course_done, '$prev_enroll_no', '$prev_course_name', '$prev_course_session',
         '$aadhar_no', '$aadhar_path', '$cert_path',
-        $final_fee, '$payment_status', 'ADMIN_MANUAL'
+        $final_fee, '$payment_status', 'ADMIN_MANUAL', '$password_hash'
     )";
     
     if ($conn->query($sql) === TRUE) {
@@ -127,6 +139,53 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $txn_sql = "INSERT INTO student_transactions (enrollment_no, transaction_id, amount, payment_mode, status, remarks) 
                         VALUES ('$enrollment_no', 'ADMIN-$enrollment_no', $final_fee, 'Cash/Manual', 'success', 'Admin Manual Enrollment (Disc: $discount_percent%)')";
             $conn->query($txn_sql);
+        }
+        
+        // Send Email
+        if (!empty($email)) {
+             $smtp_sql = "SELECT * FROM smtp_settings WHERE is_active=1 LIMIT 1";
+             $smtp_res = $conn->query($smtp_sql);
+             if ($smtp_res && $smtp_res->num_rows > 0) {
+                 $smtp = $smtp_res->fetch_assoc();
+                 $mail = new PHPMailer(true);
+                 try {
+                     // Server settings
+                     $mail->isSMTP();
+                     $mail->Host       = $smtp['smtp_host'];
+                     $mail->SMTPAuth   = true;
+                     $mail->Username   = $smtp['smtp_username'];
+                     $mail->Password   = $smtp['smtp_password'];
+                     $mail->SMTPSecure = $smtp['smtp_encryption']; // tls or ssl
+                     $mail->Port       = $smtp['smtp_port'];
+ 
+                     // Recipients
+                     $mail->setFrom($smtp['from_email'], $smtp['from_name']);
+                     $mail->addAddress($email, $full_name);
+ 
+                     // Content
+                     $mail->isHTML(true);
+                     $mail->Subject = 'Internship Enrollment Successful - MG Education';
+                     $mail->Body    = "
+                         <h2>Welcome to MG Education!</h2>
+                         <p>Dear $full_name,</p>
+                         <p>You have been successfully enrolled in the internship program.</p>
+                         <p><strong>Enrollment No:</strong> $enrollment_no<br>
+                         <strong>Password:</strong> $password_plain</p>
+                         <p>Please use these credentials to login to your student dashboard.</p>
+                         <p>Regards,<br>MG Education Team</p>
+                     ";
+ 
+                     $mail->send();
+                     
+                     // Log Success
+                     $safe_msg = mysqli_real_escape_string($conn, $mail->Body); // Basic log
+                     $conn->query("INSERT INTO email_logs (to_email, subject, message, status) VALUES ('$email', 'Internship Enrollment', 'Sent successfully', 'success')");
+                     
+                 } catch (Exception $e) {
+                     $error_message .= " <br>Warning: Email could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                     $conn->query("INSERT INTO email_logs (to_email, subject, message, status, error_message) VALUES ('$email', 'Internship Enrollment', 'Failed', 'failed', '" . mysqli_real_escape_string($conn, $mail->ErrorInfo) . "')");
+                 }
+             }
         }
     } else {
         $error_message = "Database Error: " . $conn->error;
