@@ -8,11 +8,29 @@ if(!isset($_SESSION['reception_id'])) {
     exit;
 } 
 
-// Mock Data for "Attractive" Demo
-$total_enquiries = 124;
-$today_visitors = 12;
-$pending_followups = 5;
-$active_students = 450;
+$conn = getDbConnection();
+
+// 1. Total Enquiries
+$sql_enq = "SELECT COUNT(*) as count FROM quick_enquiries";
+$total_enquiries = $conn->query($sql_enq)->fetch_assoc()['count'];
+
+// 2. Callback Requests
+$sql_cb = "SELECT COUNT(*) as count FROM callback_requests";
+$callback_requests = $conn->query($sql_cb)->fetch_assoc()['count'];
+
+// 3. Total Students (Admitted by Admin - similar logic to search)
+$sql_stu = "SELECT COUNT(*) as count FROM admissions WHERE center_id IS NULL OR center_id = 0";
+$active_students = $conn->query($sql_stu)->fetch_assoc()['count'];
+
+// 4. Today's Visitors
+$today = date('Y-m-d');
+$sql_vis = "SELECT COUNT(*) as count FROM visitors WHERE DATE(check_in_time) = '$today'";
+$today_visitors = $conn->query($sql_vis)->fetch_assoc()['count'];
+
+// 5. Total Visitors (Lifetime) - Requested by user to show "Total Visitors" stats
+$sql_vis_total = "SELECT COUNT(*) as count FROM visitors";
+$total_visitors = $conn->query($sql_vis_total)->fetch_assoc()['count'];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -157,6 +175,7 @@ $active_students = 450;
     </div>
 
     <div class="stats-grid">
+        <!-- Total Enquiries -->
         <div class="stat-card pink">
             <div class="stat-info">
                 <h3><?php echo $total_enquiries; ?></h3>
@@ -166,28 +185,34 @@ $active_students = 450;
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
             </div>
         </div>
+
+        <!-- Callback Requests -->
         <div class="stat-card purple">
             <div class="stat-info">
-                <h3><?php echo $today_visitors; ?></h3>
-                <p>Today's Visitors</p>
+                <h3><?php echo $callback_requests; ?></h3>
+                <p>Callback Requests</p>
             </div>
              <div class="stat-icon bg-purple-soft">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-            </div>
-        </div>
-        <div class="stat-card blue">
-            <div class="stat-info">
-                <h3><?php echo $pending_followups; ?></h3>
-                <p>Pending Follow-ups</p>
-            </div>
-             <div class="stat-icon bg-blue-soft">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
             </div>
         </div>
-        <div class="stat-card orange">
+
+        <!-- Active Students -->
+        <div class="stat-card blue">
             <div class="stat-info">
                 <h3><?php echo $active_students; ?></h3>
-                <p>Active Students</p>
+                <p>Total Students</p>
+            </div>
+             <div class="stat-icon bg-blue-soft">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+        </div>
+
+        <!-- Visitors (Today / Total) -->
+        <div class="stat-card orange">
+            <div class="stat-info">
+                <h3 style="font-size:24px;"><?php echo $today_visitors; ?> <span style="font-size:14px; color:#94a3b8; font-weight:500;">/ <?php echo $total_visitors; ?></span></h3>
+                <p>Visitors (Today / Total)</p>
             </div>
              <div class="stat-icon bg-orange-soft">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
