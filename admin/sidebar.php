@@ -23,32 +23,68 @@
 
     /* GLOBAL RESET & THEME ENFORCEMENT */
     body {
-        background-color: var(--bg-body) !important;
+        background: var(--bg-body) !important; /* Shorthand to override gradients */
         color: var(--text-main) !important;
         font-family: 'Inter', sans-serif !important;
     }
 
-    h1, h2, h3, h4, h5, h6 { color: var(--text-main) !important; }
-    p, span, div { color: inherit; }
+    h1, h2, h3, h4, h5, h6, .page-title { color: var(--text-main) !important; }
+    p, span, div, .breadcrumb, .breadcrumb a { color: inherit; }
     
     /* Common Admin Components Theme Override */
     .card, .dashboard-card, .stat-card {
-        background-color: var(--bg-card) !important;
+        background: var(--bg-card) !important; /* Shorthand override */
         border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important; /* Enforce standard radius */
+        padding: 24px !important;
         color: var(--text-main) !important;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
     }
     
     /* Tables */
     table, th, td { color: var(--text-main) !important; border-color: var(--border-color) !important; }
-    thead th { background-color: #020617 !important; color: var(--text-muted) !important; }
-    tr:nth-child(even) { background-color: rgba(255,255,255,0.02) !important; }
+    thead th { background: #020617 !important; color: var(--text-muted) !important; }
+    tr:nth-child(even), table.table tr:nth-child(even) { background: rgba(255,255,255,0.02) !important; }
     
     /* Inputs */
-    input, select, textarea {
-        background-color: var(--bg-input) !important;
+    input, select, textarea, .form-input, .form-select, .form-textarea {
+        background: var(--bg-input) !important;
         border: 1px solid var(--border-color) !important;
         color: var(--text-main) !important;
+    }
+    
+    /* Buttons */
+    .btn-primary {
+         background: var(--active-bg) !important;
+         color: white !important;
+         border: none !important;
+    }
+    
+    /* Labels/Forms */
+    label, .form-label { color: var(--text-main) !important; }
+    
+    /* Fix Breadcrumbs in old pages */
+    .breadcrumb, .page-subtitle { color: var(--text-muted) !important; }
+    .breadcrumb a { color: var(--text-accent) !important; }
+
+    /* LAYOUT ENFORCEMENT */
+    .admin-content {
+        margin-left: var(--sidebar-w) !important;
+        min-height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+        transition: margin-left 0.3s ease;
+    }
+    
+    @media (max-width: 900px) {
+        .admin-content {
+             margin-left: var(--sidebar-collapsed-w) !important;
+             padding: 10px;
+        }
+    }
+    
+    body.sidebar-collapsed .admin-content { 
+        margin-left: var(--sidebar-collapsed-w) !important; 
     }
 
     /* SIDEBAR STYLES */

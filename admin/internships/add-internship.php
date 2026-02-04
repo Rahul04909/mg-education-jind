@@ -87,31 +87,7 @@ include __DIR__ . "/../sidebar.php";
     <!-- CKEditor -->
     <script src="../../vendor/ckeditor/ckeditor/ckeditor.js"></script>
     
-    <style>
-        :root{--active:#22c55e;--indigo:#6f75ff;--line:#e6e8ee;--text:#0b1020;--muted:#6f7787;--error:#ef4444;--success:#22c55e;--info:#3b82f6}
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(180deg,#f8fafc 0%,#ffffff 100%);color:var(--text)}
-        .admin-content{margin-left:260px;min-height:100vh;padding:20px;transition:margin-left .25s ease}
-        .admin-wrap{max-width:1200px;margin:0 auto}
-        .page-header{margin-bottom:30px}
-        .page-title{font-size:32px;font-weight:800;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:12px}
-        .page-subtitle{color:var(--muted);font-size:15px}
-        .breadcrumb{color:var(--muted);margin-bottom:10px;font-size:14px}
-        .breadcrumb a{color:var(--indigo);text-decoration:none}
-        .alert{padding:16px 20px;border-radius:12px;margin-bottom:20px;display:flex;align-items:center;gap:12px;border:1px solid;animation:slideDown .3s ease}
-        .alert-success{background:#d1fae5;border-color:#86efac;color:#065f46}
-        .alert-error{background:#fee2e2;border-color:#fca5a5;color:#991b1b}
-        .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px;box-shadow:0 4px 12px rgba(0,0,0,.05);margin-bottom: 20px;}
-        .form-group{margin-bottom:20px}
-        .form-label{display:block;font-weight:700;color:var(--text);margin-bottom:8px;font-size:14px}
-        .form-input, .form-textarea, .form-select{width:100%;padding:12px 16px;border:1px solid var(--line);border-radius:10px;font-size:15px;transition:all .2s ease;font-family:inherit;background:#fff}
-        .form-input:focus, .form-textarea:focus, .form-select:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px rgba(111,117,255,.1)}
-        .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:12px;font-weight:700;font-size:15px;border:none;cursor:pointer;transition:all .2s ease;text-decoration:none}
-        .btn-primary{background:linear-gradient(135deg,var(--indigo) 0%,#5a5fff 100%);color:#fff}
-        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
-        .preview-image{max-width:200px;margin-top:10px;border-radius:8px;display:none}
-    </style>
+    
 </head>
 <body>
     <main class="admin-content">
