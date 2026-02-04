@@ -1,180 +1,179 @@
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
     
     :root {
-        --admin-primary: #4f46e5; /* Indigo 600 */
-        --admin-primary-dark: #3730a3; /* Indigo 800 */
-        --admin-primary-soft: #eef2ff; /* Indigo 50 */
-        --admin-hover-bg: #f5f3ff;
-        --text-main: #1e293b;
-        --text-light: #64748b;
-        --sidebar-w: 260px;
-        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        --shadow-glow: 0 10px 15px -3px rgba(79, 70, 229, 0.2);
+        /* WordPress Admin Color Scheme */
+        --wp-sidebar-bg: #1d2327;
+        --wp-sidebar-text: #f0f0f1;
+        --wp-sidebar-hover: #2c3338; /* Slightly lighter than bg */
+        --wp-sidebar-active: #2271b1; /* WP Blue */
+        --wp-sidebar-submenu-bg: #2c3338; 
+        --wp-icon-color: #f0f0f1; /* White icons usually, or light gray */
+        --wp-icon-hover: #72aee6; /* Light blue on hover sometimes, or white */
+        
+        --sidebar-w: 160px; /* WP Default is 160px */
+        --transition: 0.1s ease-in-out; /* WP is snappy */
     }
 
     .sidebar {
         width: var(--sidebar-w);
         height: 100vh;
-        background: #ffffff;
+        background: var(--wp-sidebar-bg);
         position: fixed;
         left: 0;
         top: 0;
-        border-right: 1px solid #e2e8f0;
         display: flex;
         flex-direction: column;
         box-sizing: border-box;
-        font-family: 'Outfit', sans-serif;
-        z-index: 1000;
-        transition: var(--transition);
-        white-space: nowrap;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+        z-index: 9999;
+        font-size: 13px;
+        line-height: 1.4em;
     }
 
-    .sidebar.collapsed { width: 80px; }
+    /* Collapse behavior handled via body class in WP usually, but keeping local toggle for now */
+    .sidebar.collapsed { width: 36px; }
 
-    /* Brand */
+    /* Brand / Top Area */
     .brand {
         display: flex;
         align-items: center;
-        padding: 10px 24px;
+        justify-content: center;
+        height: 50px; /* Admin bar height usually 32px or 46px */
+        background: #000000; /* Darker header for sidebar */
+        color: #fff;
+        font-weight: 600;
+        padding: 0;
         flex-shrink: 0;
-        min-height: 80px;
     }
-
     .brand img {
-        max-width: 150px;
+        max-width: 30px;
         height: auto;
-        max-height: 70px;
-        border-radius: 8px;
-        transition: all 0.2s;
+        border-radius: 50%;
     }
-    
-    .sidebar.collapsed .brand img {
-        max-width: 35px;
-        max-height: 35px;
-    }
-
-    /* Hide text elements in collapsed state if any remain (though we are replacing HTML) */
+    .brand-text { margin-left: 8px; font-size: 14px; }
     .sidebar.collapsed .brand-text { display: none; }
+    .sidebar.collapsed .brand { padding: 0; }
 
-    /* Scrollable Content */
+    /* Content */
     .sidebar-content {
         flex: 1;
         overflow-y: auto;
-        padding: 10px 24px 24px 24px;
+        overflow-x: hidden;
+        padding: 0;
         display: flex;
         flex-direction: column;
-        min-height: 0;
     }
-    .sidebar-content::-webkit-scrollbar { width: 4px; }
-    .sidebar-content::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
-    .sidebar.collapsed .sidebar-content { overflow: visible; padding: 10px 12px; }
+    .sidebar-content::-webkit-scrollbar { width: 6px; }
+    .sidebar-content::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+    .sidebar-content::-webkit-scrollbar-track { background: #1d2327; }
 
-    /* Nav */
+    /* Nav List */
+    .nav-list { list-style: none; padding: 0; margin: 10px 0 0 0; display: flex; flex-direction: column; }
+
+    /* WP Separator logic (optional) - usually just spacing */
     .nav-label {
-        font-size: 11px;
-        text-transform: uppercase;
-        color: #94a3b8;
-        font-weight: 700;
-        margin: 16px 0 8px 12px;
-        letter-spacing: 0.5px;
+        display: none; /* WP doesn't use text labels between groups usually */
     }
-    .sidebar.collapsed .nav-label { display: none; }
 
-    .nav-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
-
-    .nav-item { position: relative; }
+    .nav-item { position: relative; margin: 0; }
     
     .nav-link {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 12px;
-        color: var(--text-light);
+        padding: 8px 12px;
+        color: var(--wp-sidebar-text);
         text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        border-radius: 12px;
-        transition: all 0.2s;
-        cursor: pointer;
+        font-size: 13px;
+        font-weight: 400;
+        transition: none; /* WP is fast */
+        position: relative;
+        border-left: 3px solid transparent; /* Selection marker placeholder */
     }
     
     .nav-link:hover {
-        background: var(--admin-hover-bg);
-        color: var(--admin-primary);
+        background: var(--wp-sidebar-hover);
+        color: #72aee6; /* WP Text Blue on hover */
     }
     
-    .nav-item.active > .nav-link {
-        background: var(--admin-primary-soft);
-        color: var(--admin-primary);
+    .nav-link:hover .nav-icon { stroke: #72aee6; }
+
+    .nav-item.active > .nav-link,
+    .nav-item.open > .nav-link {
+        background: var(--wp-sidebar-active);
+        color: #fff;
         font-weight: 600;
+        border-left-color: transparent; /* WP highlight is full bg */
     }
-    .nav-item.active > .nav-link .nav-icon { stroke: var(--admin-primary); }
+    .nav-item.active > .nav-link::after {
+        /* Triangle on right for active item in WP? Usually acts as pointer to content. 
+           We will optionaly add 'current' indicator if needed. */
+         content: "";
+         position: absolute;
+         right: 0;
+         top: 50%;
+         transform: translateY(-50%);
+         /* width: 0; height: 0; border: ... */
+    }
 
     .nav-icon {
         width: 20px; height: 20px; min-width: 20px;
-        stroke: currentColor; stroke-width: 2; fill: none;
+        stroke: currentColor; stroke-width: 1.5; fill: none;
+        margin-right: 8px;
+        opacity: 0.8;
     }
-    .nav-text { white-space: nowrap; flex: 1; transition: opacity 0.2s; }
+    .nav-item.active .nav-icon { opacity: 1; stroke: #fff; }
+    
+    .nav-text { white-space: nowrap; flex: 1; opacity: 0.9; }
     .sidebar.collapsed .nav-text { display: none; }
     
-    /* Submenu */
+    /* Submenu - WP Style: Slides down or pops out */
     .nav-chevron {
-        width: 16px; height: 16px;
+        width: 14px; height: 14px;
         stroke: currentColor; stroke-width: 2; fill: none;
-        transition: transform 0.3s;
-        opacity: 0.5;
+        opacity: 0.6;
+        transition: transform 0.2s;
     }
     .sidebar.collapsed .nav-chevron { display: none; }
     
     .submenu {
         list-style: none; margin: 0; padding: 0;
         max-height: 0; overflow: hidden;
-        transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
+        background: var(--wp-sidebar-submenu-bg);
+        transition: max-height 0.3s ease;
     }
-    .submenu::before {
-        content: ''; position: absolute; left: 22px; top: 0; bottom: 0;
-        width: 1px; background: #e2e8f0;
+    
+    /* When active/open */
+    .nav-item.open .submenu { max-height: 500px; }
+    .nav-item.open .nav-chevron { transform: rotate(180deg); opacity: 1; }
+
+    .submenu-item a {
+        display: flex; align-items: center;
+        padding: 6px 12px 6px 40px; /* Indented */
+        color: rgba(240, 240, 241, 0.7);
+        text-decoration: none;
+        font-size: 13px;
+        transition: color 0.1s;
+    }
+    .submenu-item a:hover {
+        color: #72aee6;
     }
     .sidebar.collapsed .submenu { display: none !important; }
 
-    .submenu-item { padding-left: 22px; }
-    .submenu-item a {
-        display: flex; align-items: center;
-        padding: 8px 12px 8px 18px;
-        color: var(--text-light); text-decoration: none;
-        font-size: 13px; border-radius: 8px;
-        position: relative; transition: all 0.2s;
-    }
-    .submenu-item a::before {
-        content: ''; position: absolute; left: 0; top: 50%;
-        width: 5px; height: 5px; background: #cbd5e1;
-        border-radius: 50%; transform: translate(-50%, -50%);
-        border: 2px solid #fff; z-index: 2; transition: all 0.2s;
-    }
-    .submenu-item a:hover { color: var(--admin-primary); background: var(--admin-hover-bg); }
-    .submenu-item a:hover::before { background: var(--admin-primary); width: 7px; height: 7px; }
-
-    /* Open State */
-    .nav-item.open .submenu { max-height: 300px; margin-top: 4px; margin-bottom: 8px; }
-    .nav-item.open .nav-chevron { transform: rotate(180deg); opacity: 1; }
-    
-    /* Sidebar Footer */
+    /* Footer / Bottom */
     .sidebar-footer {
-        margin-top: auto;
-        padding-top: 20px;
-        border-top: 1px solid #f1f5f9;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding: 0;
     }
 </style>
 
 <aside class="sidebar" id="sidebar">
     <div class="brand">
-        <img src="../../assets/images/sidebar-logo.jpg" alt="MG Admin">
-        <!-- Toggle Button for desktop -->
-        <div style="margin-left:auto; cursor:pointer; color:#94a3b8;" onclick="toggleSidebar()">
-             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        <!-- WP Style Icon Place holder or user logo -->
+        <div style="width: 36px; height: 36px; display:flex; align-items:center; justify-content:center;">
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#fff;"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/></svg>
         </div>
+        <span class="brand-text">MG Skill</span>
     </div>
 
     <div class="sidebar-content">
@@ -350,10 +349,13 @@
         </ul>
 
         <div class="sidebar-footer">
-             <a href="../../admin/logout.php" class="nav-link" style="color:#ef4444; background: #fef2f2;">
-                 <svg class="nav-icon" viewBox="0 0 24 24" style="stroke:#ef4444"><path d="M9 3h6v4"/><path d="M9 21h6v-4"/><path d="M16 12H3"/><path d="M12 8l4 4-4 4"/></svg>
-                 <span class="nav-text">Logout</span>
-             </a>
+             <div class="nav-item">
+                 <a href="../../admin/logout.php" class="nav-link">
+                     <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 3h6v4"/><path d="M9 21h6v-4"/><path d="M16 12H3"/><path d="M12 8l4 4-4 4"/></svg>
+                     <span class="nav-text">Collapse Menu</span>
+                 </a>
+                 <div style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; cursor: pointer;" onclick="toggleSidebar()"></div> 
+             </div>
         </div>
     </div>
 </aside>
