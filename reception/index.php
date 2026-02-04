@@ -31,6 +31,26 @@ $today_visitors = $conn->query($sql_vis)->fetch_assoc()['count'];
 $sql_vis_total = "SELECT COUNT(*) as count FROM visitors";
 $total_visitors = $conn->query($sql_vis_total)->fetch_assoc()['count'];
 
+// 6. Recent Activity (Enquiries + Callbacks)
+// Combined query or separate fetch and merge
+$recent_activities = [];
+
+// Fetch Enquiries
+$res_enq = $conn->query("SELECT 'enquiry' as type, name, course_source as details, created_at FROM quick_enquiries ORDER BY created_at DESC LIMIT 5");
+while($r = $res_enq->fetch_assoc()) $recent_activities[] = $r;
+
+// Fetch Callbacks
+$res_cb = $conn->query("SELECT 'callback' as type, full_name as name, course_id as details, created_at FROM callback_requests ORDER BY created_at DESC LIMIT 5");
+while($r = $res_cb->fetch_assoc()) $recent_activities[] = $r;
+
+// Sort by date desc
+usort($recent_activities, function($a, $b) {
+    return strtotime($b['created_at']) - strtotime($a['created_at']);
+});
+// Slice top 5
+$recent_activities = array_slice($recent_activities, 0, 5);
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -227,36 +247,29 @@ $total_visitors = $conn->query($sql_vis_total)->fetch_assoc()['count'];
                 <a href="#" style="color:#ec4899; text-decoration:none; font-size:14px; font-weight:600;">View All</a>
             </div>
             <ul class="activity-list">
-                <li class="activity-item">
-                    <div class="activity-icon text-pink-600 bg-pink-50">
-                        AB
-                    </div>
-                    <div class="activity-details">
-                        <h4>New Enquiry: Amit Bhardwaj</h4>
-                        <p>Interested in Frontend Development Course</p>
-                    </div>
-                    <div class="activity-time">10 mins ago</div>
-                </li>
-                <li class="activity-item">
-                    <div class="activity-icon text-purple-600 bg-purple-50">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-                    </div>
-                    <div class="activity-details">
-                        <h4>Visitor Check-in: Rahul Sharma</h4>
-                        <p>Meeting with Center Manager</p>
-                    </div>
-                    <div class="activity-time">35 mins ago</div>
-                </li>
-                 <li class="activity-item">
-                    <div class="activity-icon text-green-600 bg-green-50">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    </div>
-                    <div class="activity-details">
-                        <h4>Payment Received</h4>
-                        <p>Student #MG202355 paid admission fees</p>
-                    </div>
-                    <div class="activity-time">1 hr ago</div>
-                </li>
+                <?php if (count($recent_activities) > 0): ?>
+                    <?php foreach($recent_activities as $activity): 
+                        $is_enq = $activity['type'] === 'enquiry';
+                        $initials = strtoupper(substr($activity['name'], 0, 2));
+                        $bg_class = $is_enq ? 'bg-pink-50 text-pink-600' : 'bg-purple-50 text-purple-600';
+                        $icon_label = $is_enq ? $initials : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>';
+                        $title = $is_enq ? 'New Enquiry' : 'Callback Request';
+                        $desc = $is_enq ? ($activity['details'] ?? 'General') : 'Requested a callback';
+                    ?>
+                    <li class="activity-item">
+                        <div class="activity-icon <?php echo $bg_class; ?>">
+                            <?php echo $icon_label; ?>
+                        </div>
+                        <div class="activity-details">
+                            <h4><?php echo $title; ?>: <?php echo htmlspecialchars($activity['name']); ?></h4>
+                            <p><?php echo htmlspecialchars($desc); ?></p>
+                        </div>
+                        <div class="activity-time"><?php echo time_elapsed_string($activity['created_at']); ?></div>
+                    </li>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <li class="activity-item" style="justify-content:center; color:var(--text-light);">No recent activity</li>
+                <?php endif; ?>
             </ul>
         </div>
         
@@ -264,11 +277,11 @@ $total_visitors = $conn->query($sql_vis_total)->fetch_assoc()['count'];
             <div class="card-header">
                 <div class="card-title">Quick Actions</div>
             </div>
-            <a href="#" class="action-btn btn-primary">
+            <a href="../../reception/quick-enquiries.php" class="action-btn btn-primary">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 Add New Enquiry
             </a>
-            <a href="#" class="action-btn btn-outline">
+            <a href="visitors.php" class="action-btn btn-outline">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
                 Register Visitor
             </a>
@@ -276,10 +289,6 @@ $total_visitors = $conn->query($sql_vis_total)->fetch_assoc()['count'];
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 Search Student
             </a>
-            <div style="margin-top:20px; padding:15px; background:#fff1f2; border-radius:12px;">
-                <h5 style="margin:0 0 5px 0; color:#9f1239;">Pending Tasks</h5>
-                <p style="margin:0; font-size:13px; color:#be185d;">You have <strong>5 follow-ups</strong> scheduled for today.</p>
-            </div>
         </div>
     </div>
 </main>
