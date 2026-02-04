@@ -344,7 +344,7 @@
                 <ul class="submenu">
                     <li class="submenu-item"><a href="../../admin/manage-reception.php">Manage Reception</a></li>
                     <li class="submenu-item"><a href="../../admin/profile">Profile</a></li>
-                    <li class="submenu-item"><a href="../../admin/roles">Roles & Permissions</a></li>
+                    <li class="submenu-item"><a href="../../admin/settings/razorpay-settings.php">Razorpay Settings</a></li>
                     <li class="submenu-item"><a href="../../admin/settings/smtp-settings.php">SMTP Settings</a></li>
                 </ul>
             </li>
