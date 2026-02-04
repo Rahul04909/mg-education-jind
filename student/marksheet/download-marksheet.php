@@ -4,9 +4,9 @@ require_once __DIR__ . '/../../database/db-config.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 // Enable Error Reporting for Debugging
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -295,18 +295,27 @@ $qr_content .= "Session: " . $data['session_name'] . "\n";
 $qr_content .= "Total Marks: " . $grand_total_obtained . "/" . $grand_total_max . "\n";
 $qr_content .= "Result: " . $status_result;
 
-$qr_result = (new Builder(
-    writer: new PngWriter(),
-    writerOptions: [],
-    validateResult: false,
-    data: $qr_content,
-    encoding: new Encoding('UTF-8'),
-    errorCorrectionLevel: ErrorCorrectionLevel::High,
-    size: 100,
-    margin: 0
-))->build();
+$qr_data_uri = ""; // Default empty
 
-$qr_data_uri = $qr_result->getDataUri();
+// Check for required extensions to avoid Fatal Error
+if (function_exists('iconv')) {
+    try {
+        $qr_result = (new Builder(
+            writer: new PngWriter(),
+            writerOptions: [],
+            validateResult: false,
+            data: $qr_content,
+            encoding: new Encoding('UTF-8'),
+            errorCorrectionLevel: ErrorCorrectionLevel::High,
+            size: 100,
+            margin: 0
+        ))->build();
+
+        $qr_data_uri = $qr_result->getDataUri();
+    } catch (\Throwable $e) {
+        // QR Generation failed (silently ignore to allow PDF download)
+    }
+}
 
 $html .= '       <tr style="background-color: none">
                     <td colspan="2" style="text-align: right; padding-right: 10px; font-weight: bold;">GRAND TOTAL</td>

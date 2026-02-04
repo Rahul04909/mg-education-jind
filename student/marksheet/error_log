@@ -1,0 +1,120 @@
+[04-Feb-2026 18:38:11 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function BaconQrCode\Encoder\iconv() in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php:603
+Stack trace:
+#0 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(526): BaconQrCode\Encoder\Encoder::append8BitBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#1 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(87): BaconQrCode\Encoder\Encoder::appendBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\Mode), Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#2 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Bacon/MatrixFactory.php(18): BaconQrCode\Encoder\Encoder::encode('Name: RAHUL DHI...', Object(BaconQrCode\Common\ErrorCorrectionLevel), 'UTF-8')
+#3 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(27): Endroid\QrCode\Bacon\MatrixFactory->create(Object(Endroid\QrCode\QrCode))
+#4 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(36): Endroid\QrCode\Writer\AbstractGdWriter->getMatrix(Object(Endroid\QrCode\QrCode))
+#5 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/PngWriter.php(34): Endroid\QrCode\Writer\AbstractGdWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#6 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Builder/Builder.php(120): Endroid\QrCode\Writer\PngWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#7 /home/jhdindus/mgedu.in/student/marksheet/download-marksheet.php(307): Endroid\QrCode\Builder\Builder->build()
+#8 {main}
+  thrown in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php on line 603
+[04-Feb-2026 18:38:14 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function BaconQrCode\Encoder\iconv() in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php:603
+Stack trace:
+#0 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(526): BaconQrCode\Encoder\Encoder::append8BitBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#1 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(87): BaconQrCode\Encoder\Encoder::appendBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\Mode), Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#2 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Bacon/MatrixFactory.php(18): BaconQrCode\Encoder\Encoder::encode('Name: RAHUL DHI...', Object(BaconQrCode\Common\ErrorCorrectionLevel), 'UTF-8')
+#3 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(27): Endroid\QrCode\Bacon\MatrixFactory->create(Object(Endroid\QrCode\QrCode))
+#4 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(36): Endroid\QrCode\Writer\AbstractGdWriter->getMatrix(Object(Endroid\QrCode\QrCode))
+#5 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/PngWriter.php(34): Endroid\QrCode\Writer\AbstractGdWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#6 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Builder/Builder.php(120): Endroid\QrCode\Writer\PngWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#7 /home/jhdindus/mgedu.in/student/marksheet/download-marksheet.php(307): Endroid\QrCode\Builder\Builder->build()
+#8 {main}
+  thrown in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php on line 603
+[04-Feb-2026 18:38:20 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function BaconQrCode\Encoder\iconv() in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php:603
+Stack trace:
+#0 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(526): BaconQrCode\Encoder\Encoder::append8BitBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#1 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(87): BaconQrCode\Encoder\Encoder::appendBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\Mode), Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#2 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Bacon/MatrixFactory.php(18): BaconQrCode\Encoder\Encoder::encode('Name: RAHUL DHI...', Object(BaconQrCode\Common\ErrorCorrectionLevel), 'UTF-8')
+#3 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(27): Endroid\QrCode\Bacon\MatrixFactory->create(Object(Endroid\QrCode\QrCode))
+#4 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(36): Endroid\QrCode\Writer\AbstractGdWriter->getMatrix(Object(Endroid\QrCode\QrCode))
+#5 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/PngWriter.php(34): Endroid\QrCode\Writer\AbstractGdWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#6 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Builder/Builder.php(120): Endroid\QrCode\Writer\PngWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#7 /home/jhdindus/mgedu.in/student/marksheet/download-marksheet.php(307): Endroid\QrCode\Builder\Builder->build()
+#8 {main}
+  thrown in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php on line 603
+[04-Feb-2026 18:38:29 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function BaconQrCode\Encoder\iconv() in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php:603
+Stack trace:
+#0 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(526): BaconQrCode\Encoder\Encoder::append8BitBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#1 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(87): BaconQrCode\Encoder\Encoder::appendBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\Mode), Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#2 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Bacon/MatrixFactory.php(18): BaconQrCode\Encoder\Encoder::encode('Name: RAHUL DHI...', Object(BaconQrCode\Common\ErrorCorrectionLevel), 'UTF-8')
+#3 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(27): Endroid\QrCode\Bacon\MatrixFactory->create(Object(Endroid\QrCode\QrCode))
+#4 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(36): Endroid\QrCode\Writer\AbstractGdWriter->getMatrix(Object(Endroid\QrCode\QrCode))
+#5 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/PngWriter.php(34): Endroid\QrCode\Writer\AbstractGdWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#6 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Builder/Builder.php(120): Endroid\QrCode\Writer\PngWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#7 /home/jhdindus/mgedu.in/student/marksheet/download-marksheet.php(307): Endroid\QrCode\Builder\Builder->build()
+#8 {main}
+  thrown in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php on line 603
+[04-Feb-2026 18:40:30 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function BaconQrCode\Encoder\iconv() in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php:603
+Stack trace:
+#0 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(526): BaconQrCode\Encoder\Encoder::append8BitBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#1 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(87): BaconQrCode\Encoder\Encoder::appendBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\Mode), Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#2 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Bacon/MatrixFactory.php(18): BaconQrCode\Encoder\Encoder::encode('Name: RAHUL DHI...', Object(BaconQrCode\Common\ErrorCorrectionLevel), 'UTF-8')
+#3 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(27): Endroid\QrCode\Bacon\MatrixFactory->create(Object(Endroid\QrCode\QrCode))
+#4 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(36): Endroid\QrCode\Writer\AbstractGdWriter->getMatrix(Object(Endroid\QrCode\QrCode))
+#5 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/PngWriter.php(34): Endroid\QrCode\Writer\AbstractGdWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#6 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Builder/Builder.php(120): Endroid\QrCode\Writer\PngWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#7 /home/jhdindus/mgedu.in/student/marksheet/download-marksheet.php(307): Endroid\QrCode\Builder\Builder->build()
+#8 {main}
+  thrown in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php on line 603
+[04-Feb-2026 18:40:32 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function BaconQrCode\Encoder\iconv() in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php:603
+Stack trace:
+#0 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(526): BaconQrCode\Encoder\Encoder::append8BitBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#1 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(87): BaconQrCode\Encoder\Encoder::appendBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\Mode), Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#2 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Bacon/MatrixFactory.php(18): BaconQrCode\Encoder\Encoder::encode('Name: RAHUL DHI...', Object(BaconQrCode\Common\ErrorCorrectionLevel), 'UTF-8')
+#3 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(27): Endroid\QrCode\Bacon\MatrixFactory->create(Object(Endroid\QrCode\QrCode))
+#4 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(36): Endroid\QrCode\Writer\AbstractGdWriter->getMatrix(Object(Endroid\QrCode\QrCode))
+#5 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/PngWriter.php(34): Endroid\QrCode\Writer\AbstractGdWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#6 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Builder/Builder.php(120): Endroid\QrCode\Writer\PngWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#7 /home/jhdindus/mgedu.in/student/marksheet/download-marksheet.php(307): Endroid\QrCode\Builder\Builder->build()
+#8 {main}
+  thrown in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php on line 603
+[04-Feb-2026 18:40:32 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function BaconQrCode\Encoder\iconv() in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php:603
+Stack trace:
+#0 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(526): BaconQrCode\Encoder\Encoder::append8BitBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#1 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(87): BaconQrCode\Encoder\Encoder::appendBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\Mode), Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#2 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Bacon/MatrixFactory.php(18): BaconQrCode\Encoder\Encoder::encode('Name: RAHUL DHI...', Object(BaconQrCode\Common\ErrorCorrectionLevel), 'UTF-8')
+#3 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(27): Endroid\QrCode\Bacon\MatrixFactory->create(Object(Endroid\QrCode\QrCode))
+#4 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(36): Endroid\QrCode\Writer\AbstractGdWriter->getMatrix(Object(Endroid\QrCode\QrCode))
+#5 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/PngWriter.php(34): Endroid\QrCode\Writer\AbstractGdWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#6 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Builder/Builder.php(120): Endroid\QrCode\Writer\PngWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#7 /home/jhdindus/mgedu.in/student/marksheet/download-marksheet.php(307): Endroid\QrCode\Builder\Builder->build()
+#8 {main}
+  thrown in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php on line 603
+[04-Feb-2026 18:40:33 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function BaconQrCode\Encoder\iconv() in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php:603
+Stack trace:
+#0 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(526): BaconQrCode\Encoder\Encoder::append8BitBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#1 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(87): BaconQrCode\Encoder\Encoder::appendBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\Mode), Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#2 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Bacon/MatrixFactory.php(18): BaconQrCode\Encoder\Encoder::encode('Name: RAHUL DHI...', Object(BaconQrCode\Common\ErrorCorrectionLevel), 'UTF-8')
+#3 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(27): Endroid\QrCode\Bacon\MatrixFactory->create(Object(Endroid\QrCode\QrCode))
+#4 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(36): Endroid\QrCode\Writer\AbstractGdWriter->getMatrix(Object(Endroid\QrCode\QrCode))
+#5 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/PngWriter.php(34): Endroid\QrCode\Writer\AbstractGdWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#6 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Builder/Builder.php(120): Endroid\QrCode\Writer\PngWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#7 /home/jhdindus/mgedu.in/student/marksheet/download-marksheet.php(307): Endroid\QrCode\Builder\Builder->build()
+#8 {main}
+  thrown in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php on line 603
+[04-Feb-2026 18:40:40 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function BaconQrCode\Encoder\iconv() in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php:603
+Stack trace:
+#0 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(526): BaconQrCode\Encoder\Encoder::append8BitBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#1 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(87): BaconQrCode\Encoder\Encoder::appendBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\Mode), Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#2 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Bacon/MatrixFactory.php(18): BaconQrCode\Encoder\Encoder::encode('Name: RAHUL DHI...', Object(BaconQrCode\Common\ErrorCorrectionLevel), 'UTF-8')
+#3 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(27): Endroid\QrCode\Bacon\MatrixFactory->create(Object(Endroid\QrCode\QrCode))
+#4 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(36): Endroid\QrCode\Writer\AbstractGdWriter->getMatrix(Object(Endroid\QrCode\QrCode))
+#5 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/PngWriter.php(34): Endroid\QrCode\Writer\AbstractGdWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#6 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Builder/Builder.php(120): Endroid\QrCode\Writer\PngWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#7 /home/jhdindus/mgedu.in/student/marksheet/download-marksheet.php(307): Endroid\QrCode\Builder\Builder->build()
+#8 {main}
+  thrown in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php on line 603
+[04-Feb-2026 18:40:42 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function BaconQrCode\Encoder\iconv() in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php:603
+Stack trace:
+#0 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(526): BaconQrCode\Encoder\Encoder::append8BitBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#1 /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php(87): BaconQrCode\Encoder\Encoder::appendBytes('Name: RAHUL DHI...', Object(BaconQrCode\Common\Mode), Object(BaconQrCode\Common\BitArray), 'UTF-8')
+#2 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Bacon/MatrixFactory.php(18): BaconQrCode\Encoder\Encoder::encode('Name: RAHUL DHI...', Object(BaconQrCode\Common\ErrorCorrectionLevel), 'UTF-8')
+#3 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(27): Endroid\QrCode\Bacon\MatrixFactory->create(Object(Endroid\QrCode\QrCode))
+#4 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/AbstractGdWriter.php(36): Endroid\QrCode\Writer\AbstractGdWriter->getMatrix(Object(Endroid\QrCode\QrCode))
+#5 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Writer/PngWriter.php(34): Endroid\QrCode\Writer\AbstractGdWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#6 /home/jhdindus/mgedu.in/vendor/endroid/qr-code/src/Builder/Builder.php(120): Endroid\QrCode\Writer\PngWriter->write(Object(Endroid\QrCode\QrCode), NULL, NULL, Array)
+#7 /home/jhdindus/mgedu.in/student/marksheet/download-marksheet.php(307): Endroid\QrCode\Builder\Builder->build()
+#8 {main}
+  thrown in /home/jhdindus/mgedu.in/vendor/bacon/bacon-qr-code/src/Encoder/Encoder.php on line 603
