@@ -204,7 +204,7 @@ final class Encoder
      */
     private static function isOnlyDoubleByteKanji(string $content) : bool
     {
-        $bytes = @iconv('utf-8', 'SHIFT-JIS', $content);
+        $bytes = @\iconv('utf-8', 'SHIFT-JIS', $content);
 
         if (false === $bytes) {
             return false;
@@ -600,7 +600,7 @@ final class Encoder
      */
     private static function append8BitBytes(string $content, BitArray $bits, string $encoding) : void
     {
-        $bytes = @iconv('utf-8', $encoding, $content);
+        $bytes = @\iconv('utf-8', $encoding, $content);
 
         if (false === $bytes) {
             throw new WriterException('Could not encode content to ' . $encoding);
@@ -621,7 +621,7 @@ final class Encoder
      */
     private static function appendKanjiBytes(string $content, BitArray $bits) : void
     {
-        $bytes = @iconv('utf-8', 'SHIFT-JIS', $content);
+        $bytes = @\iconv('utf-8', 'SHIFT-JIS', $content);
 
         if (false === $bytes) {
             throw new WriterException('Content could not be converted to SHIFT-JIS');
