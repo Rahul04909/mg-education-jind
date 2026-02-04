@@ -19,14 +19,18 @@ include __DIR__ . '/sidebar.php';
         :root {
             /* WP Admin Colors */
             --wp-bg: #f0f0f1;
+            --wp-surface: #ffffff;
             --wp-text: #3c434a;
             --wp-text-light: #646970;
             --wp-border: #c3c4c7;
+            --wp-border-focus: #2271b1; /* Official WP Blue */
             --wp-primary: #2271b1;
             --wp-primary-hover: #135e96;
             --wp-alert-red: #d63638;
-            --admin-bar-height: 32px;
-            --sidebar-width: 160px;
+            
+            /* Keeping user brand color as a secondary accent if needed, but referencing WP Blue for the "WP Look" */
+            --primary: #4f46e5;
+            --primary-dark: #3730a3; 
         }
 
         body {
@@ -41,22 +45,27 @@ include __DIR__ . '/sidebar.php';
 
         /* Layout */
         .admin-content {
-            margin-left: var(--sidebar-width);
+            margin-left: 260px;
             min-height: 100vh;
-            padding: 10px 20px 20px 20px;
+            padding: 10px 20px 0 20px;
             box-sizing: border-box;
         }
         
         body.sidebar-collapsed .admin-content {
-            margin-left: 36px;
+            margin-left: 80px;
         }
 
-        /* Top Header - WP Style (Simple, just Title + Screen Options usually) */
+        @media (max-width: 900px) {
+            .admin-content { margin-left: 80px; padding: 10px; }
+        }
+
+        /* Top Header (WP style usually has toolbar, but we'll adapt the existing header) */
         .top-bar {
-            padding: 10px 0 20px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 20px;
+            padding-top: 10px;
         }
         
         .page-title h1 {
@@ -66,82 +75,104 @@ include __DIR__ . '/sidebar.php';
             color: #1d2327;
             padding: 9px 0 4px 0;
             line-height: 1.3;
-            display: inline-block;
         }
-        
-        /* Dashboard Widgets Container */
-        .dashboard-widgets {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 0 -8px;
+        .page-title p {
+            display: none; /* WP dashboard doesn't usually show subtitle here */
         }
-        
-        .postbox-container {
-            width: 50%;
-            padding: 0 8px;
-            box-sizing: border-box;
-        }
-        @media (max-width: 800px) { .postbox-container { width: 100%; } }
 
-        /* Generic Postbox (Widget) */
-        .postbox {
-            background: #fff;
-            border: 1px solid #c3c4c7;
-            box-shadow: 0 1px 1px rgba(0,0,0,.04);
-            margin-bottom: 20px;
-            position: relative;
-            min-width: 255px;
-        }
-        
-        .postbox-header {
-            border-bottom: 1px solid #c3c4c7;
-            padding: 8px 12px;
-            margin: 0;
-            background: #fff;
+        .top-actions {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            cursor: pointer; /* Toggleable usually */
-        }
-        .postbox-header h2 {
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 1.4;
-            color: #1d2327;
-            margin: 0;
-        }
-        
-        .postbox-content {
-            padding: 0 12px 12px;
-            margin-top: 10px; /* Spacing from header */
-        }
-        
-        /* Welcome Panel */
-        .welcome-panel {
-            background: #fff;
-            border: 1px solid #c3c4c7;
-            padding: 24px;
-            margin-bottom: 20px;
-            position: relative;
-            display: flex;
-            justify-content: space-between; /* To push button to right if needed, or structured */
-        }
-        .welcome-panel-content h2 {
-            margin: 0 0 10px;
-            font-size: 21px;
-            font-weight: 400;
-            line-height: 1.2;
-        }
-        .welcome-panel-content p {
-            font-size: 14px;
-            margin-bottom: 20px;
-            color: #646970;
+            gap: 10px;
         }
 
-        /* Quick Button */
-        .button {
-            display: inline-block;
+        /* WP Screen Options / Help style buttons (mocking the search/profile here) */
+        .search-box input {
+            padding: 0 8px;
+            line-height: 2;
+            min-height: 30px;
+            box-shadow: 0 0 0 transparent;
+            border-radius: 4px;
+            border: 1px solid #8c8f94;
+            background-color: #fff;
+            color: #2c3338;
+            font-size: 13px;
+            width: 200px;
+            transition: all 0.2s;
+        }
+        .search-box input:focus {
+            border-color: var(--wp-primary);
+            box-shadow: 0 0 0 1px var(--wp-primary);
+            outline: none;
+        }
+        .search-icon { display: none; } /* Hide icon inside input for strict WP look */
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--wp-text-light);
+            display: flex;
+            align-items: center;
+            padding: 4px;
+        }
+        .action-btn:hover { color: var(--wp-primary); }
+        .notification-dot {
+            width: 8px; height: 8px; background: var(--wp-alert-red); border-radius: 50%; display: inline-block; margin-right: -8px; margin-top: -8px;
+        }
+
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--wp-text);
+        }
+        .profile-btn:hover { color: var(--wp-primary); }
+        .profile-img {
+            width: 26px; height: 26px;
+            border-radius: 50%; /* WP often uses squares or circles, circle is fine */
+            background: #ccc;
+        }
+        .profile-name { font-weight: 600; }
+        .profile-role { display: none; }
+
+        /* Welcome Panel (Matches WP "Welcome to WordPress") */
+        .welcome-banner {
+            background: #fff;
+            border: 1px solid #c3c4c7;
+            padding: 0;
+            margin-bottom: 20px;
+            position: relative;
+            box-sizing: border-box;
+            display: flex;
+        }
+        .welcome-content {
+            padding: 30px;
+            max-width: 100%;
+        }
+        .welcome-title {
+            font-size: 23px;
+            font-weight: 400;
+            margin: 0 0 10px 0;
+            color: #1d2327;
+        }
+        .welcome-text {
+            font-size: 15px;
+            line-height: 1.5;
+            margin: 0 0 20px 0;
+            color: var(--wp-text);
+        }
+        .welcome-btn {
+            background: var(--wp-primary);
+            border-color: var(--wp-primary);
+            color: #fff;
             text-decoration: none;
+            text-shadow: none;
+            display: inline-block;
             font-size: 13px;
             line-height: 2.15384615;
             min-height: 30px;
@@ -154,64 +185,188 @@ include __DIR__ . '/sidebar.php';
             border-radius: 3px;
             white-space: nowrap;
             box-sizing: border-box;
+            font-weight: 400;
         }
-        .button-primary {
-            background: var(--wp-primary);
-            border-color: var(--wp-primary);
-            color: #fff;
-        }
-        .button-primary:hover {
+        .welcome-btn:hover {
             background: var(--wp-primary-hover);
             border-color: var(--wp-primary-hover);
             color: #fff;
         }
+        .welcome-decor { display: none; } /* Remove the decor gradient */
 
-        /* At a Glance */
-        ul.glance-list {
-            list-style: none;
-            margin: 0;
+        /* Dashboard Widgets (Stats) */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* WP usually dense */
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 1200px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .stats-grid { grid-template-columns: 1fr; } }
+        
+        .stat-card {
+            background: #fff;
+            border: 1px solid #c3c4c7;
+            /* box-shadow: 0 1px 1px rgba(0,0,0,.04); */
             padding: 0;
-        }
-        ul.glance-list li {
-            margin-bottom: 10px;
-            color: #646970;
-            font-size: 14px;
+            min-height: auto;
+            border-radius: 0;
+            position: relative;
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            box-sizing: border-box;
+            border-top: 4px solid #fff; /* Placeholder for color accent */
         }
-        ul.glance-list li a {
-            text-decoration: none;
-            color: var(--wp-primary);
-            font-weight: 600;
-        }
-        ul.glance-list li span.count {
-            margin-right: 5px;
-        }
-        ul.glance-list li .dashicons {
-            margin-right: 5px;
-            color: #8c8f94;
-        }
+        .stat-card:hover { border-color: #c3c4c7; box-shadow: 0 1px 1px rgba(0,0,0,.04); transform: none; }
 
-        /* Activity / Recent Comments style */
-        .activity-block {
-            border-bottom: 1px solid #f0f0f1;
-            padding: 10px 0;
+        /* Color accents on top border to differentiate, keeping the 'color scheme' rule in a WP way */
+        .stat-card.blue { border-top-color: #3b82f6; }
+        .stat-card.green { border-top-color: #10b981; }
+        .stat-card.teal { border-top-color: #0ea5e9; }
+        .stat-card.yellow { border-top-color: #f59e0b; }
+        .stat-card.purple { border-top-color: #8b5cf6; }
+        .stat-card.red { border-top-color: #ef4444; }
+
+        .stat-content {
+            padding: 12px 12px 24px;
+            display: block;
         }
-        .activity-block:last-child { border-bottom: none; }
-        .activity-header {
-            font-size: 12px;
-            color: #646970;
-            margin-bottom: 4px;
-        }
-        .activity-title a {
+        .stat-number {
+            font-size: 24px; /* WP numbers aren't huge */
             font-weight: 600;
-            color: var(--wp-primary);
-            text-decoration: none;
+            color: #1d2327;
+            margin-bottom: 4px;
+            line-height: 1;
         }
-        .activity-description {
-            color: #3c434a;
+        .stat-label {
+            font-size: 13px;
+            color: var(--wp-text-light);
+            font-weight: 400;
+        }
+        .stat-icon-bg {
+            display: none; /* WP widgets rarely have big background icons */
         }
         
+        /* Postbox (Generic Container for Charts/Tables) */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 1000px) { .content-grid { grid-template-columns: 1fr; } }
+
+        .dashboard-card {
+            background: #fff;
+            border: 1px solid #c3c4c7;
+            box-shadow: 0 1px 1px rgba(0,0,0,.04);
+            margin-bottom: 20px;
+            position: relative;
+            min-width: 255px;
+            border-radius: 0; /* Boxy */
+            padding: 0;
+        }
+
+        .card-header {
+            border-bottom: 1px solid #c3c4c7;
+            padding: 8px 12px;
+            margin: 0;
+            background: #fff; /* Sometimes WP uses #fcfcfc but straight white is cleaner */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.4;
+            color: #1d2327;
+            margin: 0;
+        }
+        .card-action {
+            font-size: 12px;
+            text-decoration: none;
+            color: var(--wp-primary);
+        }
+        .card-action:hover { color: var(--wp-primary-hover); }
+
+        .card-body {
+            padding: 0 12px 12px;
+        }
+
+        /* Tables (WP List Table Style) */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border-top: 1px solid #c3c4c7; /* Match WP list table border */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            background: #fff;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px 10px;
+            font-size: 13px;
+            line-height: 1.5;
+            vertical-align: top;
+            color: #2c3338;
+        }
+        th {
+            border-bottom: 1px solid #c3c4c7;
+            font-weight: 600;
+            color: #1d2327;
+        }
+        td {
+            /* box-shadow: inset 0 -1px 0 rgba(0,0,0,0.1); */
+            border-bottom: 1px solid #f0f0f1;
+        }
+        tr:nth-child(odd) { background-color: #f9f9f9; } /* Striped rows */
+        tr:last-child td { border-bottom: none; }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .user-avatar {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+        }
+
+        .status-badge {
+            font-weight: 700;
+            /* WP uses text status primarily, but we'll keep badges minimal */
+            padding: 0;
+            background: transparent !important;
+            font-size: 13px;
+        }
+        .status-badge.completed { color: #007017; }
+        .status-badge.pending { color: #b32d56; } /* Orange-ish/Red-ish */
+        .status-badge.failed { color: #d63638; }
+
+        select {
+            font-size: 13px;
+            color: #2c3338;
+            border: 1px solid #8c8f94;
+            border-radius: 3px;
+            padding: 0 24px 0 8px;
+            min-height: 30px;
+            max-width: 25rem;
+            -webkit-appearance: none;
+            background: #fff url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E") no-repeat right 5px top 55%;
+            background-size: 16px 16px;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+        select:focus {
+            color: #2c3338;
+            border-color: var(--wp-primary);
+            box-shadow: 0 0 0 1px var(--wp-primary);
+            outline: 0;
+        }
+
     </style>
 </head>
 <body>
@@ -220,123 +375,225 @@ include __DIR__ . '/sidebar.php';
     <header class="top-bar">
         <div class="page-title">
             <h1>Dashboard</h1>
+            <p>Welcome back, Admin</p>
         </div>
-        <!-- Screen Options / Help usually here -->
+        
+        <div class="top-actions">
+            <div class="search-box">
+                <input type="text" placeholder="Search...">
+            </div>
+            
+            <button class="action-btn">
+                <span class="notification-dot"></span>
+                <span style="font-size: 16px; font-weight: 500;">Notifications</span>
+            </button>
+            
+            <div class="profile-btn">
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=4f46e5&color=fff" alt="Admin" class="profile-img">
+                <span class="profile-name">Howdy, Admin User</span>
+            </div>
+        </div>
     </header>
 
-    <div class="welcome-panel">
-        <div class="welcome-panel-content">
-            <h2>Welcome to MG Skill</h2>
-            <p>We’ve assembled some links to get you started:</p>
-            <a href="#" class="button button-primary">Customize Your Site</a>
+    <div class="welcome-banner">
+        <!-- Removed decor -->
+        <div class="welcome-content">
+            <h2 class="welcome-title">Welcome to your MG Skill Dashboard</h2>
+            <p class="welcome-text">We’ve assembled some links to get you started:</p>
+            <div style="display:flex; gap:10px;">
+                <button class="welcome-btn">Customize Your Site</button>
+                <button class="welcome-btn" style="background:#fff; color:var(--wp-primary); border-color:var(--wp-primary);">View Reports</button>
+            </div>
         </div>
     </div>
 
-    <div class="dashboard-widgets">
-        <!-- Column 1 -->
-        <div class="postbox-container">
-            <!-- At a Glance -->
-            <div class="postbox">
-                <div class="postbox-header"><h2>At a Glance</h2></div>
-                <div class="postbox-content">
-                    <ul class="glance-list">
-                        <li>
-                            <svg class="dashicons" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                            <a href="#"><span class="count">48</span> Courses</a>
-                        </li>
-                        <li>
-                            <svg class="dashicons" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            <a href="#"><span class="count">2,543</span> Students</a>
-                        </li>
-                         <li>
-                            <svg class="dashicons" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                            <a href="#"><span class="count">128</span> Batches</a>
-                        </li>
-                    </ul>
-                    <p style="margin-top:20px; font-size:12px; color:#646970;">WordPress 6.4.2 running MG Theme.</p>
+    <div class="stats-grid">
+        <!-- Stat 1: Students (Blue) -->
+        <div class="stat-card blue">
+            <div class="stat-content">
+                <div class="stat-number">2,543</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+        </div>
+
+        <!-- Stat 2: Revenue (Green) -->
+        <div class="stat-card green">
+            <div class="stat-content">
+                <div class="stat-number">₹45.2L</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+        </div>
+
+        <!-- Stat 3: Batches (Teal) -->
+        <div class="stat-card teal">
+            <div class="stat-content">
+                <div class="stat-number">128</div>
+                <div class="stat-label">Active Batches</div>
+            </div>
+        </div>
+
+        <!-- Stat 4: New Courses (Yellow) -->
+        <div class="stat-card yellow">
+             <div class="stat-content">
+                <div class="stat-number">48</div>
+                <div class="stat-label">New Courses</div>
+            </div>
+        </div>
+        
+        <!-- Stat 5: Instructors (Purple) -->
+         <div class="stat-card purple">
+            <div class="stat-content">
+                <div class="stat-number">32</div>
+                <div class="stat-label">Instructors</div>
+            </div>
+        </div>
+        
+        <!-- Stat 6: Tickets (Red) -->
+         <div class="stat-card red">
+            <div class="stat-content">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Open Tickets</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-grid">
+        <!-- Chart Section -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3 class="card-title">Revenue Analytics</h3>
+                <div>
+                    <select>
+                        <option>This Year</option>
+                        <option>Last Year</option>
+                    </select>
                 </div>
             </div>
-
-            <!-- Activity -->
-            <div class="postbox">
-                <div class="postbox-header"><h2>Activity</h2></div>
-                <div class="postbox-content">
-                    <div style="margin-bottom:15px; font-size:12px; color:#646970; text-transform:uppercase; font-weight:600;">Recently Published</div>
-                    
-                    <div class="activity-block">
-                        <div class="activity-header">Feb 4th, 10:30 AM</div>
-                        <div class="activity-title"><a href="#">Introduction to PHP Programming</a></div>
-                    </div>
-                    
-                    <div class="activity-block">
-                         <div class="activity-header">Feb 3rd, 2:15 PM</div>
-                        <div class="activity-title"><a href="#">Graphic Design Masterclass</a></div>
-                    </div>
-                    
-                    <div class="activity-block">
-                         <div class="activity-header">Feb 1st, 09:00 AM</div>
-                        <div class="activity-title"><a href="#">Web Development Bootcamp</a></div>
-                    </div>
+            <div class="card-body">
+                <div style="height: 300px; padding-top: 20px;">
+                    <canvas id="revenueChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Column 2 -->
-        <div class="postbox-container">
-            <!-- Quick Draft / Revenue (Simulation) -->
-            <div class="postbox">
-                <div class="postbox-header"><h2>Quick Stats</h2></div>
-                <div class="postbox-content">
-                     <canvas id="revenueChart" style="height:200px; width:100%;"></canvas>
-                </div>
+        <!-- Recent Activity -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h3 class="card-title">Recent Transactions</h3>
+                <a href="#" class="card-action">View All</a>
             </div>
-            
-             <!-- MG Events -->
-            <div class="postbox">
-                <div class="postbox-header"><h2>Upcoming Events</h2></div>
-                <div class="postbox-content">
-                     <div class="activity-block">
-                        <div class="activity-title"><a href="#">Mega Recruitment Drive</a></div>
-                         <div class="activity-description">Scheduled for 15th Feb, 2026.</div>
-                    </div>
-                    <div class="activity-block">
-                        <div class="activity-title"><a href="#">Coding Hackathon</a></div>
-                         <div class="activity-description">Scheduled for 20th Feb, 2026.</div>
-                    </div>
-                </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <img src="https://i.pravatar.cc/150?img=3" class="user-avatar">
+                                    <span style="font-weight:600; color:#2271b1;">Rahul K.</span>
+                                </div>
+                            </td>
+                            <td><span style="font-family:monospace;">₹4,500</span></td>
+                            <td><span class="status-badge completed">Paid</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <img src="https://i.pravatar.cc/150?img=4" class="user-avatar">
+                                    <span style="font-weight:600; color:#2271b1;">Sneha P.</span>
+                                </div>
+                            </td>
+                            <td><span style="font-family:monospace;">₹12,000</span></td>
+                            <td><span class="status-badge pending">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <img src="https://i.pravatar.cc/150?img=5" class="user-avatar">
+                                    <span style="font-weight:600; color:#2271b1;">Amit S.</span>
+                                </div>
+                            </td>
+                            <td><span style="font-family:monospace;">₹2,400</span></td>
+                            <td><span class="status-badge completed">Paid</span></td>
+                        </tr>
+                         <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <img src="https://i.pravatar.cc/150?img=8" class="user-avatar">
+                                    <span style="font-weight:600; color:#2271b1;">Priya M.</span>
+                                </div>
+                            </td>
+                            <td><span style="font-family:monospace;">₹8,000</span></td>
+                            <td><span class="status-badge failed">Failed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </main>
 
 <script>
-    // Chart Configuration for Quick Stats (Simplified)
+    // Chart Configuration
     const ctx = document.getElementById('revenueChart').getContext('2d');
     
+    // Removed Gradient - WP is simpler
+    // const gradient = ... 
+
     new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
-            labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             datasets: [{
-                label: 'Signups',
-                data: [12, 19, 3, 5, 2, 3, 10],
-                backgroundColor: '#2271b1',
+                label: 'Revenue (₹)',
+                data: [12000, 19000, 15000, 25000, 22000, 30000, 35000, 28000, 42000, 45000, 48000, 55000],
+                // WP Blue
+                borderColor: '#2271b1',
+                backgroundColor: 'rgba(34, 113, 177, 0.1)',
+                borderWidth: 2,
+                pointBackgroundColor: '#ffffff',
+                pointBorderColor: '#2271b1',
+                pointRadius: 3,
+                pointHoverRadius: 5,
+                fill: true,
+                tension: 0 // Straighter lines often look more like business data, or keep slightly curved
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1d2327',
+                    padding: 8,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            return '₹ ' + context.parsed.y.toLocaleString();
+                        }
+                    }
+                }
+            },
             scales: {
-                y: { display: false },
-                x: { grid: { display: false } }
+                y: {
+                    beginAtZero: true,
+                    grid: { borderDash: [2, 2], color: '#f0f0f1' },
+                    ticks: { font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI"', size: 11 }, color: '#646970' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI"', size: 11 }, color: '#646970' }
+                }
             }
         }
     });
-
-    // Sidebar Toggle connection
-    // We need to ensure sidebar toggle works with body class
-    // Since sidebar.php has the script, we can just ensure body has the class if needed
 </script>
 </body>
 </html>
