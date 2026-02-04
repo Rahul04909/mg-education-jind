@@ -183,7 +183,7 @@ if ($search !== '') {
                             <th>Student Name</th>
                             <th>Course</th>
                             <th>Mobile</th>
-                            <th>Status</th>
+                            <th>Father's Name</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -199,11 +199,7 @@ if ($search !== '') {
                                 </td>
                                 <td><?php echo htmlspecialchars($row['course_title'] ?? 'N/A'); ?></td>
                                 <td><?php echo htmlspecialchars($row['mobile']); ?></td>
-                                <td>
-                                    <span class="badge <?php echo ($row['payment_status'] ?? 'pending') === 'success' ? 'badge-success' : 'badge-warning'; ?>">
-                                        <?php echo ucfirst($row['payment_status'] ?? 'Pending'); ?>
-                                    </span>
-                                </td>
+                                <td><?php echo htmlspecialchars($row['father_name'] ?? 'N/A'); ?></td>
                                 <td>
                                     <!-- Placeholder links, waiting for specific view page requirement or use admin's view -->
                                     <a href="#" style="color:var(--primary); font-weight:600; text-decoration:none;">View Details</a>
