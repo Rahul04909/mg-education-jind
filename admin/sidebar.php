@@ -2,211 +2,165 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
     
     :root {
-        /* WordPress Admin Sidebar Colors */
-        --sidebar-bg: #1d2327;
-        --sidebar-text: #f0f0f1;
-        --sidebar-text-hover: #72aee6; /* WP light blue text on hover sometimes */
-        --sidebar-hover-bg: #135e96; /* WP hover background */
-        --sidebar-active-bg: #2271b1; /* WP active background */
-        --sidebar-submenu-bg: #2c3338;
-        --sidebar-icon: #f0f0f1; /* White icons */
+        /* GLOBAL DARK THEME (Slate/Charcoal) */
+        --bg-body: #0f172a;       /* Deep Slate - Main Background */
+        --bg-sidebar: #1e293b;    /* Lighter Slate - Sidebar */
+        --bg-card: #1e293b;       /* Card Background */
+        --bg-input: #334155;      /* Input Background */
+        
+        --text-main: #f1f5f9;     /* White-ish */
+        --text-muted: #94a3b8;    /* Muted Text */
+        --text-accent: #818cf8;   /* Indigo Accent */
+        
+        --border-color: #334155;  /* Slate Border */
+        --hover-bg: #334155;      /* Hover State */
+        --active-bg: #4f46e5;     /* Active Primary */
         
         --sidebar-w: 260px;
-        --transition: none; /* WP is snappy, rarely transitions */
+        --sidebar-collapsed-w: 64px; /* Wider for centered icons */
+        --header-h: 60px;
     }
 
+    /* GLOBAL RESET & THEME ENFORCEMENT */
+    body {
+        background-color: var(--bg-body) !important;
+        color: var(--text-main) !important;
+        font-family: 'Inter', sans-serif !important;
+    }
+
+    h1, h2, h3, h4, h5, h6 { color: var(--text-main) !important; }
+    p, span, div { color: inherit; }
+    
+    /* Common Admin Components Theme Override */
+    .card, .dashboard-card, .stat-card {
+        background-color: var(--bg-card) !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-main) !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    }
+    
+    /* Tables */
+    table, th, td { color: var(--text-main) !important; border-color: var(--border-color) !important; }
+    thead th { background-color: #020617 !important; color: var(--text-muted) !important; }
+    tr:nth-child(even) { background-color: rgba(255,255,255,0.02) !important; }
+    
+    /* Inputs */
+    input, select, textarea {
+        background-color: var(--bg-input) !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-main) !important;
+    }
+
+    /* SIDEBAR STYLES */
     .sidebar {
         width: var(--sidebar-w);
         height: 100vh;
-        background: var(--sidebar-bg);
+        background: var(--bg-sidebar);
         position: fixed;
         left: 0;
         top: 0;
-        /* No border right in WP usually, handled by main content bg, but adding one for safety */
-        /* border-right: 1px solid #c3c4c7;  */
+        border-right: 1px solid var(--border-color);
         display: flex;
         flex-direction: column;
-        box-sizing: border-box;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
         z-index: 1000;
-        transition: width 0.3s; /* Only transition width if collapsing */
+        transition: width 0.3s ease;
         white-space: nowrap;
-        color: var(--sidebar-text);
-        font-size: 13px;
-        font-weight: 400;
     }
 
-    .sidebar.collapsed { width: 36px; } /* WP collapsed sidebar is tiny */
+    .sidebar.collapsed { width: var(--sidebar-collapsed-w); }
 
     /* Brand */
     .brand {
+        height: var(--header-h);
         display: flex;
         align-items: center;
         padding: 0 20px;
-        flex-shrink: 0;
-        height: 50px; /* WP Admin Bar height approx */
-        background: #000000; /* Darker header part */
-        color: #fff;
-        font-weight: 600;
+        border-bottom: 1px solid var(--border-color);
+        background: rgba(0,0,0,0.2);
     }
-
-    .brand img {
-        max-width: 120px;
-        height: auto;
-        max-height: 30px;
-        border-radius: 0;
-        display: none; /* Often WP relies on simple text or icon */
-    }
-    
-    .brand-text-logo {
-        font-size: 16px;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .sidebar.collapsed .brand { padding: 0 8px; justify-content: center; }
+    .brand a { color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 18px; }
+    .sidebar.collapsed .brand { padding: 0; justify-content: center; }
     .sidebar.collapsed .brand-text-logo { display: none; }
-    .sidebar.collapsed .brand-icon-only { display: block; }
-
-    /* Scrollable Content */
-    .sidebar-content {
-        flex: 1;
-        overflow-y: auto;
-        overflow-x: hidden;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        min-height: 0;
-    }
-    .sidebar-content::-webkit-scrollbar { width: 6px; }
-    .sidebar-content::-webkit-scrollbar-track { background: var(--sidebar-bg); }
-    .sidebar-content::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
     
-    .sidebar.collapsed .sidebar-content { overflow: visible; }
-
-    /* Nav */
-    .nav-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0; }
-
-    /* Separators if needed, WP uses distinct grouping sometimes */
-    .nav-label { display: none; } /* WP generally doesn't use section labels in the sidebar text, just dividers */
+    /* Navigation */
+    .sidebar-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 10px 0; }
+    .nav-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
     
-    .nav-item { position: relative; margin: 0; }
-    
+    .nav-item { margin: 0 10px; }
+    .sidebar.collapsed .nav-item { margin: 0 8px; } /* Tighter margin in collapsed */
+
     .nav-link {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
-        color: var(--sidebar-text);
+        gap: 12px;
+        padding: 10px 12px;
+        color: var(--text-muted);
         text-decoration: none;
         font-size: 14px;
-        font-weight: 400;
-        border-radius: 0; /* Boxy */
-        transition: background 0.1s, color 0.1s;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: all 0.2s;
         cursor: pointer;
-        position: relative;
-    }
-    
-    /* Active State */
-    .nav-item.active > .nav-link,
-    .nav-item.open > .nav-link {
-        background: var(--sidebar-active-bg);
-        color: #fff;
-        font-weight: 600;
-    }
-    
-    /* Hover State */
-    .nav-link:hover {
-        background: var(--sidebar-bg); /* Usually stays dark, text turns blue */
-        color: var(--sidebar-text-hover);
-    }
-    .nav-item.active > .nav-link:hover {
-        background: var(--sidebar-active-bg);
-        color: #fff;
-    }
-    
-    /* WP Hover logic: if hovering over item it gets a darker bg or the blue text */
-    .nav-item:not(.active):hover > .nav-link {
-        background: #191e23;
-        color: var(--sidebar-text-hover);
     }
 
-    /* Active Indicator (Triangle) - WP classic style */
-    .nav-item.active > .nav-link::after {
-        content: ""; /* right pointing triangle if selected? WP actually keeps it simple blue block mostly now */
-        /* display: block;
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        border-top: 6px solid transparent;
-        border-bottom: 6px solid transparent;
-        border-right: 6px solid #f0f0f1; */ /* Pointing to content */
+    /* Hover & Active */
+    .nav-link:hover { background: var(--hover-bg); color: var(--text-main); }
+    .nav-item.active > .nav-link, .nav-item.open > .nav-link {
+        background: var(--active-bg);
+        color: #fff;
+        box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.4);
     }
-    
+
     .nav-icon {
         width: 20px; height: 20px; min-width: 20px;
-        fill: currentColor; /* Dashicons fill style */
-        stroke: none;
-        opacity: 0.8;
-    }
-    .nav-item.active .nav-icon { opacity: 1; fill: #fff; }
-    
-    .nav-text { white-space: nowrap; flex: 1; transition: opacity 0.2s; }
-    .sidebar.collapsed .nav-text { display: none; }
-    
-    /* Submenu */
-    .nav-chevron {
-        width: 16px; height: 16px;
         fill: currentColor;
-        stroke: none;
-        opacity: 0.6;
-        transition: transform 0.3s;
+        transition: transform 0.2s;
     }
-    .sidebar.collapsed .nav-chevron { display: none; }
+    .nav-text { flex: 1; opacity: 1; transition: opacity 0.2s; }
     
+    .sidebar.collapsed .nav-text, 
+    .sidebar.collapsed .nav-chevron { display: none !important; }
+    
+    .sidebar.collapsed .nav-link { 
+        justify-content: center; 
+        padding: 10px 0; 
+    }
+    .sidebar.collapsed .nav-icon { margin: 0; }
+
+    /* Submenu */
     .submenu {
         list-style: none; margin: 0; padding: 0;
         max-height: 0; overflow: hidden;
-        transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        background: var(--sidebar-submenu-bg);
+        transition: max-height 0.3s ease;
+        background: rgba(0,0,0,0.2);
+        border-radius: 6px;
+        margin-top: 2px;
     }
-    /* WP submenus have no line */
-    .submenu::before { display: none; }
+    .nav-item.open .submenu { max-height: 800px; padding: 4px 0; }
     
-    .sidebar.collapsed .submenu { 
-        display: none !important; /* In WP collapsed mode, submenus are popouts, complex JS needed. Hiding for now to satisfy simple constraints */
-    }
-
-    .submenu-item { padding: 0; }
     .submenu-item a {
-        display: flex; align-items: center;
-        padding: 6px 12px 6px 40px; /* Indented text */
-        color: rgba(240, 246, 252, 0.7); 
+        display: block;
+        padding: 8px 12px 8px 44px;
+        color: var(--text-muted);
         text-decoration: none;
         font-size: 13px;
-        border-radius: 0;
-        transition: color 0.1s;
+        transition: color 0.2s;
     }
-    .submenu-item a::before { display: none; }
-    .submenu-item a:hover { color: var(--sidebar-text-hover); background: transparent; }
-    .submenu-item a:focus { color: var(--sidebar-text-hover); }
+    .submenu-item a:hover { color: var(--text-main); }
+    .sidebar.collapsed .submenu { display: none !important; }
+    
+    .nav-chevron { width: 16px; height: 16px; opacity: 0.5; transition: transform 0.3s; }
+    .nav-item.open .nav-chevron { transform: rotate(180deg); }
 
-    /* Open State */
-    .nav-item.open .submenu { max-height: 1000px; /* Allow expansion */ }
-    .nav-item.open .nav-chevron { transform: rotate(180deg); opacity: 1; }
-    
-    /* Sidebar Footer */
-    .sidebar-footer {
-        margin-top: auto;
-        padding: 0;
+    /* Footer */
+    .sidebar-footer { padding: 10px; border-top: 1px solid var(--border-color); }
+
+    /* Collapsed Main Content Adjustment Helper */
+    /* This style assumes the main content has a class we can target or we use a general rule */
+    body.sidebar-collapsed .main-content, 
+    body.sidebar-collapsed .admin-content { 
+        margin-left: var(--sidebar-collapsed-w) !important; 
     }
-    
-    /* Separator line */
-    .nav-item + .nav-item { margin-top: 0; }
-    
 </style>
 
 <aside class="sidebar" id="sidebar">

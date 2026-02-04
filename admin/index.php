@@ -16,50 +16,26 @@ include __DIR__ . '/sidebar.php';
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            /* WP Admin Colors */
-            --wp-bg: #f0f0f1;
-            --wp-surface: #ffffff;
-            --wp-text: #3c434a;
-            --wp-text-light: #646970;
-            --wp-border: #c3c4c7;
-            --wp-border-focus: #2271b1; /* Official WP Blue */
-            --wp-primary: #2271b1;
-            --wp-primary-hover: #135e96;
-            --wp-alert-red: #d63638;
-            
-            /* Keeping user brand color as a secondary accent if needed, but referencing WP Blue for the "WP Look" */
-            --primary: #4f46e5;
-            --primary-dark: #3730a3; 
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-            background-color: var(--wp-bg);
-            margin: 0;
-            padding: 0;
-            color: var(--wp-text);
-            font-size: 13px;
-            line-height: 1.4;
-        }
+        /* :root and body are handled globally in sidebar.php for Dark Theme */
 
         /* Layout */
         .admin-content {
-            margin-left: 260px;
+            margin-left: var(--sidebar-w);
             min-height: 100vh;
             padding: 10px 20px 0 20px;
             box-sizing: border-box;
+            transition: margin-left 0.3s ease;
         }
         
         body.sidebar-collapsed .admin-content {
-            margin-left: 80px;
+            margin-left: var(--sidebar-collapsed-w);
         }
 
         @media (max-width: 900px) {
-            .admin-content { margin-left: 80px; padding: 10px; }
+            .admin-content { margin-left: var(--sidebar-collapsed-w); padding: 10px; }
         }
 
-        /* Top Header (WP style usually has toolbar, but we'll adapt the existing header) */
+        /* Top Header */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -72,13 +48,11 @@ include __DIR__ . '/sidebar.php';
             font-size: 23px;
             font-weight: 400;
             margin: 0;
-            color: #1d2327;
+            color: var(--text-main);
             padding: 9px 0 4px 0;
             line-height: 1.3;
         }
-        .page-title p {
-            display: none; /* WP dashboard doesn't usually show subtitle here */
-        }
+        .page-title p { display: none; }
 
         .top-actions {
             display: flex;
@@ -86,39 +60,39 @@ include __DIR__ . '/sidebar.php';
             gap: 10px;
         }
 
-        /* WP Screen Options / Help style buttons (mocking the search/profile here) */
+        /* Screen Options / Search */
         .search-box input {
             padding: 0 8px;
             line-height: 2;
             min-height: 30px;
-            box-shadow: 0 0 0 transparent;
+            box-shadow: none;
             border-radius: 4px;
-            border: 1px solid #8c8f94;
-            background-color: #fff;
-            color: #2c3338;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-input);
+            color: var(--text-main);
             font-size: 13px;
             width: 200px;
             transition: all 0.2s;
         }
         .search-box input:focus {
-            border-color: var(--wp-primary);
-            box-shadow: 0 0 0 1px var(--wp-primary);
+            border-color: var(--active-bg);
+            box-shadow: 0 0 0 1px var(--active-bg);
             outline: none;
         }
-        .search-icon { display: none; } /* Hide icon inside input for strict WP look */
+        .search-icon { display: none; } 
 
         .action-btn {
             background: transparent;
             border: none;
             cursor: pointer;
-            color: var(--wp-text-light);
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             padding: 4px;
         }
-        .action-btn:hover { color: var(--wp-primary); }
+        .action-btn:hover { color: var(--text-main); }
         .notification-dot {
-            width: 8px; height: 8px; background: var(--wp-alert-red); border-radius: 50%; display: inline-block; margin-right: -8px; margin-top: -8px;
+            width: 8px; height: 8px; background: #ef4444; border-radius: 50%; display: inline-block; margin-right: -8px; margin-top: -8px;
         }
 
         .profile-btn {
@@ -129,21 +103,21 @@ include __DIR__ . '/sidebar.php';
             border: none;
             cursor: pointer;
             font-size: 13px;
-            color: var(--wp-text);
+            color: var(--text-main);
         }
-        .profile-btn:hover { color: var(--wp-primary); }
+        .profile-btn:hover { color: var(--text-accent); }
         .profile-img {
             width: 26px; height: 26px;
-            border-radius: 50%; /* WP often uses squares or circles, circle is fine */
-            background: #ccc;
+            border-radius: 50%;
+            background: #334155;
         }
         .profile-name { font-weight: 600; }
         .profile-role { display: none; }
 
-        /* Welcome Panel (Matches WP "Welcome to WordPress") */
+        /* Welcome Panel */
         .welcome-banner {
-            background: #fff;
-            border: 1px solid #c3c4c7;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
             padding: 0;
             margin-bottom: 20px;
             position: relative;
