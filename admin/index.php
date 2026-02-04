@@ -11,38 +11,44 @@ include __DIR__ . '/sidebar.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - MG Skill</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Dashboard &lsaquo; MG Skill &#8212; WordPress</title>
+    <!-- Use system fonts like WP -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary: #4f46e5; /* Indigo 600 */
-            --primary-dark: #3730a3; /* Indigo 800 */
-            --primary-soft: #eef2ff; /* Indigo 50 */
-            --text-main: #0f172a; /* Slate 900 */
-            --text-light: #64748b; /* Slate 500 */
-            --bg-body: #f1f5f9; /* Slate 100 */
-            --surface: #ffffff;
-            --border: #e2e8f0;
-            --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            /* WP Admin Colors */
+            --wp-bg: #f0f0f1;
+            --wp-surface: #ffffff;
+            --wp-text: #3c434a;
+            --wp-text-light: #646970;
+            --wp-border: #c3c4c7;
+            --wp-border-focus: #2271b1; /* Official WP Blue */
+            --wp-primary: #2271b1;
+            --wp-primary-hover: #135e96;
+            --wp-alert-red: #d63638;
+            
+            /* Keeping user brand color as a secondary accent if needed, but referencing WP Blue for the "WP Look" */
+            --primary: #4f46e5;
+            --primary-dark: #3730a3; 
         }
 
         body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-body);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            background-color: var(--wp-bg);
             margin: 0;
             padding: 0;
-            color: var(--text-main);
+            color: var(--wp-text);
+            font-size: 13px;
+            line-height: 1.4;
         }
 
         /* Layout */
         .admin-content {
             margin-left: 260px;
             min-height: 100vh;
-            padding: 32px;
-            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 10px 20px 0 20px;
+            box-sizing: border-box;
         }
         
         body.sidebar-collapsed .admin-content {
@@ -50,291 +56,317 @@ include __DIR__ . '/sidebar.php';
         }
 
         @media (max-width: 900px) {
-            .admin-content { margin-left: 80px; padding: 20px; }
+            .admin-content { margin-left: 80px; padding: 10px; }
         }
 
-        /* Top Bar */
+        /* Top Header (WP style usually has toolbar, but we'll adapt the existing header) */
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 32px;
+            margin-bottom: 20px;
+            padding-top: 10px;
         }
         
         .page-title h1 {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 23px;
+            font-weight: 400;
             margin: 0;
-            color: var(--text-main);
+            color: #1d2327;
+            padding: 9px 0 4px 0;
+            line-height: 1.3;
         }
         .page-title p {
-            font-size: 14px;
-            color: var(--text-light);
-            margin: 4px 0 0 0;
+            display: none; /* WP dashboard doesn't usually show subtitle here */
         }
 
         .top-actions {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 10px;
         }
 
-        .search-box {
-            position: relative;
-        }
+        /* WP Screen Options / Help style buttons (mocking the search/profile here) */
         .search-box input {
-            padding: 10px 16px 10px 40px;
-            border-radius: 99px;
-            border: 1px solid var(--border);
-            outline: none;
-            font-family: inherit;
-            font-size: 14px;
-            width: 240px;
+            padding: 0 8px;
+            line-height: 2;
+            min-height: 30px;
+            box-shadow: 0 0 0 transparent;
+            border-radius: 4px;
+            border: 1px solid #8c8f94;
+            background-color: #fff;
+            color: #2c3338;
+            font-size: 13px;
+            width: 200px;
             transition: all 0.2s;
-            background: var(--surface);
         }
         .search-box input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-soft);
-            width: 280px;
+            border-color: var(--wp-primary);
+            box-shadow: 0 0 0 1px var(--wp-primary);
+            outline: none;
         }
-        .search-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 18px;
-            height: 18px;
-            stroke: var(--text-light);
-        }
+        .search-icon { display: none; } /* Hide icon inside input for strict WP look */
 
         .action-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 1px solid var(--border);
-            background: var(--surface);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--wp-text-light);
             display: flex;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--text-light);
-            position: relative;
+            padding: 4px;
         }
-        .action-btn:hover {
-            background: var(--primary-soft);
-            color: var(--primary);
-            border-color: var(--primary-soft);
-        }
+        .action-btn:hover { color: var(--wp-primary); }
         .notification-dot {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 8px;
-            height: 8px;
-            background: #ef4444;
-            border-radius: 50%;
-            border: 2px solid var(--surface);
+            width: 8px; height: 8px; background: var(--wp-alert-red); border-radius: 50%; display: inline-block; margin-right: -8px; margin-top: -8px;
         }
 
         .profile-btn {
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: var(--surface);
-            padding: 6px 16px 6px 6px;
-            border-radius: 99px;
-            border: 1px solid var(--border);
+            gap: 8px;
+            background: transparent;
+            border: none;
             cursor: pointer;
-            transition: all 0.2s;
+            font-size: 13px;
+            color: var(--wp-text);
         }
-        .profile-btn:hover { border-color: var(--primary); }
+        .profile-btn:hover { color: var(--wp-primary); }
         .profile-img {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
+            width: 26px; height: 26px;
+            border-radius: 50%; /* WP often uses squares or circles, circle is fine */
+            background: #ccc;
         }
-        .profile-info {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            line-height: 1.2;
-        }
-        .profile-name { font-size: 13px; font-weight: 600; color: var(--text-main); }
-        .profile-role { font-size: 11px; color: var(--text-light); }
+        .profile-name { font-weight: 600; }
+        .profile-role { display: none; }
 
-        /* Welcome Banner */
+        /* Welcome Panel (Matches WP "Welcome to WordPress") */
         .welcome-banner {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            border-radius: 20px;
-            padding: 32px;
-            color: white;
+            background: #fff;
+            border: 1px solid #c3c4c7;
+            padding: 0;
+            margin-bottom: 20px;
             position: relative;
-            overflow: hidden;
-            margin-bottom: 32px;
-            box-shadow: var(--shadow-lg);
+            box-sizing: border-box;
+            display: flex;
         }
-        .welcome-content { position: relative; z-index: 2; max-width: 600px; }
-        .welcome-title { font-size: 28px; font-weight: 800; margin: 0 0 8px 0; }
-        .welcome-text { font-size: 15px; opacity: 0.9; margin: 0 0 24px 0; line-height: 1.5; }
+        .welcome-content {
+            padding: 30px;
+            max-width: 100%;
+        }
+        .welcome-title {
+            font-size: 23px;
+            font-weight: 400;
+            margin: 0 0 10px 0;
+            color: #1d2327;
+        }
+        .welcome-text {
+            font-size: 15px;
+            line-height: 1.5;
+            margin: 0 0 20px 0;
+            color: var(--wp-text);
+        }
         .welcome-btn {
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 10px;
-            color: white;
-            font-weight: 600;
+            background: var(--wp-primary);
+            border-color: var(--wp-primary);
+            color: #fff;
+            text-decoration: none;
+            text-shadow: none;
+            display: inline-block;
+            font-size: 13px;
+            line-height: 2.15384615;
+            min-height: 30px;
+            margin: 0;
+            padding: 0 10px;
             cursor: pointer;
-            backdrop-filter: blur(4px);
-            transition: all 0.2s;
+            border-width: 1px;
+            border-style: solid;
+            -webkit-appearance: none;
+            border-radius: 3px;
+            white-space: nowrap;
+            box-sizing: border-box;
+            font-weight: 400;
         }
-        .welcome-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
-        
-        .welcome-decor {
-            position: absolute;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            width: 50%;
-            background: radial-gradient(circle at 70% 50%, rgba(255,255,255,0.1) 0%, transparent 60%);
-            z-index: 1;
+        .welcome-btn:hover {
+            background: var(--wp-primary-hover);
+            border-color: var(--wp-primary-hover);
+            color: #fff;
         }
-        .welcome-decor::after {
-            content: '';
-            position: absolute;
-            right: -20px;
-            bottom: -20px;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.05);
-        }
+        .welcome-decor { display: none; } /* Remove the decor gradient */
 
-        /* Updated Stats Grid */
+        /* Dashboard Widgets (Stats) */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(4, 1fr); /* WP usually dense */
+            gap: 20px;
+            margin-bottom: 20px;
         }
-        @media (max-width: 1000px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 1200px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 600px) { .stats-grid { grid-template-columns: 1fr; } }
         
-        .stat-card.blue { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
-        .stat-card.green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        .stat-card.teal { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); }
-        .stat-card.yellow { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-        .stat-card.purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
-        .stat-card.red { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
-
         .stat-card {
-            position: relative; 
-            overflow: hidden; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            padding: 24px 28px; 
-            min-height: 120px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            border: none;
-            transition: transform 0.2s;
+            background: #fff;
+            border: 1px solid #c3c4c7;
+            /* box-shadow: 0 1px 1px rgba(0,0,0,.04); */
+            padding: 0;
+            min-height: auto;
+            border-radius: 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            border-top: 4px solid #fff; /* Placeholder for color accent */
         }
-        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15); }
+        .stat-card:hover { border-color: #c3c4c7; box-shadow: 0 1px 1px rgba(0,0,0,.04); transform: none; }
+
+        /* Color accents on top border to differentiate, keeping the 'color scheme' rule in a WP way */
+        .stat-card.blue { border-top-color: #3b82f6; }
+        .stat-card.green { border-top-color: #10b981; }
+        .stat-card.teal { border-top-color: #0ea5e9; }
+        .stat-card.yellow { border-top-color: #f59e0b; }
+        .stat-card.purple { border-top-color: #8b5cf6; }
+        .stat-card.red { border-top-color: #ef4444; }
+
+        .stat-content {
+            padding: 12px 12px 24px;
+            display: block;
+        }
+        .stat-number {
+            font-size: 24px; /* WP numbers aren't huge */
+            font-weight: 600;
+            color: #1d2327;
+            margin-bottom: 4px;
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: var(--wp-text-light);
+            font-weight: 400;
+        }
+        .stat-icon-bg {
+            display: none; /* WP widgets rarely have big background icons */
+        }
         
-        .stat-content { z-index: 2; position: relative; display: flex; flex-direction: column; justify-content: center; }
-        .stat-number { font-size: 36px; font-weight: 700; line-height: 1; margin-bottom: 6px; color:white; }
-        .stat-label { font-size: 15px; font-weight: 500; opacity: 0.95; color:white; letter-spacing: 0.5px; }
-        
-        .stat-icon-bg { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); opacity: 0.2; width: 80px; height: 80px; }
-        .stat-icon-bg svg { width: 100%; height: 100%; fill: currentColor; color: white; }
-        
-        /* Main Grid */
+        /* Postbox (Generic Container for Charts/Tables) */
         .content-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
-            gap: 24px;
+            gap: 20px;
         }
-        @media (max-width: 1200px) { .content-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 1000px) { .content-grid { grid-template-columns: 1fr; } }
 
         .dashboard-card {
-            background: var(--surface);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-            padding: 24px;
-            height: 100%;
+            background: #fff;
+            border: 1px solid #c3c4c7;
+            box-shadow: 0 1px 1px rgba(0,0,0,.04);
+            margin-bottom: 20px;
+            position: relative;
+            min-width: 255px;
+            border-radius: 0; /* Boxy */
+            padding: 0;
         }
 
         .card-header {
+            border-bottom: 1px solid #c3c4c7;
+            padding: 8px 12px;
+            margin: 0;
+            background: #fff; /* Sometimes WP uses #fcfcfc but straight white is cleaner */
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
         }
         .card-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.4;
+            color: #1d2327;
             margin: 0;
         }
         .card-action {
-            color: var(--primary);
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 12px;
             text-decoration: none;
-            cursor: pointer;
+            color: var(--wp-primary);
+        }
+        .card-action:hover { color: var(--wp-primary-hover); }
+
+        .card-body {
+            padding: 0 12px 12px;
         }
 
-        /* Table */
+        /* Tables (WP List Table Style) */
         .table-container {
             width: 100%;
             overflow-x: auto;
+            border-top: 1px solid #c3c4c7; /* Match WP list table border */
         }
         table {
             width: 100%;
             border-collapse: collapse;
+            border-spacing: 0;
+            background: #fff;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px 10px;
+            font-size: 13px;
+            line-height: 1.5;
+            vertical-align: top;
+            color: #2c3338;
         }
         th {
-            text-align: left;
-            font-size: 12px;
+            border-bottom: 1px solid #c3c4c7;
             font-weight: 600;
-            color: var(--text-light);
-            text-transform: uppercase;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
+            color: #1d2327;
         }
         td {
-            padding: 16px 0;
-            font-size: 14px;
-            color: var(--text-main);
-            border-bottom: 1px solid #f1f5f9;
+            /* box-shadow: inset 0 -1px 0 rgba(0,0,0,0.1); */
+            border-bottom: 1px solid #f0f0f1;
         }
+        tr:nth-child(odd) { background-color: #f9f9f9; } /* Striped rows */
         tr:last-child td { border-bottom: none; }
-        
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-        }
-        .status-badge.completed { background: #dcfce7; color: #16a34a; }
-        .status-badge.pending { background: #ffedd5; color: #ea580c; }
-        .status-badge.failed { background: #fee2e2; color: #dc2626; }
 
         .user-cell {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         .user-avatar {
             width: 32px; height: 32px;
             border-radius: 50%;
-            background: #e2e8f0;
-            object-fit: cover;
         }
+
+        .status-badge {
+            font-weight: 700;
+            /* WP uses text status primarily, but we'll keep badges minimal */
+            padding: 0;
+            background: transparent !important;
+            font-size: 13px;
+        }
+        .status-badge.completed { color: #007017; }
+        .status-badge.pending { color: #b32d56; } /* Orange-ish/Red-ish */
+        .status-badge.failed { color: #d63638; }
+
+        select {
+            font-size: 13px;
+            color: #2c3338;
+            border: 1px solid #8c8f94;
+            border-radius: 3px;
+            padding: 0 24px 0 8px;
+            min-height: 30px;
+            max-width: 25rem;
+            -webkit-appearance: none;
+            background: #fff url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E") no-repeat right 5px top 55%;
+            background-size: 16px 16px;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+        select:focus {
+            color: #2c3338;
+            border-color: var(--wp-primary);
+            box-shadow: 0 0 0 1px var(--wp-primary);
+            outline: 0;
+        }
+
     </style>
 </head>
 <body>
@@ -348,31 +380,30 @@ include __DIR__ . '/sidebar.php';
         
         <div class="top-actions">
             <div class="search-box">
-                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 <input type="text" placeholder="Search...">
             </div>
             
             <button class="action-btn">
-                <div class="notification-dot"></div>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                <span class="notification-dot"></span>
+                <span style="font-size: 16px; font-weight: 500;">Notifications</span>
             </button>
             
             <div class="profile-btn">
                 <img src="https://ui-avatars.com/api/?name=Admin+User&background=4f46e5&color=fff" alt="Admin" class="profile-img">
-                <div class="profile-info">
-                    <span class="profile-name">Admin User</span>
-                    <span class="profile-role">Super Admin</span>
-                </div>
+                <span class="profile-name">Howdy, Admin User</span>
             </div>
         </div>
     </header>
 
     <div class="welcome-banner">
-        <div class="welcome-decor"></div>
+        <!-- Removed decor -->
         <div class="welcome-content">
-            <h2 class="welcome-title">Overview & Analytics</h2>
-            <p class="welcome-text">Here's what's happening with your platform today. Check the new reports section for detailed insights.</p>
-            <button class="welcome-btn">View Reports</button>
+            <h2 class="welcome-title">Welcome to your MG Skill Dashboard</h2>
+            <p class="welcome-text">We’ve assembled some links to get you started:</p>
+            <div style="display:flex; gap:10px;">
+                <button class="welcome-btn">Customize Your Site</button>
+                <button class="welcome-btn" style="background:#fff; color:var(--wp-primary); border-color:var(--wp-primary);">View Reports</button>
+            </div>
         </div>
     </div>
 
@@ -383,9 +414,6 @@ include __DIR__ . '/sidebar.php';
                 <div class="stat-number">2,543</div>
                 <div class="stat-label">Total Students</div>
             </div>
-            <div class="stat-icon-bg">
-                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-            </div>
         </div>
 
         <!-- Stat 2: Revenue (Green) -->
@@ -393,9 +421,6 @@ include __DIR__ . '/sidebar.php';
             <div class="stat-content">
                 <div class="stat-number">₹45.2L</div>
                 <div class="stat-label">Total Revenue</div>
-            </div>
-            <div class="stat-icon-bg">
-                <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
             </div>
         </div>
 
@@ -405,9 +430,6 @@ include __DIR__ . '/sidebar.php';
                 <div class="stat-number">128</div>
                 <div class="stat-label">Active Batches</div>
             </div>
-            <div class="stat-icon-bg">
-                <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22 6 12 13 2 6"></polyline></svg>
-            </div>
         </div>
 
         <!-- Stat 4: New Courses (Yellow) -->
@@ -415,9 +437,6 @@ include __DIR__ . '/sidebar.php';
              <div class="stat-content">
                 <div class="stat-number">48</div>
                 <div class="stat-label">New Courses</div>
-            </div>
-            <div class="stat-icon-bg">
-                <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
             </div>
         </div>
         
@@ -427,9 +446,6 @@ include __DIR__ . '/sidebar.php';
                 <div class="stat-number">32</div>
                 <div class="stat-label">Instructors</div>
             </div>
-            <div class="stat-icon-bg">
-                <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-            </div>
         </div>
         
         <!-- Stat 6: Tickets (Red) -->
@@ -437,9 +453,6 @@ include __DIR__ . '/sidebar.php';
             <div class="stat-content">
                 <div class="stat-number">12</div>
                 <div class="stat-label">Open Tickets</div>
-            </div>
-            <div class="stat-icon-bg">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
             </div>
         </div>
     </div>
@@ -449,15 +462,17 @@ include __DIR__ . '/sidebar.php';
         <div class="dashboard-card">
             <div class="card-header">
                 <h3 class="card-title">Revenue Analytics</h3>
-                <div style="display:flex; gap:10px;">
-                    <select style="border:1px solid #e2e8f0; padding:6px; border-radius:8px; outline:none;">
+                <div>
+                    <select>
                         <option>This Year</option>
                         <option>Last Year</option>
                     </select>
                 </div>
             </div>
-            <div style="height: 300px;">
-                <canvas id="revenueChart"></canvas>
+            <div class="card-body">
+                <div style="height: 300px; padding-top: 20px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
             </div>
         </div>
 
@@ -481,40 +496,40 @@ include __DIR__ . '/sidebar.php';
                             <td>
                                 <div class="user-cell">
                                     <img src="https://i.pravatar.cc/150?img=3" class="user-avatar">
-                                    <span>Rahul K.</span>
+                                    <span style="font-weight:600; color:#2271b1;">Rahul K.</span>
                                 </div>
                             </td>
-                            <td style="font-weight:600;">₹4,500</td>
+                            <td><span style="font-family:monospace;">₹4,500</span></td>
                             <td><span class="status-badge completed">Paid</span></td>
                         </tr>
                         <tr>
                             <td>
                                 <div class="user-cell">
                                     <img src="https://i.pravatar.cc/150?img=4" class="user-avatar">
-                                    <span>Sneha P.</span>
+                                    <span style="font-weight:600; color:#2271b1;">Sneha P.</span>
                                 </div>
                             </td>
-                            <td style="font-weight:600;">₹12,000</td>
+                            <td><span style="font-family:monospace;">₹12,000</span></td>
                             <td><span class="status-badge pending">Pending</span></td>
                         </tr>
                         <tr>
                             <td>
                                 <div class="user-cell">
                                     <img src="https://i.pravatar.cc/150?img=5" class="user-avatar">
-                                    <span>Amit S.</span>
+                                    <span style="font-weight:600; color:#2271b1;">Amit S.</span>
                                 </div>
                             </td>
-                            <td style="font-weight:600;">₹2,400</td>
+                            <td><span style="font-family:monospace;">₹2,400</span></td>
                             <td><span class="status-badge completed">Paid</span></td>
                         </tr>
                          <tr>
                             <td>
                                 <div class="user-cell">
                                     <img src="https://i.pravatar.cc/150?img=8" class="user-avatar">
-                                    <span>Priya M.</span>
+                                    <span style="font-weight:600; color:#2271b1;">Priya M.</span>
                                 </div>
                             </td>
-                            <td style="font-weight:600;">₹8,000</td>
+                            <td><span style="font-family:monospace;">₹8,000</span></td>
                             <td><span class="status-badge failed">Failed</span></td>
                         </tr>
                     </tbody>
@@ -528,10 +543,8 @@ include __DIR__ . '/sidebar.php';
     // Chart Configuration
     const ctx = document.getElementById('revenueChart').getContext('2d');
     
-    // Gradient
-    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(79, 70, 229, 0.4)'); // Primary color with opacity
-    gradient.addColorStop(1, 'rgba(79, 70, 229, 0)');
+    // Removed Gradient - WP is simpler
+    // const gradient = ... 
 
     new Chart(ctx, {
         type: 'line',
@@ -540,15 +553,16 @@ include __DIR__ . '/sidebar.php';
             datasets: [{
                 label: 'Revenue (₹)',
                 data: [12000, 19000, 15000, 25000, 22000, 30000, 35000, 28000, 42000, 45000, 48000, 55000],
-                borderColor: '#4f46e5',
-                backgroundColor: gradient,
+                // WP Blue
+                borderColor: '#2271b1',
+                backgroundColor: 'rgba(34, 113, 177, 0.1)',
                 borderWidth: 2,
                 pointBackgroundColor: '#ffffff',
-                pointBorderColor: '#4f46e5',
-                pointRadius: 4,
-                pointHoverRadius: 6,
+                pointBorderColor: '#2271b1',
+                pointRadius: 3,
+                pointHoverRadius: 5,
                 fill: true,
-                tension: 0.4
+                tension: 0 // Straighter lines often look more like business data, or keep slightly curved
             }]
         },
         options: {
@@ -557,8 +571,8 @@ include __DIR__ . '/sidebar.php';
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    backgroundColor: '#1e293b',
-                    padding: 12,
+                    backgroundColor: '#1d2327',
+                    padding: 8,
                     displayColors: false,
                     callbacks: {
                         label: function(context) {
@@ -570,12 +584,12 @@ include __DIR__ . '/sidebar.php';
             scales: {
                 y: {
                     beginAtZero: true,
-                    grid: { borderDash: [4, 4], color: '#e2e8f0' },
-                    ticks: { font: { family: 'Outfit', size: 11 }, color: '#64748b' }
+                    grid: { borderDash: [2, 2], color: '#f0f0f1' },
+                    ticks: { font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI"', size: 11 }, color: '#646970' }
                 },
                 x: {
                     grid: { display: false },
-                    ticks: { font: { family: 'Outfit', size: 11 }, color: '#64748b' }
+                    ticks: { font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI"', size: 11 }, color: '#646970' }
                 }
             }
         }
