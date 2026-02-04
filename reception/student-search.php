@@ -2,8 +2,11 @@
 session_start();
 require_once __DIR__ . '/../database/db-config.php';
 
-// Mock auth check
-// if(!isset($_SESSION['reception_id'])) { header("Location: login.php"); exit; }
+// Auth check
+if(!isset($_SESSION['reception_id'])) {
+    header("Location: login.php");
+    exit;
+}
 
 $conn = getDbConnection();
 

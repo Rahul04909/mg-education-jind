@@ -1,8 +1,12 @@
 <?php
 session_start();
-// Use similar auth check as Center/Student to be safe, or just placeholder for now.
-// For now, assuming reception login is handled or this is an open dashboard for demo.
-// require_once __DIR__ . '/../database/db-config.php'; 
+require_once __DIR__ . '/../database/db-config.php';
+
+// Auth check
+if(!isset($_SESSION['reception_id'])) {
+    header("Location: login.php");
+    exit;
+} 
 
 // Mock Data for "Attractive" Demo
 $total_enquiries = 124;
