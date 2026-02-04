@@ -287,6 +287,7 @@
                 </a>
                 <ul class="submenu">
                     <li class="submenu-item"><a href="../../admin/enquiries/callback-requests.php">Callback Requests</a></li>
+                    <li class="submenu-item"><a href="../../admin/enquiries/quick-enquiries.php">Quick Enquiries</a></li>
                </ul>
             </li>
 
