@@ -3,7 +3,8 @@ session_start();
 require_once __DIR__ . '/../database/db-config.php';
 
 // Auth check - assuming similar to other admin pages
-if (!isset($_SESSION['user_id'])) {
+// Auth check
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header("Location: login.php");
     exit;
 }
