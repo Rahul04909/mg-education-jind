@@ -4,9 +4,9 @@ require_once __DIR__ . '/../../database/db-config.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 // Enable Error Reporting for Debugging
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
