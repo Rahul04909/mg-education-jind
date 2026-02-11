@@ -41,7 +41,7 @@ if ($exam_id == 0) {
 // Fetch Student & Result Details
 $sql = "SELECT er.*, 
                 s.full_name, s.father_name, s.mother_name, s.enrollment_no, s.dob, s.student_photo,
-                sub.name as subject_name, sub.id as subject_id, sub.theory_marks, sub.assignment_marks, c.title as course_name, cs.session_name,
+                sub.name as subject_name, sub.id as subject_id, sub.theory_marks, sub.assignment_marks, sub.passing_marks, c.title as course_name, cs.session_name,
                 es.exam_date
          FROM exam_results er
          JOIN admissions s ON er.student_id = s.id
@@ -78,18 +78,26 @@ $grand_total_max = $theory_max + $internal_max;
 // Recalculate Percentage
 $percentage = ($grand_total_max > 0) ? round(($grand_total_obtained / $grand_total_max) * 100, 2) : 0;
 
+// Determine Pass/Fail based on Passing Marks
+$passing_marks = isset($data['passing_marks']) ? intval($data['passing_marks']) : 33; // Default 33
+$is_passed = ($grand_total_obtained >= $passing_marks);
+
+$status_result = $is_passed ? 'PASS' : 'FAIL';
+$status_color = $is_passed ? 'green' : 'red';
+
 // Grade Calculation Helper
-function getGrade($percentage) {
+function getGrade($percentage, $is_passed) {
+    if (!$is_passed) return 'FAIL';
     if ($percentage >= 85) return 'A+';
     if ($percentage >= 75) return 'A';
     if ($percentage >= 65) return 'B+';
     if ($percentage >= 55) return 'B';
     if ($percentage >= 45) return 'C';
     if ($percentage >= 33) return 'D';
-    return 'FAIL';
+    return 'D'; // Default to D if passed but low percentage (should match passing marks logic usually)
 }
 
-$grade = getGrade($percentage);
+$grade = getGrade($percentage, $is_passed);
 $dob_formatted = date('d/m/Y', strtotime($data['dob']));
 
 // Image Helper
@@ -115,11 +123,6 @@ $photo_path = (!empty($data['student_photo'])) ? $root_dir . '/' . $data['studen
 $bg_src = get_image_base64($bg_image_path);
 $sign_src = get_image_base64($sign_image_path);
 $photo_src = get_image_base64($photo_path);
-
-// Determine Pass/Fail Color based on Grade or existing status? 
-// Re-evaluating status based on grade
-$status_result = ($grade == 'FAIL') ? 'FAIL' : 'PASS';
-$status_color = ($status_result == 'PASS') ? 'green' : 'red';
 
 $html = '
 <!DOCTYPE html>
