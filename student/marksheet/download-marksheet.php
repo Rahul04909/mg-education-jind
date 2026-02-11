@@ -298,6 +298,7 @@ $qr_content .= "Result: " . $status_result;
 $qr_data_uri = ""; // Default empty
 
 // Check for required extensions to avoid Fatal Error
+// Check for required extensions to avoid Fatal Error
 if (function_exists('iconv')) {
     try {
         $qr_result = (new Builder(
@@ -314,7 +315,10 @@ if (function_exists('iconv')) {
         $qr_data_uri = $qr_result->getDataUri();
     } catch (\Throwable $e) {
         // QR Generation failed (silently ignore to allow PDF download)
+        file_put_contents(__DIR__ . '/qr_debug.log', date('Y-m-d H:i:s') . " QR Error: " . $e->getMessage() . "\n", FILE_APPEND);
     }
+} else {
+    file_put_contents(__DIR__ . '/qr_debug.log', date('Y-m-d H:i:s') . " QR Skipped: iconv extension missing\n", FILE_APPEND);
 }
 
 $html .= '       <tr style="background-color: none">
