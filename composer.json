@@ -6,6 +6,7 @@
         "picqer/php-barcode-generator": "^3.2",
         "dompdf/dompdf": "^3.1",
         "endroid/qr-code": "^6.0",
-        "ckeditor/ckeditor": "~4.22.1"
+        "ckeditor/ckeditor": "~4.22.1",
+        "symfony/polyfill-iconv": "^1.33"
     }
 }

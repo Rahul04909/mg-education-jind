@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'WpOrg\\Requests\\' => array($vendorDir . '/rmccue/requests/src'),
+    'Symfony\\Polyfill\\Iconv\\' => array($vendorDir . '/symfony/polyfill-iconv'),
     'Svg\\' => array($vendorDir . '/dompdf/php-svg-lib/src/Svg'),
     'Sabberworm\\CSS\\' => array($vendorDir . '/sabberworm/php-css-parser/src'),
     'Razorpay\\Tests\\' => array($vendorDir . '/razorpay/razorpay/tests'),
