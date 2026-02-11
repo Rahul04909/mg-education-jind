@@ -40,7 +40,7 @@ if ($exam_id == 0) {
 
 // Fetch Student & Result Details
 $sql = "SELECT er.*, 
-                s.full_name, s.father_name, s.mother_name, s.enrollment_no, s.dob, s.student_photo, s.student_signature,
+                s.full_name, s.father_name, s.mother_name, s.enrollment_no, s.dob, s.student_photo, s.student_sign,
                 sub.name as subject_name, sub.id as subject_id, sub.theory_marks, sub.assignment_marks, sub.passing_marks, c.title as course_name, cs.session_name,
                 es.exam_date
          FROM exam_results er
@@ -52,8 +52,8 @@ $sql = "SELECT er.*,
          WHERE er.student_id = $student_id AND er.exam_schedule_id = $exam_id";
 
 $res = $conn->query($sql);
-if ($res->num_rows == 0) {
-    die("Result not found.");
+if ($res === false || $res->num_rows == 0) {
+    die("Result not found or Database Error.");
 }
 
 $data = $res->fetch_assoc();
@@ -119,7 +119,7 @@ $sign_image_path = $base_dir . '/mg-sign.png';
 // Student photo is in root/assets/uploads... so we go up 2 levels from student/marksheet to get to root
 $root_dir = dirname(dirname($base_dir)); 
 $photo_path = (!empty($data['student_photo'])) ? $root_dir . '/' . $data['student_photo'] : $root_dir . '/assets/images/avatar-placeholder.png';
-$student_sign_path = (!empty($data['student_signature'])) ? $root_dir . '/' . $data['student_signature'] : '';
+$student_sign_path = (!empty($data['student_sign'])) ? $root_dir . '/' . $data['student_sign'] : '';
 
 $bg_src = get_image_base64($bg_image_path);
 $sign_src = get_image_base64($sign_image_path);
