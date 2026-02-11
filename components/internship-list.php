@@ -86,24 +86,27 @@ $result = $conn->query($sql);
                 <div class="internship-body">
                   <h4 class="internship-title"><?php echo $title; ?></h4>
                   
-                  <div class="internship-meta">
-                    <span class="duration-badge">
-                        <svg style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;stroke:currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        <?php echo $duration; ?>
-                    </span>
-                    <div style="margin-left:auto;text-align:right;line-height:1.2">
+                  <div class="internship-meta" style="justify-content:space-between;align-items:flex-end;border-top:1px solid #f1f5f9;padding-top:12px;margin-top:auto">
+                    <div style="display:flex;flex-direction:column;gap:4px">
+                        <span class="duration-badge" style="align-self:flex-start;background:#f1f5f9;color:#475569;font-weight:600;font-size:11px;padding:4px 8px;border-radius:6px;letter-spacing:0.3px">
+                            <svg style="width:10px;height:10px;display:inline-block;vertical-align:-1px;margin-right:3px;stroke:currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <?php echo $duration; ?>
+                        </span>
+                    </div>
+
+                    <div style="text-align:right">
                         <?php if(isset($fees['amount']) && $fees['amount'] > 0): 
                             $original_price = $fees['amount'];
                             $discount_percent = rand(60, 75);
                             $mrp = round($original_price * 100 / (100 - $discount_percent));
                         ?>
-                            <div style="font-size:11px;color:#94a3b8;text-decoration:line-through">₹<?php echo number_format($mrp); ?></div>
-                            <div class="price-tag">
-                                ₹<?php echo number_format($original_price); ?>
-                                <span style="font-size:10px;color:#16a34a;background:#dcfce7;padding:2px 4px;border-radius:4px;vertical-align:top;margin-left:2px"><?php echo $discount_percent; ?>% OFF</span>
+                            <div style="font-size:11px;color:#94a3b8;text-decoration:line-through;margin-bottom:2px">₹<?php echo number_format($mrp); ?></div>
+                            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end">
+                                <span class="price-tag" style="font-size:16px">₹<?php echo number_format($original_price); ?></span>
+                                <span style="font-size:10px;font-weight:700;color:#16a34a;background:#dcfce7;padding:2px 6px;border-radius:4px"><?php echo $discount_percent; ?>% OFF</span>
                             </div>
                         <?php else: ?>
-                             <span class="price-tag"><?php echo $price; ?></span>
+                             <span class="price-tag" style="font-size:16px;color:#0b1020">Free</span>
                         <?php endif; ?>
                     </div>
                   </div>
