@@ -91,7 +91,21 @@ $result = $conn->query($sql);
                         <svg style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;stroke:currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                         <?php echo $duration; ?>
                     </span>
-                    <span class="price-tag"><?php echo $price; ?></span>
+                    <div style="margin-left:auto;text-align:right;line-height:1.2">
+                        <?php if(isset($fees['amount']) && $fees['amount'] > 0): 
+                            $original_price = $fees['amount'];
+                            $discount_percent = rand(60, 75);
+                            $mrp = round($original_price * 100 / (100 - $discount_percent));
+                        ?>
+                            <div style="font-size:11px;color:#94a3b8;text-decoration:line-through">₹<?php echo number_format($mrp); ?></div>
+                            <div class="price-tag">
+                                ₹<?php echo number_format($original_price); ?>
+                                <span style="font-size:10px;color:#16a34a;background:#dcfce7;padding:2px 4px;border-radius:4px;vertical-align:top;margin-left:2px"><?php echo $discount_percent; ?>% OFF</span>
+                            </div>
+                        <?php else: ?>
+                             <span class="price-tag"><?php echo $price; ?></span>
+                        <?php endif; ?>
+                    </div>
                   </div>
                 </div>
               </a>
