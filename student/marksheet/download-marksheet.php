@@ -40,7 +40,7 @@ if ($exam_id == 0) {
 
 // Fetch Student & Result Details
 $sql = "SELECT er.*, 
-                s.full_name, s.father_name, s.mother_name, s.enrollment_no, s.dob, s.student_photo,
+                s.full_name, s.father_name, s.mother_name, s.enrollment_no, s.dob, s.student_photo, s.student_signature,
                 sub.name as subject_name, sub.id as subject_id, sub.theory_marks, sub.assignment_marks, sub.passing_marks, c.title as course_name, cs.session_name,
                 es.exam_date
          FROM exam_results er
@@ -94,7 +94,7 @@ function getGrade($percentage, $is_passed) {
     if ($percentage >= 55) return 'B';
     if ($percentage >= 45) return 'C';
     if ($percentage >= 33) return 'D';
-    return 'D'; // Default to D if passed but low percentage (should match passing marks logic usually)
+    return 'D'; 
 }
 
 $grade = getGrade($percentage, $is_passed);
@@ -119,10 +119,20 @@ $sign_image_path = $base_dir . '/mg-sign.png';
 // Student photo is in root/assets/uploads... so we go up 2 levels from student/marksheet to get to root
 $root_dir = dirname(dirname($base_dir)); 
 $photo_path = (!empty($data['student_photo'])) ? $root_dir . '/' . $data['student_photo'] : $root_dir . '/assets/images/avatar-placeholder.png';
+$student_sign_path = (!empty($data['student_signature'])) ? $root_dir . '/' . $data['student_signature'] : '';
 
 $bg_src = get_image_base64($bg_image_path);
 $sign_src = get_image_base64($sign_image_path);
 $photo_src = get_image_base64($photo_path);
+$student_sign_src = get_image_base64($student_sign_path);
+
+$student_sign_html = '';
+if ($student_sign_src) {
+    $student_sign_html = '<div style="margin-top: 5px; text-align: center;">
+                            <img src="' . $student_sign_src . '" style="height: 30px; max-width: 100px; display: inline-block;">
+                            <div style="font-size: 10px; font-weight: bold;">Student Signature</div>
+                          </div>';
+}
 
 $html = '
 <!DOCTYPE html>
@@ -239,6 +249,7 @@ $html = '
                         <div class="photo-box">
                             <img src="' . $photo_src . '" class="photo-img">
                         </div>
+                        ' . $student_sign_html . '
                     </td>
                 </tr>
             </table>
