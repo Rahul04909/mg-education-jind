@@ -60,10 +60,73 @@ if ($result->num_rows > 0) {
         .fee-row{display:flex;justify-content:space-between;margin-bottom:5px;font-weight:600}
         .total-row{border-top:1px dashed #0284c7;padding-top:10px;margin-top:10px;font-size:18px;color:#0369a1}
         
-        @media(max-width:900px){
-            .sidebar{position:relative;width:100%;height:auto;padding:30px}
-            .main{margin:0;border-radius:0}
-            .form-grid{grid-template-columns:1fr}
+@media(max-width:900px){
+            body { flex-direction: column; background: var(--primary); } /* Background color same as sidebar for seamless look */
+            
+            .sidebar{
+                position:relative;
+                width:100%;
+                height:auto;
+                padding:24px 20px 30px; /* Extra bottom padding for overlap */
+                min-height: auto;
+                background: transparent; /* Let body bg show or keep primary */
+                display: block;
+            }
+            .sidebar h1{ font-size: 24px; margin-bottom: 8px; text-align: center; }
+            .sidebar p { display: none; } /* Hide desc */
+            .sidebar div:last-child { display: none; } /* Hide copyright footer */
+            
+            .steps {
+                margin-top: 16px;
+                display: flex;
+                justify-content: center;
+                gap: 12px;
+                margin-bottom: 0;
+            }
+            .steps li {
+                margin-bottom: 0;
+                font-size: 0; /* Hide text, show only numbers/icons */
+            }
+            .steps li .num { 
+                width: 32px; 
+                height: 32px; 
+                font-size: 14px; 
+                border-width: 2px;
+                background: rgba(255,255,255,0.2);
+            }
+            .steps li.active .num {
+                background: var(--white);
+                color: var(--primary);
+                font-weight: 800;
+            }
+
+            .main{
+                margin: 0;
+                border-radius: 24px 24px 0 0; /* Rounded top */
+                padding: 30px 20px;
+                min-height: calc(100vh - 150px);
+                background: #fff;
+                width: 100%;
+            }
+            
+            .container { padding: 0; }
+            .form-grid{ grid-template-columns:1fr; gap: 16px; }
+            
+            .section-title { font-size: 18px; margin: 24px 0 16px; }
+            
+            input, select, textarea { 
+                font-size: 16px; /* Prevent zoom on iOS */
+                padding: 14px; 
+                border-radius: 12px;
+            }
+            
+            .btn { 
+                padding: 16px; 
+                font-size: 18px;
+                position: sticky;
+                bottom: 20px;
+                box-shadow: 0 4px 12px rgba(19, 88, 219, 0.3);
+            }
         }
 
         /* Course Row Grid */

@@ -182,11 +182,10 @@ body.noscroll{overflow:hidden}
         <a class="drawer-link" href="/dashboards">Dashboards</a>
         <a class="drawer-link" href="../../pages/join-as-a-volunteer/index.php">Join As a Volunteer</a>
         <a class="drawer-link" href="../../online-admisson">Online Admission</a>
-        <a class="drawer-link" href="/recommendations">Recommendation</a>
-        <a class="drawer-link" href="/courses">Skill Courses</a>
-        <a class="drawer-link" href="/jobs">Job Exchange</a>
-        <a class="drawer-link" href="/skill-centre">Skill Centre</a>
-        <a class="drawer-link" href="/soar">AI SOAR</a>
+        <a class="drawer-link" href="../../internship-enrollment">Internship Enrollment</a>
+        <a class="drawer-link" href="../../pages/course-listings/">Our Courses</a>
+        <a class="drawer-link" href="../../pages/Internships">Internships</a>
+        <a class="drawer-link" href="../../pages/gallery/">Gallery</a>
       </nav>
       <div class="drawer-ctas">
         <!-- These buttons are in the drawer for mobile access since they are hidden in header -->
