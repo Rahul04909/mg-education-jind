@@ -156,37 +156,100 @@ $result = $conn->query($sql);
     @media (max-width: 768px) {
         .vol-section {
             padding: 40px 0;
+            background: #516591; /* Ensure bg is solid */
+        }
+        .vol-container {
+            padding: 0 16px;
+            overflow: hidden; /* Hide overflow from container */
+        }
+        .vol-grid {
+            display: flex;
+            overflow-x: auto;
+            gap: 16px;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 20px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+        }
+        .vol-grid::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+        
+        .vol-card {
+            min-width: 200px; /* Fixed width for mobile cards */
+            flex: 0 0 auto;
+            scroll-snap-align: center;
+            background: rgba(255,255,255,0.1); /* Subtle card bg */
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px 16px;
             border-radius: 16px;
         }
-        .vol-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-        .vol-title {
-            font-size: 26px;
-        }
-        .vol-img-wrap {
-            width: 100px;
-            height: 100px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .vol-section {
-            padding: 30px 0;
-        }
-        .vol-grid {
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-        .vol-card {
-            padding: 16px;
-            background: rgba(255,255,255,0.5); /* Slight background on mobile for better separation */
-        }
+        
         .vol-card:hover {
-            transform: none; /* Disable hover translation on touch */
+            transform: none;
+            background: rgba(255,255,255,0.15);
+        }
+
+        .vol-img-wrap {
+            width: 90px;
+            height: 90px; /* Smaller image */
+            margin-bottom: 12px;
+        }
+        
+        .vol-title {
+            font-size: 24px;
+        }
+        .vol-subtitle {
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        .vol-name {
+            font-size: 16px;
+        }
+        .vol-role {
+            font-size: 12px;
+            padding: 3px 8px;
         }
     }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const volGrid = document.querySelector('.vol-grid');
+    if (window.innerWidth <= 768 && volGrid) {
+        let isPaused = false;
+        let scrollAmount = 0;
+        
+        // Auto-scroll logic
+        const autoScroll = () => {
+            if (!isPaused) {
+                const cardWidth = 216; // 200px width + 16px gap
+                const maxScroll = volGrid.scrollWidth - volGrid.clientWidth;
+                
+                if (volGrid.scrollLeft >= maxScroll - 5) {
+                    // Reset to start smoothly or instantly
+                    volGrid.scrollTo({left: 0, behavior: 'smooth'});
+                } else {
+                    volGrid.scrollBy({left: cardWidth, behavior: 'smooth'});
+                }
+            }
+        };
+
+        // Start autoplay
+        let scrollInterval = setInterval(autoScroll, 3000); // Scroll every 3 seconds
+
+        // Pause interaction
+        const pause = () => { isPaused = true; };
+        const resume = () => { 
+            // Slight delay before resuming to not jar user
+            setTimeout(() => { isPaused = false; }, 2000); 
+        };
+
+        volGrid.addEventListener('touchstart', pause, {passive: true});
+        volGrid.addEventListener('touchend', resume);
+        volGrid.addEventListener('mouseenter', pause);
+        volGrid.addEventListener('mouseleave', resume);
+    }
+});
+</script>
 </style>
 
 <section class="vol-section" aria-label="Volunteer Showcase">
