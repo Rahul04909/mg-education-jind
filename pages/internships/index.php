@@ -1,0 +1,541 @@
+<?php
+require_once __DIR__ . '/../../database/db-config.php';
+$conn = getDbConnection();
+
+// Fetch Internships (with Filters)
+$where_clauses = ["is_active = 1"];
+
+// Search
+if (!empty($_GET['search'])) {
+    $search = $conn->real_escape_string($_GET['search']);
+    $where_clauses[] = "(title LIKE '%$search%' OR meta_keywords LIKE '%$search%')";
+}
+
+// Price Range Filter logic is complex with JSON, skipping for MVP or implementing simple check if structure is consistent.
+// For now, fetching all relevant internships.
+
+$where_sql = implode(' AND ', $where_clauses);
+$sql = "SELECT * FROM internships WHERE $where_sql ORDER BY id DESC";
+$result = $conn->query($sql);
+$internships = [];
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        // Decode JSON fields
+        $row['fees'] = json_decode($row['fees'], true);
+        $internships[] = $row;
+    }
+}
+
+// Include Header
+include __DIR__ . '/../../includes/header.php';
+?>
+
+<style>
+    :root {
+        --primary-color: #6f75ff;
+        --secondary-color: #4a5568;
+        --bg-color: #f8fafc;
+        --card-bg: #ffffff;
+        --border-color: #e2e8f0;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        font-family: 'Outfit', sans-serif;
+    }
+
+    .page-wrapper {
+        display: flex;
+        gap: 30px;
+        max-width: 1280px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 300px;
+        flex-shrink: 0;
+    }
+
+    .filter-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: #1a202c;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Range Slider Styling (Simple) */
+    .range-slider {
+        width: 100%;
+        margin: 10px 0;
+    }
+    
+    /* Enquiry Form */
+    .enquiry-form input, .enquiry-form textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin-bottom: 12px;
+        font-family: inherit;
+    }
+    .enquiry-btn {
+        width: 100%;
+        padding: 12px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .enquiry-btn:hover {
+        background: #5a60d6;
+    }
+
+    /* Main Content */
+    .main-content {
+        flex: 1;
+    }
+
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        background: white;
+        padding: 15px 24px;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .search-box {
+        position: relative;
+        flex: 1;
+        max-width: 400px;
+        margin-left:auto; /* Center or push right if view toggles removed */
+        margin-right:auto;
+    }
+    .search-input {
+        width: 100%;
+        padding: 10px 16px 10px 40px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 14px;
+    }
+    .search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #a0aec0;
+    }
+
+    .view-toggles {
+        display: flex;
+        gap: 10px;
+    }
+    .view-btn {
+        padding: 8px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background: white;
+        cursor: pointer;
+        color: #718096;
+    }
+    .view-btn.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+
+    /* Internship Grid */
+    .internship-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+
+    .internship-list-view {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    /* Internship Card */
+    .internship-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .internship-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+    }
+
+    .card-thumb {
+        height: 160px;
+        background: #f1f5f9;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .card-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .internship-card:hover .card-thumb img {
+        transform: scale(1.05);
+    }
+
+    .card-body {
+        padding: 16px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .internship-badge {
+        display: inline-block;
+        padding: 3px 10px;
+        background: #e0e7ff;
+        color: var(--primary-color);
+        border-radius: 50px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        align-self: flex-start;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .internship-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 8px;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .internship-meta {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 12px;
+        color: #718096;
+        margin-bottom: 12px;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .internship-desc {
+        font-size: 13px;
+        color: #718096;
+        margin-bottom: 16px; 
+        line-height: 1.5; 
+        display:-webkit-box; 
+        -webkit-line-clamp:2; 
+        -webkit-box-orient:vertical; 
+        overflow:hidden;
+    }
+
+    .internship-footer {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 12px;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    .price {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .view-btn-link {
+        padding: 6px 16px;
+        background: var(--bg-color);
+        color: var(--secondary-color);
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 13px;
+        transition: all 0.2s;
+    }
+    .view-btn-link:hover {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    /* List View Overrides */
+    .internship-list-view .internship-grid {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .internship-list-view .internship-card {
+        flex-direction: row;
+        height: auto; /* Allow content to dictate height */
+        min-height: 200px;
+        align-items: stretch;
+    }
+    .internship-list-view .card-thumb {
+        width: 300px;
+        height: auto; /* Match parent height */
+        flex-shrink: 0;
+        min-height: 100%;
+        position: relative;
+    }
+    .internship-list-view .card-thumb img {
+        position: absolute;
+        top:0; left:0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .internship-list-view .card-body {
+        padding: 24px;
+        justify-content: flex-start; /* Align top */
+    }
+    .internship-list-view .internship-desc {
+        -webkit-line-clamp: 3; /* Show more text in list view */
+        margin-bottom: 16px;
+        font-size: 14px;
+        display: -webkit-box;
+    }
+    .internship-list-view .internship-title {
+        font-size: 20px;
+        margin-bottom: 10px;
+        -webkit-line-clamp: 2; /* Ensure longer titles wrap nicely */
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .internship-list-view .internship-footer {
+        margin-top: auto;
+        border-top: none;
+        padding-top: 0;
+    }
+
+    @media (max-width: 992px) {
+        .page-wrapper {
+            flex-direction: column;
+        }
+        .sidebar {
+            width: 100%;
+            margin-bottom: 24px;
+        }
+        /* Keep list view stack on mobile */
+        .internship-list-view .internship-card {
+            flex-direction: column;
+        }
+        .internship-list-view .card-thumb {
+            width: 100%;
+            height: 200px;
+            position: relative;
+        }
+    }
+</style>
+
+<div class="page-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <!-- Search (Mobile) -->
+        
+        <!-- Filter Form -->
+        <form id="filter-form" method="GET">
+            <!-- Removed Category Filter as Internships don't have explicit categories yet -->
+
+            <!-- Price Range Filter Placeholder -->
+            <!-- 
+            <div class="filter-card">
+                <h3 class="filter-title">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Price Range
+                </h3>
+                <input type="range" class="range-slider" min="0" max="50000" step="1000">
+                <div style="display:flex; justify-content:space-between; font-size:14px; color:#64748b; margin-top:5px;">
+                    <span>₹0</span>
+                    <span>₹50k+</span>
+                </div>
+            </div> 
+            -->
+        </form>
+
+        <!-- Enquiry Form -->
+        <div class="filter-card">
+            <h3 class="filter-title" style="color:var(--primary-color)">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                Quick Enquiry
+            </h3>
+            <form class="enquiry-form" id="quickEnquiryForm">
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="tel" name="phone" placeholder="Mobile Number" required>
+                <textarea name="message" rows="3" placeholder="Message / Internship Interest"></textarea>
+                <button type="submit" class="enquiry-btn">Send Message</button>
+                <p id="enquiry-feedback" style="margin-top:10px; font-size:13px; display:none;"></p>
+            </form>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="search-box">
+                <svg class="search-icon" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input type="text" class="search-input" placeholder="Search for internships..." form="filter-form" name="search" value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>">
+            </div>
+            
+            <div class="view-toggles">
+                <button class="view-btn active" id="grid-view" title="Grid View">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                </button>
+                <button class="view-btn" id="list-view" title="List View">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Internship Listings -->
+        <div id="internship-container" class="internship-grid">
+            <?php if (count($internships) > 0): ?>
+                <?php foreach($internships as $internship): ?>
+                <div class="internship-card">
+                    <div class="card-thumb">
+                        <img src="../../<?php echo !empty($internship['featured_image']) ? $internship['featured_image'] : 'assets/images/placeholder-internship.jpg'; ?>" 
+                             alt="<?php echo htmlspecialchars($internship['title']); ?>"
+                             loading="lazy"
+                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgNDAwIDMwMCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2YxZjVmOSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iYXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiM2NDc0OGIiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+                    </div>
+                    <div class="card-body">
+                        <span class="internship-badge">Internship</span>
+                        <h3 class="internship-title"><?php echo htmlspecialchars($internship['title']); ?></h3>
+                        
+                        <div class="internship-meta">
+                            <div class="meta-item">
+                                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <?php echo $internship['duration_value'] . ' ' . $internship['duration_type']; ?>
+                            </div>
+                        </div>
+
+                        <p class="internship-desc">
+                            <?php echo strip_tags(html_entity_decode($internship['description'])); ?>
+                        </p>
+
+                        <div class="internship-footer">
+                            <a href="../../online-admisson" style="background:#22c55e; color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:6px;">
+                                Apply Now
+                            </a>
+                            <a href="../../internship-details.php?slug=<?php echo urlencode($internship['slug']); ?>" class="view-btn-link">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div style="grid-column: 1/-1; text-align: center; padding: 50px; background: white; border-radius: 12px;">
+                    <h3 style="color:#4a5568">No internships found matching your criteria.</h3>
+                    <a href="index.php" style="color:var(--primary-color); text-decoration:none; font-weight:600; margin-top:10px; display:inline-block">Clear Filters</a>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<script>
+    const gridBtn = document.getElementById('grid-view');
+    const listBtn = document.getElementById('list-view');
+    const container = document.getElementById('internship-container');
+
+    gridBtn.addEventListener('click', () => {
+        container.classList.remove('internship-list-view');
+        container.classList.add('internship-grid');
+        gridBtn.classList.add('active');
+        listBtn.classList.remove('active');
+    });
+
+    listBtn.addEventListener('click', () => {
+        container.classList.remove('internship-grid');
+        container.classList.add('internship-list-view');
+        listBtn.classList.add('active');
+        gridBtn.classList.remove('active');
+    });
+
+    // Quick Enquiry AJAX
+    document.getElementById('quickEnquiryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = this.querySelector('button');
+        const feedback = document.getElementById('enquiry-feedback');
+        const originalText = btn.innerText;
+
+        btn.innerText = 'Sending...';
+        btn.disabled = true;
+
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => data[key] = value);
+        data['course_source'] = 'internship_listing_page'; // Updated source
+
+        fetch('../../actions/submit-quick-enquiry.php', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(result => {
+            feedback.style.display = 'block';
+            if(result.success) {
+                feedback.style.color = 'green';
+                feedback.innerText = 'Thanks! Your inquiry has been sent.';
+                this.reset();
+            } else {
+                feedback.style.color = 'red';
+                feedback.innerText = result.message || 'Something went wrong.';
+            }
+        })
+        .catch(err => {
+            feedback.style.display = 'block';
+            feedback.style.color = 'red';
+            feedback.innerText = 'Network error. Please try again.';
+        })
+        .finally(() => {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        });
+    });
+</script>
+
+<?php include __DIR__ . '/../../includes/footer.php'; ?>

@@ -47,7 +47,7 @@ $result = $conn->query($sql);
         <h3 class="internships-title"><span class="accent-gradient">Featured Internships</span></h3>
         <p style="color:#64748b;margin:6px 0 0 0">Gain real-world experience with our practical programs.</p>
       </div>
-      <a class="internships-cta" href="/internships">View All</a>
+      <a class="internships-cta" href="../../pages/internships">View All</a>
     </div>
     <div class="internships-shell">
       <div class="internships-scroll" id="internshipsScroll">

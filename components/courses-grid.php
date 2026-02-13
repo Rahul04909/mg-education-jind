@@ -49,7 +49,7 @@ $result = $conn->query($sql);
   <div class="courses-wrap">
     <div class="courses-head">
       <h3 class="courses-title"><span class="strong accent-gradient">Top Courses</span> to grow your career</h3>
-      <a class="courses-cta" href="/courses">Explore All</a>
+      <a class="courses-cta" href="../../pages/course-listings">Explore All</a>
     </div>
     <div class="courses-shell">
       <div class="courses-scroll" id="coursesScroll">
