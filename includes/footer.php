@@ -39,6 +39,7 @@ $baseUrl=$scheme.'://'.$host.($basePath===''?'/':$basePath.'/');
 }
 @media(max-width:640px){
   .site-footer{--cta-offset:0}
+  .ft-wrap { padding: 24px 20px 0 !important; } /* Enforce left/right padding */
   .footer-top{display:none} 
   .footer-grid{
     grid-template-columns: 1fr 1fr; /* 2 columns for Programs & Resources */
