@@ -153,13 +153,59 @@ $result = $conn->query($sql);
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
+    .blogs-section{padding: 40px 0;}
+    .blogs-head{margin-bottom: 24px;}
+    .blogs-title{font-size: 24px;}
+    .blogs-subtitle{font-size: 14px;}
+    
     .blogs-grid {
-        grid-template-columns: 1fr; /* Stack on mobile */
-        gap: 20px;
+        grid-template-columns: repeat(2, 1fr); /* 2 Columns on mobile */
+        gap: 12px; /* Smaller gap */
     }
+    
     .blog-card {
-        max-width: 100%;
+        border-radius: 12px;
         min-height: auto;
+    }
+    
+    .blog-img-wrap {
+        border-radius: 12px 12px 0 0;
+        aspect-ratio: 16/10; /* Slightly taller for mobile */
+    }
+    
+    .blog-body {
+        padding: 12px; /* Reduced padding */
+    }
+    
+    .blog-meta {
+        margin-bottom: 8px;
+        font-size: 10px;
+        gap: 6px;
+    }
+    
+    .blog-heading {
+        font-size: 14px; /* Smaller title */
+        margin-bottom: 6px;
+        line-height: 1.3;
+        -webkit-line-clamp: 2;
+    }
+    
+    .blog-desc {
+        display: none; /* Hide description on mobile for compactness */
+    }
+    
+    .blog-footer {
+        padding-top: 8px;
+        margin-top: 8px;
+    }
+    
+    .read-more-link {
+        font-size: 11px;
+    }
+    
+    /* Load More Logic */
+    .blog-card.mobile-hidden {
+        display: none;
     }
 }
 </style>
@@ -171,9 +217,14 @@ $result = $conn->query($sql);
             <p class="blogs-subtitle">Stay updated with our newest articles and announcements.</p>
         </div>
 
-        <div class="blogs-grid">
-            <?php if ($result && $result->num_rows > 0): ?>
-                <?php while ($row = $result->fetch_assoc()): ?>
+        <div class="blogs-grid" id="blogsGrid">
+            <?php if ($result && $result->num_rows > 0): 
+                $counter = 0;
+            ?>
+                <?php while ($row = $result->fetch_assoc()): 
+                    $counter++;
+                    $mobile_hidden_class = ($counter > 6) ? 'mobile-hidden' : '';
+                ?>
                     <?php 
                         $title = htmlspecialchars($row['title']);
                         $date = date("M d, Y", strtotime($row['created_at']));
@@ -189,7 +240,7 @@ $result = $conn->query($sql);
                             $category = htmlspecialchars($row['category_name']);
                         }
                     ?>
-                    <article class="blog-card">
+                    <article class="blog-card <?php echo $mobile_hidden_class; ?>">
                         <a href="<?php echo $link; ?>" class="blog-img-wrap" aria-label="<?php echo $title; ?>">
                             <img src="<?php echo htmlspecialchars($img); ?>" alt="<?php echo $title; ?>" loading="lazy">
                             <div class="blog-img-overlay"></div>
@@ -205,7 +256,7 @@ $result = $conn->query($sql);
                             
                             <div class="blog-footer">
                                 <a href="<?php echo $link; ?>" class="read-more-link">
-                                    Read Article <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                                    Read Article <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                                 </a>
                             </div>
                         </div>
@@ -217,5 +268,32 @@ $result = $conn->query($sql);
                 </div>
             <?php endif; ?>
         </div>
+        
+        <!-- Mobile Load More Button -->
+        <div id="loadMoreBtn" style="text-align:center; margin-top: 24px; display: none;">
+            <button onclick="loadMoreBlogs()" style="padding: 10px 20px; border-radius: 99px; background: #fff; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                Load More
+            </button>
+        </div>
     </div>
 </section>
+
+<script>
+function loadMoreBlogs() {
+    var hiddenCards = document.querySelectorAll('.blog-card.mobile-hidden');
+    hiddenCards.forEach(function(card) {
+        card.classList.remove('mobile-hidden');
+        card.style.display = 'flex'; // Ensure it's displayed as flex
+    });
+    document.getElementById('loadMoreBtn').style.display = 'none';
+}
+
+// Check if we need to show the load more button on mobile
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.innerWidth <= 768) {
+        if (document.querySelectorAll('.blog-card.mobile-hidden').length > 0) {
+            document.getElementById('loadMoreBtn').style.display = 'block';
+        }
+    }
+});
+</script>
