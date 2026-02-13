@@ -43,7 +43,30 @@ $result = $conn->query($sql);
 .bubble svg{height:16px;width:16px;stroke:#475569;fill:none;stroke-width:2}
 @media(max-width:1024px){.courses-track{--cols:5}}
 @media(max-width:900px){.courses-title{font-size:24px}.courses-track{--cols:4}}
-@media(max-width:640px){.courses-wrap{padding:12px 12px 16px}.courses-track{--cols:2}.ci-img{height:90px}.rating-count{display:none}}
+@media(max-width:640px){
+  .courses-wrap{padding:0 16px 24px}
+  .courses-track{
+    --cols:1;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 85%; /* Peaking effect */
+    gap: 16px;
+    padding-bottom: 20px; /* Space for scrollbar if visible or just spacing */
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  .courses-track::-webkit-scrollbar { display: none; } /* Hide scrollbar for cleaner look */
+  .course-card {
+    scroll-snap-align: center; /* Center the active card */
+    margin-right: 0;
+  }
+  .ci-img{height:140px} /* Slightly larger image area for better visual */
+  .rating-count{display:none}
+  .courses-title{font-size: 22px;}
+  .nav{display:none;} /* Hide arrows on mobile, swipe is intuitive */
+}
 </style>
 <section class="courses" aria-label="Courses">
   <div class="courses-wrap">

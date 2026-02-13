@@ -38,7 +38,29 @@ $result = $conn->query($sql);
 @media(max-width:1200px){.nav{display:none}}
 @media(max-width:1024px){.internships-track{--cols:3}}
 @media(max-width:768px){.internships-track{--cols:2}}
-@media(max-width:500px){.internships-track{--cols:1;grid-auto-columns:100%}}
+@media(max-width:640px){
+  .internships-wrap{padding:0 16px}
+  .internships-track{
+    --cols:1;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 85%; /* Peaking effect */
+    gap: 16px;
+    padding-bottom: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  .internships-track::-webkit-scrollbar { display: none; }
+  .internship-card {
+    scroll-snap-align: center;
+    height: auto; /* Let content dictate height if needed, or keep 100% of grid row */
+  }
+  .ii-img{height:150px}
+  .internships-title{font-size: 24px;}
+  .internship-title{font-size: 17px;}
+}
 </style>
 <section class="internships" aria-label="Internships">
   <div class="internships-wrap">
