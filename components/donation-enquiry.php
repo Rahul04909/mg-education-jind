@@ -238,22 +238,70 @@
         }
     }
     
-    @media (max-width: 600px) {
+@media (max-width: 600px) {
         .donation-section {
-            padding: 40px 16px;
+            padding: 30px 16px; /* Much tighter padding */
+            margin: 24px 16px; /* Less margin */
         }
         
         .donation-form-wrapper {
-            padding: 24px;
+            padding: 20px 16px; /* Compact form container */
         }
         
+        .donation-title {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+        
+        .donation-subtitle {
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        /* Compact Stats */
+        .donation-stats {
+            margin-top: 16px;
+            gap: 16px;
+        }
+        .stat-item h4 {
+            font-size: 22px;
+        }
+        .stat-item p {
+            font-size: 11px;
+        }
+
+        /* Compact Form Elements */
+        .donation-form-header {
+            margin-bottom: 16px;
+        }
+        .donation-form-header h3 {
+            font-size: 20px;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-label {
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+        .form-control {
+            padding: 10px 12px;
+            font-size: 14px;
+            border-radius: 8px;
+        }
         .form-row {
             flex-direction: column;
             gap: 0;
         }
-        
-        .donation-title {
-            font-size: 28px;
+        .btn-submit {
+            padding: 12px;
+            font-size: 15px;
+            margin-top: 8px;
+        }
+        .secure-note {
+            margin-top: 10px;
+            font-size: 11px;
         }
     }
 </style>
