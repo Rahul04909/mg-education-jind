@@ -39,12 +39,20 @@ $baseUrl=$scheme.'://'.$host.($basePath===''?'/':$basePath.'/');
 }
 @media(max-width:640px){
   .site-footer{--cta-offset:0}
-  .footer-top{display:none} /* Hide CTA on mobile as per requirement "footer looks to be" implies just the links part */
+  .footer-top{display:none} 
   .footer-grid{
-    grid-template-columns: 1fr; /* Single column for mobile */
-    gap: 32px; /* More space between sections */
-    text-align: center; /* Center align for better mobile aesthetics */
+    grid-template-columns: 1fr 1fr; /* 2 columns for Programs & Resources */
+    gap: 24px;
+    text-align: left; /* Left align for columns look better */
   }
+  
+  /* Brand section spans full width */
+  .footer-grid > div:first-child {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
   .footer-brand {
     justify-content: center;
     flex-direction: column;
@@ -53,6 +61,12 @@ $baseUrl=$scheme.'://'.$host.($basePath===''?'/':$basePath.'/');
     justify-content: center;
     margin-top: 16px;
   }
+
+  /* Programs (2nd child) and Resources (3rd child) fall into col 1 and 2 naturally */
+  
+  /* Contact (4th child) falls into next row col 1 (under Programs) naturally */
+  /* Ensure no forced centering on these */
+
   .footer-col h4 {
     font-size: 18px;
     margin-bottom: 16px;
@@ -62,13 +76,15 @@ $baseUrl=$scheme.'://'.$host.($basePath===''?'/':$basePath.'/');
     gap: 12px;
   }
   .footer-link {
-    font-size: 16px; /* Larger touch target */
+    font-size: 15px;
     display: block;
-    padding: 4px 0;
+    padding: 2px 0;
+    color: #c7cbd3;
   }
+
   .footer-bottom {
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     text-align: center;
     padding-bottom: 32px;
   }
