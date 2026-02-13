@@ -30,8 +30,54 @@ $baseUrl=$scheme.'://'.$host.($basePath===''?'/':$basePath.'/');
 .legal{display:flex;gap:12px}
 .legal a{color:#aeb4bf}
 .legal a:hover{color:#fff}
-@media(max-width:900px){.site-footer{--cta-offset:220px}.footer-grid{grid-template-columns:1fr 1fr}.footer-top{flex-direction:column;align-items:flex-start}.footer-form{grid-template-columns:1fr;}}
-@media(max-width:640px){.site-footer{--cta-offset:0}.footer-top{display:none}.footer-grid{grid-template-columns:1fr 1fr}.footer-bottom{flex-direction:column;gap:8px}}
+@media(max-width:900px){
+  .site-footer{--cta-offset:24px} /* Reduced offset */
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .footer-top{position:relative; transform:none; left:0; right:0; top:0; margin-bottom:24px; flex-direction:column; align-items:flex-start} /* Make relative to flow naturally */
+  .ft-wrap{padding-top:24px} /* Adjust padding since top is relative */
+  .footer-form{grid-template-columns:1fr; width:100%}
+}
+@media(max-width:640px){
+  .site-footer{--cta-offset:0}
+  .footer-top{display:none} /* Hide CTA on mobile as per requirement "footer looks to be" implies just the links part */
+  .footer-grid{
+    grid-template-columns: 1fr; /* Single column for mobile */
+    gap: 32px; /* More space between sections */
+    text-align: center; /* Center align for better mobile aesthetics */
+  }
+  .footer-brand {
+    justify-content: center;
+    flex-direction: column;
+  }
+  .socials {
+    justify-content: center;
+    margin-top: 16px;
+  }
+  .footer-col h4 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: #fff;
+  }
+  .footer-links {
+    gap: 12px;
+  }
+  .footer-link {
+    font-size: 16px; /* Larger touch target */
+    display: block;
+    padding: 4px 0;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+    padding-bottom: 32px;
+  }
+  .legal {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+}
 </style>
 <footer class="site-footer" role="contentinfo">
   <div class="ft-wrap">
