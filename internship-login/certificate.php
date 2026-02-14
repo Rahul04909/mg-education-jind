@@ -139,6 +139,26 @@ if (!$student) {
             display: block;
             margin-top: 5px;
         }
+
+        /* Logo Area Additions */
+        .qr-code {
+            position: absolute;
+            top: 12%; /* Approximate alignment with logo center/left */
+            left: 20%;
+            width: 100px;
+            height: 100px;
+        }
+        
+        .student-photo {
+            position: absolute;
+            top: 10%; /* Approximate alignment with logo center/right */
+            right: 20%;
+            width: 100px;
+            height: 120px;
+            object-fit: cover;
+            border: 2px solid #fff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
         
         .date-section {
             position: absolute;
@@ -187,7 +207,27 @@ if (!$student) {
         </button>
     </div>
 
+<?php
+    // Define Photo URL
+    $photo_url = "assets/images/avatar-placeholder.png"; // Default
+    if(!empty($student['student_photo'])) {
+        $check_path = __DIR__ . "/../" . $student['student_photo'];
+        if(file_exists($check_path)) {
+            $photo_url = "../" . $student['student_photo'];
+        }
+    }
+    
+    // QR Code Data (Enrollment - Name)
+    $qr_data = urlencode("MG Skills Verified: " . $student['enrollment_no'] . " - " . $student['full_name']);
+    $qr_url = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" . $qr_data;
+    ?>
     <div class="certificate-container">
+        <!-- QR Code (Left of Logo) -->
+        <img src="<?php echo $qr_url; ?>" class="qr-code" alt="QR Code">
+
+        <!-- Student Photo (Right of Logo) -->
+        <img src="<?php echo $photo_url; ?>" class="student-photo" alt="Student Photo">
+
         <!-- Enrollment Number -->
         <div class="enrollment-no">Enrollment No: <?php echo htmlspecialchars($student['enrollment_no']); ?></div>
         
