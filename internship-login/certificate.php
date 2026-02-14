@@ -75,7 +75,7 @@ if (!$student) {
             width: 1123px; /* A4 width at 96 DPI approx */
             height: 794px; /* A4 height at 96 DPI approx */
             position: relative;
-            background-image: url('assets/background.png');
+            background-image: url('assets/new-background.png');
             background-size: cover;
             background-position: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
