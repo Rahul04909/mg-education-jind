@@ -169,8 +169,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                          <h2>Welcome to MG Education!</h2>
                          <p>Dear $full_name,</p>
                          <p>You have been successfully enrolled in the internship program.</p>
-                         <p><strong>Enrollment No:</strong> $enrollment_no<br>
-                         <strong>Password:</strong> $password_plain</p>
+                         <p><strong>Enrollment No:</strong> $enrollment_no</p>
+                         
+                         <div style='background:#f3f4f6; padding:15px; border-radius:8px; margin:20px 0; border:1px solid #e5e7eb;'>
+                            <h3 style='margin-top:0; color:#1358db;'>Exam Portal Credentials</h3>
+                            <p>You can login to the internship exam dashboard using the following credentials:</p>
+                            <p><strong>URL:</strong> <a href='https://mg-skills.com/internship-exam/login.php'>Login Here</a></p>
+                            <p><strong>User ID:</strong> $enrollment_no (or your email)</p>
+                            <p><strong>Password:</strong> <span style='font-family:monospace; background:#fff; padding:2px 6px; border-radius:4px;'>$password_plain</span></p>
+                        </div>
                          <p>Please use these credentials to login to your student dashboard.</p>
                          <p>Regards,<br>MG Education Team</p>
                      ";

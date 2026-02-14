@@ -108,6 +108,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     $payment_status = ($course_fee > 0) ? 'success' : 'success'; // Treat free as success too
 
+    // Generate Random Password
+    $raw_password = substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"), 0, 8);
+    $hashed_password = password_hash($raw_password, PASSWORD_DEFAULT);
+
     // Insert Data
     $sql = "INSERT INTO internship_enrollments (
         enrollment_no, internship_id, session_id,
@@ -117,7 +121,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         highest_qual, school_name, board_university, passing_year, percentage,
         computer_knowledge, typing_speed, prev_course_done, prev_enroll_no, prev_course_name, prev_course_session,
         aadhar_no, aadhar_file, edu_cert_file,
-        course_fee, payment_status, razorpay_payment_id, razorpay_order_id
+        course_fee, payment_status, razorpay_payment_id, razorpay_order_id,
+        password
     ) VALUES (
         '$enrollment_no', $internship_id, " . ($session_id ? $session_id : "NULL") . ",
         '$full_name', '$father_name', '$mother_name', '$dob', '$category',
@@ -126,7 +131,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         '$highest_qual', '$school_name', '$board', $passing_year, '$percentage',
         '$computer_knowledge', '$typing_speed', $prev_course_done, '$prev_enroll_no', '$prev_course_name', '$prev_course_session',
         '$aadhar_no', '$aadhar_path', '$cert_path',
-        $course_fee, '$payment_status', '$payment_id', '$order_id'
+        $course_fee, '$payment_status', '$payment_id', '$order_id',
+        '$hashed_password'
     )";
     
     if ($conn->query($sql) === TRUE) {
@@ -164,6 +170,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <p>Your enrollment for the internship program has been confirmed.</p>
                     <p><strong>Enrollment Number:</strong> $enrollment_no<br>
                     <strong>Fees Paid:</strong> ₹$course_fee</p>
+                    
+                    <div style='background:#f3f4f6; padding:15px; border-radius:8px; margin:20px 0; border:1px solid #e5e7eb;'>
+                        <h3 style='margin-top:0; color:#1358db;'>Exam Portal Credentials</h3>
+                        <p>You can login to the internship exam dashboard using the following credentials:</p>
+                        <p><strong>URL:</strong> <a href='https://mg-skills.com/internship-exam/login.php'>Login Here</a></p>
+                        <p><strong>User ID:</strong> $enrollment_no (or your email)</p>
+                        <p><strong>Password:</strong> <span style='font-family:monospace; background:#fff; padding:2px 6px; border-radius:4px;'>$raw_password</span></p>
+                    </div>
+
                     <p>We will contact you shortly with further details.</p>
                     <br>
                     <p>Best Regards,<br>MG Skills Team</p>
