@@ -110,11 +110,11 @@ if (!$student) {
         .student-name {
             position: absolute;
             top: 46%; 
-            left: 50%;
+            left: 55%;
             transform: translateX(-50%);
             font-family: 'Great Vibes', cursive;
             font-size: 50px; /* Large script font */
-            color: #1e293b;
+            color: #a68229;
             text-align: center;
             width: 80%;
             line-height: 1.2;
