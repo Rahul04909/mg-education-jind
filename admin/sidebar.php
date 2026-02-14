@@ -221,6 +221,8 @@
                     <li class="submenu-item"><a href="../../admin/internships/manage-internship-sessions.php">Manage Sessions</a></li>
                     <li class="submenu-item"><a href="../../admin/internships/manage-assignments.php">Internship Assignments</a></li>
                     <li class="submenu-item"><a href="../../admin/internships/view-submissions.php">View Submissions</a></li>
+                    <li class="submenu-item"><a href="../../admin/internships/create-internship-question-paper.php">Create Question Paper</a></li>
+                    <li class="submenu-item"><a href="../../admin/internships/view-question-papers.php">Manage Question Paper</a></li>
                 </ul>
             </li>
 
