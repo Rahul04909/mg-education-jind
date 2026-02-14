@@ -35,6 +35,7 @@ if (isset($_GET['delete_id'])) {
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $title = mysqli_real_escape_string($conn, $_POST['title']);
     $internship_id = intval($_POST['internship_id']);
+    $session_id = !empty($_POST['session_id']) ? intval($_POST['session_id']) : NULL;
     $description = mysqli_real_escape_string($conn, $_POST['description']);
     $is_active = isset($_POST['is_active']) ? 1 : 0;
 
@@ -65,8 +66,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     if (empty($error_message)) {
-        $stmt = $conn->prepare("INSERT INTO internship_assignments (internship_id, title, assignment_file, description, is_active) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("isssi", $internship_id, $title, $assignment_file, $description, $is_active);
+        // Use insert with session_id
+        $stmt = $conn->prepare("INSERT INTO internship_assignments (internship_id, session_id, title, assignment_file, description, is_active) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("iisssi", $internship_id, $session_id, $title, $assignment_file, $description, $is_active);
         
         if ($stmt->execute()) {
             $success_message = "Assignment added successfully!";
@@ -87,9 +89,10 @@ if ($res_int) {
 
 // Fetch Assignments List
 $assignments = [];
-$sql_list = "SELECT ia.*, i.title as internship_title 
+$sql_list = "SELECT ia.*, i.title as internship_title, sess.session_name 
              FROM internship_assignments ia 
              JOIN internships i ON ia.internship_id = i.id 
+             LEFT JOIN internship_sessions sess ON ia.session_id = sess.id
              ORDER BY ia.created_at DESC";
 $res_list = $conn->query($sql_list);
 if ($res_list) {
@@ -164,7 +167,7 @@ include __DIR__ . "/../sidebar.php";
                     <div class="grid-2">
                         <div class="form-group">
                             <label class="form-label">Select Internship</label>
-                            <select name="internship_id" class="form-select" required>
+                            <select name="internship_id" id="internship_select" class="form-select" required onchange="loadSessions()">
                                 <option value="">-- Select Internship --</option>
                                 <?php foreach($internships as $int): ?>
                                     <option value="<?php echo $int['id']; ?>"><?php echo htmlspecialchars($int['title']); ?></option>
@@ -172,8 +175,20 @@ include __DIR__ . "/../sidebar.php";
                             </select>
                         </div>
                         <div class="form-group">
+                            <label class="form-label">Select Session</label>
+                            <select name="session_id" id="session_select" class="form-select">
+                                <option value="">-- First Select Internship --</option>
+                            </select>
+                        </div>
+                    </div>
+                     <div class="grid-2">
+                        <div class="form-group">
                             <label class="form-label">Assignment Title</label>
                             <input type="text" name="title" class="form-input" required placeholder="e.g. Month 1 - Basic Web Structure">
+                        </div>
+                         <div class="form-group">
+                            <label class="form-label">Assignment File (PDF Only)</label>
+                            <input type="file" name="assignment_file" class="form-input" accept="application/pdf" required>
                         </div>
                     </div>
 
@@ -182,16 +197,10 @@ include __DIR__ . "/../sidebar.php";
                         <textarea name="description" class="form-textarea" rows="3"></textarea>
                     </div>
 
-                    <div class="grid-2">
-                        <div class="form-group">
-                            <label class="form-label">Assignment File (PDF Only)</label>
-                            <input type="file" name="assignment_file" class="form-input" accept="application/pdf" required>
-                        </div>
-                        <div class="form-group" style="display:flex; align-items:flex-end;">
+                    <div class="form-group" style="display:flex; align-items:flex-end;">
                              <label class="form-label" style="margin-bottom:15px; display:block;">
                                 <input type="checkbox" name="is_active" checked> Active
                             </label>
-                        </div>
                     </div>
 
                     <button type="submit" class="btn">Upload Assignment</button>
@@ -206,6 +215,7 @@ include __DIR__ . "/../sidebar.php";
                         <tr>
                             <th>#</th>
                             <th>Internship</th>
+                            <th>Session</th>
                             <th>Title</th>
                             <th>File</th>
                             <th>Date</th>
@@ -220,6 +230,7 @@ include __DIR__ . "/../sidebar.php";
                             <tr>
                                 <td><?php echo $assign['id']; ?></td>
                                 <td style="font-weight:500; color:#3b82f6;"><?php echo htmlspecialchars($assign['internship_title']); ?></td>
+                                <td><?php echo htmlspecialchars($assign['session_name'] ?? 'All Sessions'); ?></td>
                                 <td><?php echo htmlspecialchars($assign['title']); ?></td>
                                 <td>
                                     <a href="../../<?php echo $assign['assignment_file']; ?>" target="_blank" class="btn-view">View PDF</a>
@@ -237,6 +248,36 @@ include __DIR__ . "/../sidebar.php";
 
         </div>
     </main>
+
+    <script>
+        function loadSessions() {
+            let intId = document.getElementById('internship_select').value;
+            let sessSelect = document.getElementById('session_select');
+             sessSelect.innerHTML = '<option value="">Loading...</option>';
+
+            if(intId) {
+                // Determine path relative to this file. 
+                // We are in admin/internships/, get-sessions is in internship-enrollment/ 
+                // So path is ../../internship-enrollment/get-sessions.php
+                fetch('../../internship-enrollment/get-sessions.php?internship_id=' + intId)
+                .then(res => res.json())
+                .then(data => {
+                    sessSelect.innerHTML = '<option value="">-- All Sessions (Optional) --</option>';
+                    if(data.status === 'success' && data.data.length > 0) {
+                        data.data.forEach(sess => {
+                            sessSelect.innerHTML += `<option value="${sess.id}">${sess.session_name}</option>`;
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    sessSelect.innerHTML = '<option value="">Error loading sessions</option>';
+                });
+            } else {
+                sessSelect.innerHTML = '<option value="">-- First Select Internship --</option>';
+            }
+        }
+    </script>
 </body>
 </html>
 <?php $conn->close(); ?>
