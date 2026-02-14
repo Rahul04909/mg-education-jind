@@ -143,7 +143,7 @@ if (!$student) {
         /* Logo Area Additions */
         .qr-code {
             position: absolute;
-            top: 22%; /* Approximate alignment with logo center/left */
+            top: 30%; /* Approximate alignment with logo center/left */
             left: 10%;
             width: 100px;
             height: 100px;
@@ -151,7 +151,7 @@ if (!$student) {
         
         .student-photo {
             position: absolute;
-            top: 10%; /* Approximate alignment with logo center/right */
+            top: 20%; /* Approximate alignment with logo center/right */
             right: 20%;
             width: 100px;
             height: 120px;
