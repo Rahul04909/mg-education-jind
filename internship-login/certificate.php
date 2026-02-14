@@ -113,7 +113,7 @@ if (!$student) {
             left: 50%;
             transform: translateX(-50%);
             font-family: 'Great Vibes', cursive;
-            font-size: 80px; /* Large script font */
+            font-size: 50px; /* Large script font */
             color: #1e293b;
             text-align: center;
             width: 80%;
