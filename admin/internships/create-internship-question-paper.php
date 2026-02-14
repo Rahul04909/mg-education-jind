@@ -54,49 +54,93 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['
     $conn->begin_transaction();
     
     try {
-        // Delete old paper if exists (or the one being edited, to simplify update structure)
-        // If editing, we delete the specific ID or the one matching internship/session to avoid duplicates
         if ($edit_id > 0) {
-             $del_sql = "DELETE FROM internship_question_papers WHERE id = $edit_id";
-             $conn->query($del_sql);
-        } else {
-             // If creating new, remove any existing for this combo to enforce one paper per session
-             $del_sql = "DELETE FROM internship_question_papers WHERE internship_id = $internship_id AND session_id = $session_id";
-             $conn->query($del_sql);
-        }
-        
-        // Insert Paper
-        $sql_paper = "INSERT INTO internship_question_papers (internship_id, session_id, total_questions, marks_per_question, total_marks, passing_marks, exam_date, exam_duration, start_time, end_time) 
-                      VALUES ($internship_id, $session_id, $total_questions, $marks_per_question, $total_marks, $passing_marks, '$exam_date', $exam_duration, '$start_time', '$end_time')";
-        
-        if (!$conn->query($sql_paper)) {
-            throw new Exception("Error saving paper details: " . $conn->error);
-        }
-        
-        $paper_id = $conn->insert_id;
-        $questions_data = $_POST['questions'];
-        
-        foreach ($questions_data as $q) {
-            $q_text = mysqli_real_escape_string($conn, $q['text']);
-            $op_a = mysqli_real_escape_string($conn, $q['a']);
-            $op_b = mysqli_real_escape_string($conn, $q['b']);
-            $op_c = mysqli_real_escape_string($conn, $q['c']);
-            $op_d = mysqli_real_escape_string($conn, $q['d']);
-            $correct = mysqli_real_escape_string($conn, $q['correct']);
+            // Update Existing Paper
+            $sql_paper = "UPDATE internship_question_papers SET 
+                         internship_id=$internship_id, 
+                         session_id=$session_id, 
+                         total_questions=$total_questions, 
+                         marks_per_question=$marks_per_question, 
+                         total_marks=$total_marks, 
+                         passing_marks=$passing_marks, 
+                         exam_date='$exam_date', 
+                         exam_duration=$exam_duration, 
+                         start_time='$start_time', 
+                         end_time='$end_time' 
+                         WHERE id=$edit_id";
             
-            $sql_q = "INSERT INTO internship_questions (paper_id, question_text, option_a, option_b, option_c, option_d, correct_option) 
-                      VALUES ($paper_id, '$q_text', '$op_a', '$op_b', '$op_c', '$op_d', '$correct')";
-            
-            if (!$conn->query($sql_q)) {
-                throw new Exception("Error saving a question: " . $conn->error);
+            if (!$conn->query($sql_paper)) {
+                throw new Exception("Error updating paper details: " . $conn->error);
             }
+            
+            $paper_id = $edit_id;
+            
+            // Check if results exist (students attempted)
+            $res_check = $conn->query("SELECT COUNT(*) as cnt FROM internship_results WHERE internship_paper_id = $edit_id");
+            $has_results = $res_check->fetch_assoc()['cnt'] > 0;
+            
+            if ($has_results) {
+                // Cannot delete/replace questions
+                $success_message = "Exam details updated successfully! (Questions were preserved and NOT modified because exams have already been submitted)";
+            } else {
+                // Safe to replace questions
+                $conn->query("DELETE FROM internship_questions WHERE paper_id = $paper_id");
+                
+                // Insert Questions
+                $questions_data = $_POST['questions'];
+                foreach ($questions_data as $q) {
+                    $q_text = mysqli_real_escape_string($conn, $q['text']);
+                    $op_a = mysqli_real_escape_string($conn, $q['a']);
+                    $op_b = mysqli_real_escape_string($conn, $q['b']);
+                    $op_c = mysqli_real_escape_string($conn, $q['c']);
+                    $op_d = mysqli_real_escape_string($conn, $q['d']);
+                    $correct = mysqli_real_escape_string($conn, $q['correct']);
+                    
+                    $sql_q = "INSERT INTO internship_questions (paper_id, question_text, option_a, option_b, option_c, option_d, correct_option) 
+                              VALUES ($paper_id, '$q_text', '$op_a', '$op_b', '$op_c', '$op_d', '$correct')";
+                    $conn->query($sql_q);
+                }
+                $success_message = "Internship Question Paper updated successfully!";
+            }
+            
+        } else {
+            // New Paper Logic
+            // Remove any existing for this combo to enforce one paper per session
+            $del_sql = "DELETE FROM internship_question_papers WHERE internship_id = $internship_id AND session_id = $session_id";
+            $conn->query($del_sql);
+            
+            // Insert Paper
+            $sql_paper = "INSERT INTO internship_question_papers (internship_id, session_id, total_questions, marks_per_question, total_marks, passing_marks, exam_date, exam_duration, start_time, end_time) 
+                          VALUES ($internship_id, $session_id, $total_questions, $marks_per_question, $total_marks, $passing_marks, '$exam_date', $exam_duration, '$start_time', '$end_time')";
+            
+            if (!$conn->query($sql_paper)) {
+                throw new Exception("Error saving paper details: " . $conn->error);
+            }
+            
+            $paper_id = $conn->insert_id;
+            
+            // Insert Questions
+            $questions_data = $_POST['questions'];
+            foreach ($questions_data as $q) {
+                $q_text = mysqli_real_escape_string($conn, $q['text']);
+                $op_a = mysqli_real_escape_string($conn, $q['a']);
+                $op_b = mysqli_real_escape_string($conn, $q['b']);
+                $op_c = mysqli_real_escape_string($conn, $q['c']);
+                $op_d = mysqli_real_escape_string($conn, $q['d']);
+                $correct = mysqli_real_escape_string($conn, $q['correct']);
+                
+                $sql_q = "INSERT INTO internship_questions (paper_id, question_text, option_a, option_b, option_c, option_d, correct_option) 
+                          VALUES ($paper_id, '$q_text', '$op_a', '$op_b', '$op_c', '$op_d', '$correct')";
+                $conn->query($sql_q);
+            }
+            $success_message = "Internship Question Paper saved successfully!";
         }
         
         $conn->commit();
-        $success_message = "Internship Question Paper saved successfully!";
+        
         // Reset edit mode after save if needed, or redirect
         if($edit_id > 0) {
-             echo "<script>setTimeout(function(){ window.location.href = 'view-question-papers.php'; }, 1000);</script>";
+             echo "<script>setTimeout(function(){ window.location.href = 'view-question-papers.php'; }, 2000);</script>";
         }
         
     } catch (Exception $e) {
