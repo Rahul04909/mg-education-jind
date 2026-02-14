@@ -122,8 +122,8 @@ if (!$student) {
 
         .internship-text {
             position: absolute;
-            top: 58%;
-            left: 50%;
+            top: 55%;
+            left: 55%;
             transform: translateX(-50%);
             text-align: center;
             width: 70%;
