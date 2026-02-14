@@ -110,7 +110,7 @@ if (!$student) {
         .student-name {
             position: absolute;
             top: 46%; 
-            left: 55%;
+            left: 54%;
             transform: translateX(-50%);
             font-family: 'Great Vibes', cursive;
             font-size: 50px; /* Large script font */
@@ -151,7 +151,7 @@ if (!$student) {
         
         .student-photo {
             position: absolute;
-            top: 30%; /* Approximate alignment with logo center/right */
+            top: 27%; /* Approximate alignment with logo center/right */
             right: 10%;
             width: 100px;
             height: 120px;
