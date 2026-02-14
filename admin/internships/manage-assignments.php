@@ -133,7 +133,24 @@ include __DIR__ . "/../sidebar.php";
         .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:12px;font-weight:700;font-size:15px;border:none;cursor:pointer;background:var(--indigo);color:#fff;text-decoration:none;}
         .btn:hover{opacity:0.9;}
         .btn-danger{background:var(--error);padding:6px 12px;font-size:13px;border-radius:6px;}
-        .btn-view{background:#3b82f6;padding:6px 12px;font-size:13px;border-radius:6px;}
+        .btn-view {
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 8px 14px;
+            font-size: 13px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: 1px solid #c7d2fe;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-view:hover {
+            background: #4338ca;
+            color: #fff;
+            border-color: #4338ca;
+        }
         
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--line); font-size: 14px; }
@@ -233,7 +250,11 @@ include __DIR__ . "/../sidebar.php";
                                 <td><?php echo htmlspecialchars($assign['session_name'] ?? 'All Sessions'); ?></td>
                                 <td><?php echo htmlspecialchars($assign['title']); ?></td>
                                 <td>
-                                    <a href="../../<?php echo $assign['assignment_file']; ?>" target="_blank" class="btn-view">View PDF</a>
+                                <td>
+                                    <a href="../../<?php echo $assign['assignment_file']; ?>" target="_blank" class="btn-view">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                        View PDF
+                                    </a>
                                 </td>
                                 <td><?php echo date('d M Y', strtotime($assign['created_at'])); ?></td>
                                 <td>
