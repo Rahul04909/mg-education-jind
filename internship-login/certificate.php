@@ -236,7 +236,7 @@ if (!$student) {
 
         <!-- Internship Details -->
         <div class="internship-text">
-            For successfully completing the internship program in
+            For successfully completing the internship program at MG Education & Social Development Organisation in
             <span class="internship-title"><?php echo htmlspecialchars($student['internship_title']); ?></span>
         </div>
 
