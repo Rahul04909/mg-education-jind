@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Disallow Administrative Areas
+Disallow: /admin/
+Disallow: /center/
+Disallow: /student/
+Disallow: /reception/
+
+# Disallow System & Config Directories
+Disallow: /includes/
+Disallow: /components/
+Disallow: /database/
+Disallow: /vendor/
+Disallow: /actions/
+Disallow: /api-keys
+Disallow: /insert-db/
+Disallow: /.git
+
+# Disallow Sensitive Uploads
+Disallow: /assets/uploads/internship_docs/
+
+# Sitemap Location
+Sitemap: https://mgedu.in/sitemap.xml
