@@ -51,6 +51,14 @@ if($att_res) {
         $attempted_map[$row['internship_paper_id']] = $row;
     }
 }
+// 4. Define Photo URL
+$photo_url = "../assets/images/avatar-placeholder.png";
+if(isset($student['student_photo']) && !empty($student['student_photo'])) {
+    $check_path = __DIR__ . "/../" . $student['student_photo'];
+    if(file_exists($check_path)) {
+        $photo_url = "../" . $student['student_photo'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
