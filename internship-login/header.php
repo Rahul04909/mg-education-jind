@@ -173,7 +173,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <span class="badge-soon">Coming Soon</span>
         </a>
 
-        <a href="#" class="nav-link">
+        <a href="certificate.php" class="nav-link">
             <i data-lucide="award" style="width:16px;"></i>
             Download Certificate
         </a>
