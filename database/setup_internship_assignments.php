@@ -8,8 +8,8 @@ $conn = getDbConnection();
 
 $sql = "CREATE TABLE IF NOT EXISTS internship_assignments (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    internship_id INT(11) UNSIGNED NOT NULL,
-    session_id INT(11) UNSIGNED NULL,
+    internship_id INT(11) NOT NULL,
+    session_id INT(11) NULL,
     title VARCHAR(255) NOT NULL,
     assignment_file VARCHAR(255) NOT NULL,
     description TEXT NULL,
