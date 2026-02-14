@@ -87,7 +87,7 @@ if (!$student) {
         /* Content Positioning */
         .enrollment-no {
             position: absolute;
-            top: 14%; /* Adjusted based on typical certificate layouts */
+            top: 1%; /* Adjusted based on typical certificate layouts */
             left: 50%;
             transform: translateX(-50%);
             font-size: 16px;
@@ -109,7 +109,7 @@ if (!$student) {
 
         .student-name {
             position: absolute;
-            top: 42%; 
+            top: 46%; 
             left: 50%;
             transform: translateX(-50%);
             font-family: 'Great Vibes', cursive;
