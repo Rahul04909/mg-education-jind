@@ -151,8 +151,8 @@ if (!$student) {
         
         .student-photo {
             position: absolute;
-            top: 20%; /* Approximate alignment with logo center/right */
-            right: 20%;
+            top: 30%; /* Approximate alignment with logo center/right */
+            right: 10%;
             width: 100px;
             height: 120px;
             object-fit: cover;
