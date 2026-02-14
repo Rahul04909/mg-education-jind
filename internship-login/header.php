@@ -156,7 +156,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             Dashboard
         </a>
         
-        <a href="#" class="nav-link">
+        <a href="assignments.php" class="nav-link <?php echo ($current_page == 'assignments.php') ? 'active' : ''; ?>">
             <i data-lucide="file-text" style="width:16px;"></i>
             Assignments
         </a>
