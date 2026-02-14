@@ -66,17 +66,7 @@ if($att_res) {
         body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 50px; }
 
         /* Header */
-        .navbar { background: white; padding: 15px 30px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; color: var(--primary); }
-        .logo img { height: 35px; border-radius: 6px; }
-        
-        .user-menu { display: flex; align-items: center; gap: 15px; }
-        .user-info { text-align: right; }
-        .user-info h4 { font-size: 14px; margin-bottom: 2px; }
-        .user-info span { font-size: 11px; color: #64748b; }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #e0e7ff; }
-        .btn-logout { padding: 8px 16px; border: 1px solid var(--border); background: transparent; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; color: #ef4444; transition: 0.2s; }
-        .btn-logout:hover { background: #fef2f2; border-color: #fecaca; }
+        /* Header Styles moved to header.php */
 
         /* Dashboard Layout */
         .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 320px 1fr; gap: 30px; }
@@ -136,31 +126,8 @@ if($att_res) {
 <body>
 
     <!-- Header -->
-    <nav class="navbar">
-        <div class="logo">
-            <img src="../assets/images/sidebar-logo.jpg" alt="Logo">
-            <span>Internship Portal</span>
-        </div>
-        <div class="user-menu">
-            <div class="user-info">
-                <h4><?php echo htmlspecialchars($student['full_name']); ?></h4>
-                <span><?php echo htmlspecialchars($student['enrollment_no']); ?></span>
-            </div>
-            
-            <?php 
-                // Student Photo Logic
-                $photo_url = "../assets/images/avatar-placeholder.png";
-                if(!empty($student['student_photo']) && file_exists("../" . $student['student_photo'])) {
-                    $photo_url = "../" . $student['student_photo'];
-                }
-            ?>
-            <img src="<?php echo $photo_url; ?>" class="avatar" alt="User">
-            
-            <a href="logout.php" class="btn-logout" title="Logout">
-                <i data-lucide="log-out" style="width:18px;"></i>
-            </a>
-        </div>
-    </nav>
+    <!-- Header -->
+    <?php include 'header.php'; ?>
 
     <!-- Content -->
     <div class="container">
