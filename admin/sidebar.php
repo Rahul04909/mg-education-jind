@@ -220,6 +220,7 @@
                     <li class="submenu-item"><a href="../../admin/internships/student-list.php">Student List</a></li>
                     <li class="submenu-item"><a href="../../admin/internships/manage-internship-sessions.php">Manage Sessions</a></li>
                     <li class="submenu-item"><a href="../../admin/internships/manage-assignments.php">Internship Assignments</a></li>
+                    <li class="submenu-item"><a href="../../admin/internships/view-submissions.php">View Submissions</a></li>
                 </ul>
             </li>
 
