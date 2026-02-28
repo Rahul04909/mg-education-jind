@@ -148,9 +148,8 @@ if ($session_id > 0) {
             flex-direction: column;
         }
         .student-photo {
-            flex: 1;
             width: 100%;
-            height: 100%;
+            height: 130px;
             object-fit: cover;
         }
         .sign-box {
@@ -301,13 +300,13 @@ if ($session_id > 0) {
                                 <div style="display:flex;align-items:center;justify-content:center;height:100%;color:#ccc;">No Photo</div>
                              <?php endif; ?>
                              
-                             <div class="sign-box">
-                                 <?php if(!empty($student['student_sign'])): ?>
-                                    <img src="../<?php echo $student['student_sign']; ?>" class="sign-img" alt="Sign">
-                                 <?php else: ?>
-                                    <span style="font-size:10px; color:#ccc;">Sign</span>
-                                 <?php endif; ?>
-                             </div>
+                                     <div class="sign-box">
+                                         <?php if(!empty($student['student_sign'])): ?>
+                                            <img src="../<?php echo $student['student_sign']; ?>" class="sign-img" alt="Sign">
+                                         <?php else: ?>
+                                            <span style="font-size:10px; color:#ccc;">Student Signature</span>
+                                         <?php endif; ?>
+                                     </div>
                          </div>
                     </div>
                 </div>
