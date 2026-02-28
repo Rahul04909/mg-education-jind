@@ -12,9 +12,10 @@ $conn = getDbConnection();
 $student_id = $_SESSION['student_id'];
 
 // 1. Fetch Student Details
-$sql_s = "SELECT s.*, c.title as course_name 
+$sql_s = "SELECT s.*, c.title as course_name, cs.session_name 
           FROM admissions s 
           LEFT JOIN courses c ON s.course_id = c.id 
+          LEFT JOIN course_sessions cs ON s.session_id = cs.id
           WHERE s.id = $student_id";
 $res_s = $conn->query($sql_s);
 $student = $res_s->fetch_assoc();
@@ -168,8 +169,8 @@ while($row = $att_res->fetch_assoc()) {
                 <span class="profile-id"><?php echo htmlspecialchars($student['enrollment_no']); ?></span>
                 
                 <div class="profile-meta">
-                    <div class="meta-item"><span class="meta-label">Course</span><span class="meta-val"><?php echo htmlspecialchars($student['course_name']); ?></span></div>
-                    <div class="meta-item"><span class="meta-label">Batch</span><span class="meta-val"><?php echo htmlspecialchars($student['passing_year']); ?></span></div>
+                    <div class="meta-item"><span class="meta-label">Course</span><span class="meta-val"><?php echo htmlspecialchars($student['course_name'] ?? 'N/A'); ?></span></div>
+                    <div class="meta-item"><span class="meta-label">Course Session</span><span class="meta-val"><?php echo htmlspecialchars($student['session_name'] ?? 'N/A'); ?></span></div>
                     <div class="meta-item"><span class="meta-label">Category</span><span class="meta-val"><?php echo htmlspecialchars($student['category']); ?></span></div>
                 </div>
 

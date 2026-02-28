@@ -13,16 +13,15 @@ $enrollment_no = $_SESSION['enrollment_no'];
 
 $conn = getDbConnection();
 
-// Fetch student details
-$sql = "SELECT * FROM admissions WHERE id = $student_id";
+// Fetch student details with course and session
+$sql = "SELECT s.*, c.title as course_name, cs.session_name 
+        FROM admissions s 
+        LEFT JOIN courses c ON s.course_id = c.id 
+        LEFT JOIN course_sessions cs ON s.session_id = cs.id
+        WHERE s.id = $student_id";
 $result = $conn->query($sql);
 $student = $result->fetch_assoc();
-
-// Fetch Course Name
-$course_id = $student['course_id'];
-$c_sql = "SELECT title FROM courses WHERE id = $course_id";
-$c_res = $conn->query($c_sql);
-$course_name = ($c_res->num_rows > 0) ? $c_res->fetch_assoc()['title'] : "Unknown Course";
+$course_name = $student['course_name'] ?? "Unknown Course";
 
 ?>
 <!DOCTYPE html>
@@ -89,7 +88,7 @@ $course_name = ($c_res->num_rows > 0) ? $c_res->fetch_assoc()['title'] : "Unknow
         </div>
         <div class="stat-card">
             <div class="stat-icon"><i data-lucide="calendar"></i></div>
-            <div class="stat-info"><h3><?php echo $student['passing_year']; ?></h3><p>Batch Year</p></div>
+            <div class="stat-info"><h3><?php echo htmlspecialchars($student['session_name'] ?? 'N/A'); ?></h3><p>Course Session</p></div>
         </div>
     </div>
 
