@@ -130,15 +130,14 @@ $html = '
         .label { font-weight: bold; width: 140px; background-color: #fce4e4; }
 
         .photo-box {
-            width: 120px; height: 150px; border: 2px solid #000;
+            width: 150px; height: 180px; border: 2px solid #000;
             margin-left: auto; text-align: center; position: relative;
-            overflow: hidden; /* Ensure image does not overflow */
         }
         /* DOMPDF does not support object-fit. We use width/height constraints. */
-        .photo-img { width: 100%; height: 120px; display: block; } 
+        .photo-img { width: 100%; height: 130px; display: block; } 
         
-        .sign-box { height: 30px; border-top: 1px solid #000; }
-        .sign-img { max-height: 25px; max-width: 100%; margin-top: 2px; }
+        .sign-box { height: 40px; border-top: 1px solid #000; margin-top: 10px; }
+        .sign-img { max-height: 35px; max-width: 100%; margin-top: 2px; }
 
         .exam-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .exam-table th { background-color: #333; color: #fff; border: 1px solid #000; padding: 8px; font-size: 12px; }
