@@ -173,12 +173,16 @@ $html = '
         .info-colon { width: 20px; text-align: center; } 
         .info-val { color: #000; text-transform: uppercase; }
 
+        .student-meta-container {
+            width: 110px;
+            margin-left: auto;
+        }
+
         .photo-box {
             width: 110px;
             height: 130px;
             border: 2px solid #000;
             padding: 3px;
-            margin-left: auto; 
         }
         .photo-img { width: 100%; height: 100%; display: block; object-fit: cover; }
 
@@ -246,10 +250,12 @@ $html = '
                         </table>
                     </td>
                     <td style="width: 25%; vertical-align: top;">
-                        <div class="photo-box">
-                            <img src="' . $photo_src . '" class="photo-img">
+                        <div class="student-meta-container">
+                            <div class="photo-box">
+                                <img src="' . $photo_src . '" class="photo-img">
+                            </div>
+                            ' . $student_sign_html . '
                         </div>
-                        ' . $student_sign_html . '
                     </td>
                 </tr>
             </table>
