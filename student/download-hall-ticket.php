@@ -144,8 +144,10 @@ $html = '
         .exam-table th { background-color: #333; color: #fff; border: 1px solid #000; padding: 8px; font-size: 12px; }
         .exam-table td { border: 1px solid #000; padding: 8px; font-size: 11px; text-align: center; }
 
-        .footer { margin-top: 60px; text-align: right; padding-right: 30px; }
-        .auth-sign p { border-top: 1px solid #000; display: inline-block; padding-top: 5px; font-weight: bold; font-size: 12px; }
+        .footer { margin-top: 60px; text-align: right; padding-right: 40px; }
+        .auth-sign { display: inline-block; text-align: center; }
+        .auth-sign p { border-top: 1px solid #000; padding-top: 5px; font-weight: bold; font-size: 12px; width: 200px; margin: 5px 0 0 0; }
+        .auth-img { height: 60px; display: block; margin: 0 auto; }
     </style>
 </head>
 <body>
@@ -217,7 +219,7 @@ $html .= '      </tbody>
 
             <div class="footer">
                 <div class="auth-sign">
-                    <img src="' . $auth_sign_src . '" style="height: 50px; display: block; margin: 0 auto;">
+                    <img src="' . $auth_sign_src . '" class="auth-img">
                     <p>Authorized Signatory</p>
                 </div>
             </div>
