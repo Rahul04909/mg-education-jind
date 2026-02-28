@@ -146,6 +146,7 @@ if ($session_id > 0) {
             position: relative;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
         .student-photo {
             width: 100%;
@@ -161,8 +162,9 @@ if ($session_id > 0) {
             margin-top: 10px;
         }
         .sign-img {
-            max-height: 35px;
+            max-height: 40px;
             max-width: 100%;
+            object-fit: contain;
         }
 
         .exam-table {
