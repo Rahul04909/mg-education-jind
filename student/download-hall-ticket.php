@@ -81,6 +81,7 @@ function get_image_base64($path) {
 $bg_src = get_image_base64($bg_image);
 $photo_src = get_image_base64($photo_path);
 $sign_src = get_image_base64($sign_path);
+$auth_sign_src = get_image_base64($base_dir . '/marksheet/mg-sign.png');
 
 // Prepare Photo HTML
 $photo_html = '<br>No Photo<br>';
@@ -216,7 +217,7 @@ $html .= '      </tbody>
 
             <div class="footer">
                 <div class="auth-sign">
-                    <br><br>
+                    <img src="' . $auth_sign_src . '" style="height: 50px; display: block; margin: 0 auto;">
                     <p>Authorized Signatory</p>
                 </div>
             </div>

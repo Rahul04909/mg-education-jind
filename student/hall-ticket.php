@@ -346,8 +346,8 @@ if ($session_id > 0) {
 
                 <div class="footer-section">
                     <div class="auth-sign">
-                        <!-- Space for Signature Image -->
-                         <br><br><br>
+                        <!-- Authorized Signatory Signature -->
+                        <img src="marksheet/mg-sign.png" alt="Signature" style="height: 60px; display: block; margin: 0 auto;">
                         <p>Authorized Signatory</p>
                     </div>
                 </div>
