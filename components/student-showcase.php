@@ -27,7 +27,7 @@ if ($res_showcase) {
 <style>
     .student-showcase-section {
         padding: 80px 0;
-        background: #fdf2ff; /* Very faint purple background */
+        background: #ffffff; /* Very faint purple background */
         overflow: hidden;
     }
 
