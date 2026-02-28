@@ -12,7 +12,7 @@ $enrollment_no = $_SESSION['enrollment_no'];
 $conn = getDbConnection();
 
 // 1. Fetch Student, Course, and Session details
-$sql = "SELECT s.*, c.title as course_name, c.fees as course_meta, cs.session_name 
+$sql = "SELECT s.*, c.title as course_name, c.fees as course_meta, c.duration_value, c.duration_type, c.featured_image, cs.session_name 
         FROM admissions s 
         LEFT JOIN courses c ON s.course_id = c.id 
         LEFT JOIN course_sessions cs ON s.session_id = cs.id
@@ -337,8 +337,17 @@ $fee_percent = ($total_fee > 0) ? round(($total_paid / $total_fee) * 100) : 0;
                     <div class="info-grid">
                         <div class="info-item"><label>Selected Course</label><div><?php echo htmlspecialchars($student['course_name'] ?? 'N/A'); ?></div></div>
                         <div class="info-item"><label>Academic Session</label><div><?php echo htmlspecialchars($student['session_name'] ?? 'N/A'); ?></div></div>
-                        <div class="info-item"><label>Admission Year</label><div><?php echo htmlspecialchars($student['passing_year'] ?? 'N/A'); ?></div></div>
-                        <div class="info-item"><label>Center ID</label><div><?php echo htmlspecialchars($student['center_id'] ?? 'N/A'); ?></div></div>
+                        <div class="info-item"><label>Course Duration</label><div><?php echo htmlspecialchars(($student['duration_value'] ?? 'N/A') . ' ' . ($student['duration_type'] ?? '')); ?></div></div>
+                        <div class="info-item">
+                            <label>Course Image</label>
+                            <div style="margin-top:5px;">
+                                <?php if(!empty($student['featured_image']) && file_exists("../" . $student['featured_image'])): ?>
+                                    <img src="../<?php echo $student['featured_image']; ?>" style="width:100px; height:60px; object-fit:cover; border-radius:8px; border:1px solid var(--border);">
+                                <?php else: ?>
+                                    <div style="width:100px; height:60px; background:#f1f5f9; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:10px; color:#94a3b8; border:1px dashed #cbd5e1;">No Image</div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
