@@ -1,0 +1,25 @@
+[22-Apr-2026 06:49:52 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'student_name' in 'SELECT' in /home/jhdindus/mgedu.in/admin/index.php:493
+Stack trace:
+#0 /home/jhdindus/mgedu.in/admin/index.php(493): mysqli->query('SELECT student_...')
+#1 {main}
+  thrown in /home/jhdindus/mgedu.in/admin/index.php on line 493
+[22-Apr-2026 06:50:22 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'student_name' in 'SELECT' in /home/jhdindus/mgedu.in/admin/index.php:493
+Stack trace:
+#0 /home/jhdindus/mgedu.in/admin/index.php(493): mysqli->query('SELECT student_...')
+#1 {main}
+  thrown in /home/jhdindus/mgedu.in/admin/index.php on line 493
+[22-Apr-2026 06:50:50 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'student_name' in 'SELECT' in /home/jhdindus/mgedu.in/admin/index.php:493
+Stack trace:
+#0 /home/jhdindus/mgedu.in/admin/index.php(493): mysqli->query('SELECT student_...')
+#1 {main}
+  thrown in /home/jhdindus/mgedu.in/admin/index.php on line 493
+[24-Apr-2026 15:57:37 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'student_name' in 'SELECT' in /home/jhdindus/mgedu.in/admin/index.php:493
+Stack trace:
+#0 /home/jhdindus/mgedu.in/admin/index.php(493): mysqli->query('SELECT student_...')
+#1 {main}
+  thrown in /home/jhdindus/mgedu.in/admin/index.php on line 493
+[24-Apr-2026 17:04:58 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'student_name' in 'SELECT' in /home/jhdindus/mgedu.in/admin/index.php:493
+Stack trace:
+#0 /home/jhdindus/mgedu.in/admin/index.php(493): mysqli->query('SELECT student_...')
+#1 {main}
+  thrown in /home/jhdindus/mgedu.in/admin/index.php on line 493

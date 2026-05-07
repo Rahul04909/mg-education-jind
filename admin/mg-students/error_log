@@ -1,0 +1,8 @@
+[21-Apr-2026 09:23:00 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Too many connections in /home/jhdindus/mgedu.in/database/db-config.php:123
+Stack trace:
+#0 /home/jhdindus/mgedu.in/database/db-config.php(123): mysqli->__construct('localhost', 'jhdindus_mg_ski...', Object(SensitiveParameterValue), 'jhdindus_mg_ski...')
+#1 /home/jhdindus/mgedu.in/database/update_admission_schema.php(5): getDbConnection()
+#2 /home/jhdindus/mgedu.in/database/update_admission_schema.php(27): updateAdmissionSchema()
+#3 /home/jhdindus/mgedu.in/admin/mg-students/index.php(3): require_once('/home/jhdindus/...')
+#4 {main}
+  thrown in /home/jhdindus/mgedu.in/database/db-config.php on line 123

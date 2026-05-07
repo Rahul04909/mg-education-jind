@@ -4,9 +4,9 @@
 
 // Database credentials
 define('DB_HOST', 'localhost');
-define('DB_USER', 'jhdindus_mg_skill');
+define('DB_USER', 'jhgfrodu_rahul_dhiman');
 define('DB_PASS', 'Rd14072003@./');
-define('DB_NAME', 'jhdindus_mg_skill');
+define('DB_NAME', 'jghfrodu_mgedu');
 
 /**
  * Function to create database if it doesn't exist
