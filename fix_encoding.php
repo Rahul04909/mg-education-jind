@@ -11,16 +11,18 @@ $result = $conn->query($sql);
 if ($result) {
     while($row = $result->fetch_assoc()) {
         $id = $row['id'];
+        echo "Checking blog ID $id: " . htmlspecialchars(substr($row['title'], 0, 50)) . "...<br>";
         
-        // Function to fix double-encoded text
         $fix = function($str) {
             if (empty($str)) return $str;
-            // Detect if it's double-encoded (contains characteristic characters like à¤)
-            if (strpos($str, 'à¤') !== false || strpos($str, 'Ã') !== false) {
-                // Convert from UTF-8 back to Latin-1 bytes, which are the actual UTF-8 bytes
+            
+            // Try to convert if it looks like Mojibake
+            // Common patterns: à¤ (Devanagari), Ã (Common UTF-8 start)
+            if (preg_match('/[\xc3\xc2]/', $str) || strpos($str, 'à¤') !== false) {
+                $original = $str;
                 $fixed = @mb_convert_encoding($str, 'latin1', 'utf-8');
-                // Check if the result is valid UTF-8
-                if (mb_check_encoding($fixed, 'utf-8')) {
+                
+                if ($fixed && $fixed !== $original && mb_check_encoding($fixed, 'UTF-8')) {
                     return $fixed;
                 }
             }
@@ -32,18 +34,21 @@ if ($result) {
         $new_mtitle = $fix($row['meta_title']);
         $new_mdesc = $fix($row['meta_desc']);
         
-        // Update if changed
         if ($new_title !== $row['title'] || $new_desc !== $row['description']) {
             $stmt = $conn->prepare("UPDATE blogs SET title = ?, description = ?, meta_title = ?, meta_desc = ? WHERE id = ?");
             $stmt->bind_param("ssssi", $new_title, $new_desc, $new_mtitle, $new_mdesc, $id);
             if ($stmt->execute()) {
-                echo "Fixed blog ID $id\n";
+                echo "Successfully FIXED blog ID $id<br>";
             } else {
-                echo "Error fixing blog ID $id: " . $stmt->error . "\n";
+                echo "Error updating blog ID $id: " . $conn->error . "<br>";
             }
             $stmt->close();
+        } else {
+            echo "No changes needed for blog ID $id<br>";
         }
     }
+} else {
+    echo "Query failed: " . $conn->error . "<br>";
 }
 echo "Done.\n";
 ?>
