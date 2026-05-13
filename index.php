@@ -4,6 +4,8 @@ $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
 $url = $scheme . '://' . $host . (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/');
 $origin = $scheme . '://' . $host . '/';
 $ogImage = $origin . 'assets/images/mg-logo.jpg';
+error_reporting(0);
+ini_set('display_errors', 0);
 ?>
 <!doctype html>
 <html lang="en">
