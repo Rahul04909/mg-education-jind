@@ -17,13 +17,14 @@ if ($result) {
         $fix = function($str) {
             if (empty($str)) return $str;
             
-            // Check if string contains UTF-8 mojibake signatures
-            // \xC3\xA0\xC2\xA4 is "à¤" in UTF-8 bytes
-            // \xC3\x83 is "Ã" in UTF-8 bytes
-            if (preg_match('/[\xC3\xC2]/', $str)) {
-                $fixed = utf8_decode($str);
-                
-                if ($fixed !== $str && mb_check_encoding($fixed, 'UTF-8')) {
+            // utf8_decode converts UTF-8 bytes to ISO-8859-1 characters.
+            // If the string was double-encoded, this restores the original UTF-8 bytes.
+            $fixed = utf8_decode($str);
+            
+            if ($fixed !== $str) {
+                // Check if the fixed string contains Devanagari characters (Hindi)
+                // Range \x{0900}-\x{097F} covers the Devanagari script
+                if (preg_match('/[\x{0900}-\x{097F}]/u', $fixed)) {
                     return $fixed;
                 }
             }
@@ -39,13 +40,13 @@ if ($result) {
             $stmt = $conn->prepare("UPDATE blogs SET title = ?, description = ?, meta_title = ?, meta_desc = ? WHERE id = ?");
             $stmt->bind_param("ssssi", $new_title, $new_desc, $new_mtitle, $new_mdesc, $id);
             if ($stmt->execute()) {
-                echo "<strong>Successfully FIXED blog ID $id</strong><br>";
+                echo "<strong>Successfully FIXED blog ID $id (Hindi detected)</strong><br>";
             } else {
                 echo "Error updating blog ID $id: " . $conn->error . "<br>";
             }
             $stmt->close();
         } else {
-            echo "No changes needed (already correct or not double-encoded).<br>";
+            echo "No changes needed (already correct or no Hindi Mojibake detected).<br>";
         }
     }
 } else {
