@@ -5,19 +5,20 @@
 // Database credentials
 define('DB_HOST', 'localhost');
 define('DB_USER', 'jghfrodu_rahul_dhiman');
-define('DB_PASS', 'Rd14072003@./');
+define('DB_PASS', 'Rd14072003');
 define('DB_NAME', 'jghfrodu_mgedu');
 
 /**
  * Function to create database if it doesn't exist
  */
-function createDatabaseIfNotExists() {
+function createDatabaseIfNotExists()
+{
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS);
-    
+
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
-    
+
     // Create database if it doesn't exist
     $sql = "CREATE DATABASE IF NOT EXISTS " . DB_NAME;
     if ($conn->query($sql) === TRUE) {
@@ -25,20 +26,21 @@ function createDatabaseIfNotExists() {
     } else {
         echo "Error creating database: " . $conn->error . "\n";
     }
-    
+
     $conn->close();
 }
 
 /**
  * Function to create required tables if they don't exist
  */
-function createTablesIfNotExists() {
+function createTablesIfNotExists()
+{
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    
+
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
-    
+
     // Create smtp_settings table
     $sql_smtp = "CREATE TABLE IF NOT EXISTS smtp_settings (
         id INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -53,13 +55,13 @@ function createTablesIfNotExists() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )";
-    
+
     if ($conn->query($sql_smtp) === TRUE) {
         echo "Table 'smtp_settings' checked/created successfully\n";
     } else {
         echo "Error creating table 'smtp_settings': " . $conn->error . "\n";
     }
-    
+
     // Create email_logs table
     $sql_logs = "CREATE TABLE IF NOT EXISTS email_logs (
         id INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -70,13 +72,13 @@ function createTablesIfNotExists() {
         error_message TEXT,
         sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )";
-    
+
     if ($conn->query($sql_logs) === TRUE) {
         echo "Table 'email_logs' checked/created successfully\n";
     } else {
         echo "Error creating table 'email_logs': " . $conn->error . "\n";
     }
-    
+
     // Create razorpay_settings table
     $sql_razorpay = "CREATE TABLE IF NOT EXISTS razorpay_settings (
         id INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -86,13 +88,13 @@ function createTablesIfNotExists() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )";
-    
+
     if ($conn->query($sql_razorpay) === TRUE) {
         echo "Table 'razorpay_settings' checked/created successfully\n";
     } else {
         echo "Error creating table 'razorpay_settings': " . $conn->error . "\n";
     }
-    
+
     // Create payment_logs table
     $sql_payment_logs = "CREATE TABLE IF NOT EXISTS payment_logs (
         id INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -105,13 +107,13 @@ function createTablesIfNotExists() {
         error_message TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )";
-    
+
     if ($conn->query($sql_payment_logs) === TRUE) {
         echo "Table 'payment_logs' checked/created successfully\n";
     } else {
         echo "Error creating table 'payment_logs': " . $conn->error . "\n";
     }
-    
+
     $conn->close();
 }
 
@@ -119,7 +121,8 @@ function createTablesIfNotExists() {
  * Function to establish database connection
  * @return mysqli connection object
  */
-function getDbConnection() {
+function getDbConnection()
+{
     try {
         $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
         $conn->set_charset("utf8mb4");
