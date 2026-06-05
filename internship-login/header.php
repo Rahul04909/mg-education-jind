@@ -182,10 +182,9 @@ if (isset($_SESSION['student_id']) && isset($conn)) {
             Assignments
         </a>
         
-        <a href="#" class="nav-link">
+        <a href="study-material.php" class="nav-link <?php echo ($current_page == 'study-material.php') ? 'active' : ''; ?>">
             <i data-lucide="book-open" style="width:16px;"></i>
             Study Material
-            <span class="badge-soon">Coming Soon</span>
         </a>
         
         <a href="#" class="nav-link">
