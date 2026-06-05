@@ -54,10 +54,7 @@ if($att_res) {
 // 4. Define Photo URL
 $photo_url = "../assets/images/avatar-placeholder.png";
 if(isset($student['student_photo']) && !empty($student['student_photo'])) {
-    $check_path = __DIR__ . "/../" . $student['student_photo'];
-    if(file_exists($check_path)) {
-        $photo_url = "../" . $student['student_photo'];
-    }
+    $photo_url = "../" . $student['student_photo'];
 }
 ?>
 <!DOCTYPE html>
@@ -155,7 +152,7 @@ if(isset($student['student_photo']) && !empty($student['student_photo'])) {
                 </div>
 
                 <div class="sign-box">
-                    <?php if(!empty($student['student_sign']) && file_exists("../".$student['student_sign'])): ?>
+                    <?php if(!empty($student['student_sign'])): ?>
                         <img src="../<?php echo $student['student_sign']; ?>" alt="Signature">
                     <?php else: ?>
                         <span style="color:#ccc; font-size:12px;">No Signature Uploaded</span>
@@ -168,6 +165,12 @@ if(isset($student['student_photo']) && !empty($student['student_photo'])) {
         <!-- Main Dashboard -->
         <div class="dashboard-content">
             <h2>Your Internship Exams</h2>
+            
+            <?php if (isset($_GET['error']) && $_GET['error'] === 'no_result'): ?>
+                <div style="background: #fee2e2; color: #991b1b; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #fca5a5; font-size: 14px; font-weight: 500;">
+                    Your exam result is not yet declared. The certificate will be available once your result is published.
+                </div>
+            <?php endif; ?>
             
             <div class="exam-grid">
                 <?php if(empty($exams)): ?>

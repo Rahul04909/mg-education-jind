@@ -29,17 +29,44 @@ $error_message = "";
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Helpers
-    function uploadAdminFile($file, $dir) {
-        if (!isset($file['name']) || $file['error'] != 0) return null;
+    function uploadAdminFile($file, $dir, $friendly_name) {
+        if (!isset($file['name']) || $file['error'] == UPLOAD_ERR_NO_FILE) {
+            throw new Exception("Please select a file for " . $friendly_name . ".");
+        }
+        if ($file['error'] != UPLOAD_ERR_OK) {
+            $err_codes = [
+                UPLOAD_ERR_INI_SIZE   => "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+                UPLOAD_ERR_FORM_SIZE  => "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form",
+                UPLOAD_ERR_PARTIAL    => "The uploaded file was only partially uploaded",
+                UPLOAD_ERR_NO_TMP_DIR => "Missing a temporary folder",
+                UPLOAD_ERR_CANT_WRITE => "Failed to write file to disk",
+                UPLOAD_ERR_EXTENSION  => "A PHP extension stopped the file upload"
+            ];
+            $err_msg = isset($err_codes[$file['error']]) ? $err_codes[$file['error']] : "Unknown upload error";
+            throw new Exception("Failed to upload " . $friendly_name . ": " . $err_msg . " (Error Code: " . $file['error'] . ")");
+        }
         $target_dir = "../../assets/uploads/internship_docs/" . $dir . "/";
-        if (!file_exists($target_dir)) mkdir($target_dir, 0777, true);
-        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+        if (!file_exists($target_dir)) {
+            if (!mkdir($target_dir, 0777, true)) {
+                throw new Exception("Failed to create upload directory for " . $friendly_name . ". Please check folder permissions.");
+            }
+        }
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        
+        // Basic security file extension check
+        $allowed_exts = ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx', 'zip'];
+        if (!in_array($ext, $allowed_exts)) {
+            throw new Exception("Invalid file type for " . $friendly_name . ". Allowed types: JPG, JPEG, PNG, PDF, DOC, DOCX, ZIP.");
+        }
+        
         $filename = "INT" . date("Ymd") . "_" . uniqid() . "." . $ext; 
         $target_file = $target_dir . $filename;
         if (move_uploaded_file($file['tmp_name'], $target_file)) {
+            @chmod($target_file, 0644); // Make it world-readable
             return "assets/uploads/internship_docs/" . $dir . "/" . $filename;
+        } else {
+            throw new Exception("Failed to save uploaded file for " . $friendly_name . ". Check directory permissions.");
         }
-        return null;
     }
     
     // Generate Enrollment No
@@ -101,37 +128,47 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $final_fee = 0;
     }
     
-    // Uploads
-    $photo_path = uploadAdminFile($_FILES['student_photo'], 'photos');
-    $sign_path = uploadAdminFile($_FILES['student_sign'], 'signatures');
-    $aadhar_path = uploadAdminFile($_FILES['aadhar_file'], 'documents');
-    $cert_path = uploadAdminFile($_FILES['edu_cert_file'], 'documents');
-    
-    $payment_status = 'success'; // Admin enrollment implies confirmed receipt or waiver
-    
-    // Generate Password
-    $password_plain = substr(str_shuffle("abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789"), 0, 8);
-    $password_hash = password_hash($password_plain, PASSWORD_DEFAULT);
+    $photo_path = null;
+    $sign_path = null;
+    $aadhar_path = null;
+    $cert_path = null;
 
-    $sql = "INSERT INTO internship_enrollments (
-        enrollment_no, internship_id, session_id, full_name, father_name, mother_name, dob, category, admission_mode,
-        student_photo, student_sign, mobile, alt_mobile, email,
-        pincode, country, state, city, address,
-        highest_qual, school_name, board_university, passing_year, percentage,
-        computer_knowledge, typing_speed, prev_course_done, prev_enroll_no, prev_course_name, prev_course_session,
-        aadhar_no, aadhar_file, edu_cert_file,
-        course_fee, payment_status, razorpay_payment_id, password
-    ) VALUES (
-        '$enrollment_no', $internship_id, " . ($session_id ? $session_id : "NULL") . ", '$full_name', '$father_name', '$mother_name', '$dob', '$category', '$admission_mode',
-        '$photo_path', '$sign_path', '$mobile', '$alt_mobile', '$email',
-        '$pincode', '$country', '$state', '$city', '$address',
-        '$highest_qual', '$school_name', '$board', $passing_year, '$percentage',
-        '$computer_knowledge', '$typing_speed', $prev_course_done, '$prev_enroll_no', '$prev_course_name', '$prev_course_session',
-        '$aadhar_no', '$aadhar_path', '$cert_path',
-        $final_fee, '$payment_status', 'ADMIN_MANUAL', '$password_hash'
-    )";
+    try {
+        // Uploads
+        $photo_path = uploadAdminFile($_FILES['student_photo'], 'photos', 'Student Photo');
+        $sign_path = uploadAdminFile($_FILES['student_sign'], 'signatures', 'Student Signature');
+        $aadhar_path = uploadAdminFile($_FILES['aadhar_file'], 'documents', 'Aadhar Card');
+        $cert_path = uploadAdminFile($_FILES['edu_cert_file'], 'documents', 'Certificate/Marksheet');
+    } catch (Exception $e) {
+        $error_message = $e->getMessage();
+    }
     
-    if ($conn->query($sql) === TRUE) {
+    if (empty($error_message)) {
+        $payment_status = 'success'; // Admin enrollment implies confirmed receipt or waiver
+        
+        // Generate Password
+        $password_plain = substr(str_shuffle("abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789"), 0, 8);
+        $password_hash = password_hash($password_plain, PASSWORD_DEFAULT);
+
+        $sql = "INSERT INTO internship_enrollments (
+            enrollment_no, internship_id, session_id, full_name, father_name, mother_name, dob, category, admission_mode,
+            student_photo, student_sign, mobile, alt_mobile, email,
+            pincode, country, state, city, address,
+            highest_qual, school_name, board_university, passing_year, percentage,
+            computer_knowledge, typing_speed, prev_course_done, prev_enroll_no, prev_course_name, prev_course_session,
+            aadhar_no, aadhar_file, edu_cert_file,
+            course_fee, payment_status, razorpay_payment_id, password
+        ) VALUES (
+            '$enrollment_no', $internship_id, " . ($session_id ? $session_id : "NULL") . ", '$full_name', '$father_name', '$mother_name', '$dob', '$category', '$admission_mode',
+            '$photo_path', '$sign_path', '$mobile', '$alt_mobile', '$email',
+            '$pincode', '$country', '$state', '$city', '$address',
+            '$highest_qual', '$school_name', '$board', $passing_year, '$percentage',
+            '$computer_knowledge', '$typing_speed', $prev_course_done, '$prev_enroll_no', '$prev_course_name', '$prev_course_session',
+            '$aadhar_no', '$aadhar_path', '$cert_path',
+            $final_fee, '$payment_status', 'ADMIN_MANUAL', '$password_hash'
+        )";
+        
+        if ($conn->query($sql) === TRUE) {
         $success_message = "Student Enrolled Successfully! Enrollment No: " . $enrollment_no;
         
         // Log transaction if fee > 0
@@ -196,6 +233,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     } else {
         $error_message = "Database Error: " . $conn->error;
+    }
     }
 }
 

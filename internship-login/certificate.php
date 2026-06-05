@@ -24,6 +24,18 @@ $student = $stmt->get_result()->fetch_assoc();
 if (!$student) {
     die("Student not found.");
 }
+
+// Check if the student has any results in internship_results
+$check_res_sql = "SELECT COUNT(*) as total FROM internship_results WHERE student_id = ?";
+$stmt_res = $conn->prepare($check_res_sql);
+$stmt_res->bind_param("i", $student_id);
+$stmt_res->execute();
+$res_count = $stmt_res->get_result()->fetch_assoc()['total'];
+
+if ($res_count == 0) {
+    header("Location: index.php?error=no_result");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -209,12 +221,9 @@ if (!$student) {
 
 <?php
     // Define Photo URL
-    $photo_url = "assets/images/avatar-placeholder.png"; // Default
+    $photo_url = "../assets/images/avatar-placeholder.png"; // Default
     if(!empty($student['student_photo'])) {
-        $check_path = __DIR__ . "/../" . $student['student_photo'];
-        if(file_exists($check_path)) {
-            $photo_url = "../" . $student['student_photo'];
-        }
+        $photo_url = "../" . $student['student_photo'];
     }
     
     // QR Code Data (Enrollment - Name)

@@ -4,6 +4,19 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 // Ensure we have access to the current page name for active state
 $current_page = basename($_SERVER['PHP_SELF']);
+
+// Check if student has results to conditionally show the certificate menu option
+$has_result = false;
+if (isset($_SESSION['student_id']) && isset($conn)) {
+    $check_res_sql = "SELECT COUNT(*) as total FROM internship_results WHERE student_id = " . intval($_SESSION['student_id']);
+    $check_res = $conn->query($check_res_sql);
+    if ($check_res) {
+        $check_row = $check_res->fetch_assoc();
+        if ($check_row['total'] > 0) {
+            $has_result = true;
+        }
+    }
+}
 ?>
 <style>
     /* Header Specific Styles */
@@ -137,7 +150,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             
             <?php 
                 $h_photo = "../assets/images/avatar-placeholder.png";
-                if(isset($student['student_photo']) && !empty($student['student_photo']) && file_exists(__DIR__ . "/../" . $student['student_photo'])) {
+                if(isset($student['student_photo']) && !empty($student['student_photo'])) {
                     $h_photo = "../" . $student['student_photo'];
                 }
             ?>
@@ -173,12 +186,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <span class="badge-soon">Coming Soon</span>
         </a>
 
-        <a href="certificate.php" class="nav-link">
+        <?php if ($has_result): ?>
+        <a href="certificate.php" class="nav-link <?php echo ($current_page == 'certificate.php') ? 'active' : ''; ?>">
             <i data-lucide="award" style="width:16px;"></i>
             Download Certificate
         </a>
+        <?php endif; ?>
 
-        <a href="#" class="nav-link">
+        <a href="index.php" class="nav-link <?php echo ($current_page == 'result.php') ? 'active' : ''; ?>">
             <i data-lucide="bar-chart-2" style="width:16px;"></i>
             Results
         </a>

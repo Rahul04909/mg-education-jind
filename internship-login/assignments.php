@@ -52,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_assignment']))
     }
 }
 
-// Fetch Student Info for Filtering
-$stmt_s = $conn->prepare("SELECT internship_id, session_id FROM internship_enrollments WHERE id = ?");
+// Fetch Student Info for Filtering and Header display
+$stmt_s = $conn->prepare("SELECT * FROM internship_enrollments WHERE id = ?");
 $stmt_s->bind_param("i", $student_id);
 $stmt_s->execute();
 $res_s = $stmt_s->get_result();
