@@ -225,7 +225,7 @@ if ($res_count == 0) {
 <?php
     // Define Photo URL
     $photo_url = $root_path . "assets/images/avatar-placeholder.png"; // Default
-    if(!empty($student['student_photo']) && file_exists(__DIR__ . '/../' . $student['student_photo'])) {
+    if(!empty($student['student_photo'])) {
         $photo_url = $root_path . $student['student_photo'];
     }
     

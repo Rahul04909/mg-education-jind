@@ -54,7 +54,7 @@ if($att_res) {
 }
 // 4. Define Photo URL
 $photo_url = $root_path . "assets/images/avatar-placeholder.png";
-if(isset($student['student_photo']) && !empty($student['student_photo']) && file_exists(__DIR__ . '/../' . $student['student_photo'])) {
+if(isset($student['student_photo']) && !empty($student['student_photo'])) {
     $photo_url = $root_path . $student['student_photo'];
 }
 ?>
@@ -153,7 +153,7 @@ if(isset($student['student_photo']) && !empty($student['student_photo']) && file
                 </div>
 
                 <div class="sign-box">
-                    <?php if(!empty($student['student_sign']) && file_exists(__DIR__ . '/../' . $student['student_sign'])): ?>
+                    <?php if(!empty($student['student_sign'])): ?>
                         <img src="<?php echo $root_path . htmlspecialchars($student['student_sign']); ?>" alt="Signature">
                     <?php else: ?>
                         <span style="color:#ccc; font-size:12px;">No Signature Uploaded</span>

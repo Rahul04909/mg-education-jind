@@ -153,7 +153,7 @@ if (isset($_SESSION['student_id']) && isset($conn)) {
             
             <?php 
                 $h_photo = $root_path . "assets/images/avatar-placeholder.png";
-                if(isset($student['student_photo']) && !empty($student['student_photo']) && file_exists(__DIR__ . '/../' . $student['student_photo'])) {
+                if(isset($student['student_photo']) && !empty($student['student_photo'])) {
                     $h_photo = $root_path . $student['student_photo'];
                 }
             ?>

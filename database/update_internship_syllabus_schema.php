@@ -15,8 +15,9 @@ $sql_syllabus = "CREATE TABLE IF NOT EXISTS internship_syllabus (
 )";
 
 if ($conn->query($sql_syllabus) === TRUE) {
-    // Table created successfully or already exists
+    echo "Table 'internship_syllabus' checked/created successfully.<br>";
 } else {
+    echo "Error creating table 'internship_syllabus': " . $conn->error . "<br>";
     error_log("Error creating table internship_syllabus: " . $conn->error);
 }
 ?>

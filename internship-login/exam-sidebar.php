@@ -14,7 +14,7 @@ if (!isset($root_path)) {
         <div class="user-mini-profile">
             <?php 
                 $u_photo = $root_path . "assets/images/avatar-placeholder.png";
-                if(!empty($student['student_photo']) && file_exists(__DIR__ . '/../' . $student['student_photo'])){
+                if(!empty($student['student_photo'])){
                     $u_photo = $root_path . $student['student_photo'];
                 }
             ?>
