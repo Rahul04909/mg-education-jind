@@ -2,6 +2,9 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+if (!isset($root_path)) {
+    $root_path = rtrim(str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME']))), '/') . '/';
+}
 // Ensure we have access to the current page name for active state
 $current_page = basename($_SERVER['PHP_SELF']);
 
@@ -137,7 +140,7 @@ if (isset($_SESSION['student_id']) && isset($conn)) {
     <div class="header-top">
         <!-- Logo -->
         <a href="index.php" class="header-logo">
-            <img src="../assets/images/sidebar-logo.jpg" alt="Logo">
+            <img src="<?php echo $root_path; ?>assets/images/sidebar-logo.jpg" alt="Logo">
             <span>Internship Portal</span>
         </a>
 
@@ -149,9 +152,9 @@ if (isset($_SESSION['student_id']) && isset($conn)) {
             </div>
             
             <?php 
-                $h_photo = "../assets/images/avatar-placeholder.png";
-                if(isset($student['student_photo']) && !empty($student['student_photo'])) {
-                    $h_photo = "../" . $student['student_photo'];
+                $h_photo = $root_path . "assets/images/avatar-placeholder.png";
+                if(isset($student['student_photo']) && !empty($student['student_photo']) && file_exists(__DIR__ . '/../' . $student['student_photo'])) {
+                    $h_photo = $root_path . $student['student_photo'];
                 }
             ?>
             <img src="<?php echo $h_photo; ?>" class="user-avatar" alt="Profile">

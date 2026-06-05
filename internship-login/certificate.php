@@ -1,6 +1,9 @@
 <?php
 session_start();
 require_once __DIR__ . '/../database/db-config.php';
+if (!isset($root_path)) {
+    $root_path = rtrim(str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME']))), '/') . '/';
+}
 
 if (!isset($_SESSION['student_id']) || !isset($_SESSION['is_internship'])) {
     header("Location: login.php");
@@ -87,7 +90,7 @@ if ($res_count == 0) {
             width: 1123px; /* A4 width at 96 DPI approx */
             height: 794px; /* A4 height at 96 DPI approx */
             position: relative;
-            background-image: url('assets/new-background.png');
+            background-image: url('<?php echo $root_path; ?>internship-login/assets/new-background.png');
             background-size: cover;
             background-position: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -221,9 +224,9 @@ if ($res_count == 0) {
 
 <?php
     // Define Photo URL
-    $photo_url = "../assets/images/avatar-placeholder.png"; // Default
-    if(!empty($student['student_photo'])) {
-        $photo_url = "../" . $student['student_photo'];
+    $photo_url = $root_path . "assets/images/avatar-placeholder.png"; // Default
+    if(!empty($student['student_photo']) && file_exists(__DIR__ . '/../' . $student['student_photo'])) {
+        $photo_url = $root_path . $student['student_photo'];
     }
     
     // QR Code Data (Enrollment - Name)

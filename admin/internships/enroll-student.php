@@ -571,4 +571,3 @@ include __DIR__ . '/../sidebar.php';
     </script>
 </body>
 </html>
-<?php $conn->close(); ?>

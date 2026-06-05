@@ -1,5 +1,8 @@
 <?php
 // Internship Exam Sidebar Component
+if (!isset($root_path)) {
+    $root_path = rtrim(str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME']))), '/') . '/';
+}
 ?>
 <div class="exam-sidebar">
     <!-- 1. Timer -->
@@ -10,9 +13,9 @@
         </div>
         <div class="user-mini-profile">
             <?php 
-                $u_photo = "../assets/images/avatar-placeholder.png";
-                if(!empty($student['student_photo']) && file_exists("../".$student['student_photo'])){
-                    $u_photo = "../".$student['student_photo'];
+                $u_photo = $root_path . "assets/images/avatar-placeholder.png";
+                if(!empty($student['student_photo']) && file_exists(__DIR__ . '/../' . $student['student_photo'])){
+                    $u_photo = $root_path . $student['student_photo'];
                 }
             ?>
             <img src="<?php echo $u_photo; ?>" alt="User" class="sidebar-avatar">

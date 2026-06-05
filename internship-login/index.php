@@ -10,6 +10,7 @@ if (!isset($_SESSION['student_id']) || !isset($_SESSION['is_internship'])) {
 
 $conn = getDbConnection();
 $student_id = $_SESSION['student_id'];
+$root_path = rtrim(str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME']))), '/') . '/';
 
 // 1. Fetch Student Details
 // Join with internships table to get internship title
@@ -52,9 +53,9 @@ if($att_res) {
     }
 }
 // 4. Define Photo URL
-$photo_url = "../assets/images/avatar-placeholder.png";
-if(isset($student['student_photo']) && !empty($student['student_photo'])) {
-    $photo_url = "../" . $student['student_photo'];
+$photo_url = $root_path . "assets/images/avatar-placeholder.png";
+if(isset($student['student_photo']) && !empty($student['student_photo']) && file_exists(__DIR__ . '/../' . $student['student_photo'])) {
+    $photo_url = $root_path . $student['student_photo'];
 }
 ?>
 <!DOCTYPE html>
@@ -152,8 +153,8 @@ if(isset($student['student_photo']) && !empty($student['student_photo'])) {
                 </div>
 
                 <div class="sign-box">
-                    <?php if(!empty($student['student_sign'])): ?>
-                        <img src="../<?php echo $student['student_sign']; ?>" alt="Signature">
+                    <?php if(!empty($student['student_sign']) && file_exists(__DIR__ . '/../' . $student['student_sign'])): ?>
+                        <img src="<?php echo $root_path . htmlspecialchars($student['student_sign']); ?>" alt="Signature">
                     <?php else: ?>
                         <span style="color:#ccc; font-size:12px;">No Signature Uploaded</span>
                     <?php endif; ?>
