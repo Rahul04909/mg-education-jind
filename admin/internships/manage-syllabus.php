@@ -118,6 +118,7 @@ include __DIR__ . "/../sidebar.php";
         .modal-content {background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 750px; border-radius: 12px; position: relative;}
         .close {color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;}
         .close:hover {color: black;}
+        .cke_notifications_area { display: none !important; }
     </style>
 </head>
 <body>
@@ -251,7 +252,9 @@ include __DIR__ . "/../sidebar.php";
         // Initialize CKEditor
         let editorInstance = null;
         window.addEventListener('load', function() {
-            editorInstance = CKEDITOR.replace('description');
+            editorInstance = CKEDITOR.replace('description', {
+                versionCheck: false
+            });
         });
 
         function openAddModal() {

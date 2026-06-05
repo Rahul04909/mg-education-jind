@@ -133,6 +133,7 @@ include __DIR__ . "/../sidebar.php";
         .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
         .section-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
         .preview-image{max-width:200px;margin-top:10px;border-radius:8px;}
+        .cke_notifications_area { display: none !important; }
     </style>
 </head>
 <body>
@@ -251,7 +252,9 @@ include __DIR__ . "/../sidebar.php";
 
     <script>
         // Init CKEditor
-        CKEDITOR.replace('description');
+        CKEDITOR.replace('description', {
+            versionCheck: false
+        });
 
         // Slug Generation (Only if empty, usually usually don't auto-update on edit unless requested)
         document.getElementById('title').addEventListener('input', function() {

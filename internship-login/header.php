@@ -172,6 +172,11 @@ if (isset($_SESSION['student_id']) && isset($conn)) {
             Dashboard
         </a>
         
+        <a href="syllabus.php" class="nav-link <?php echo ($current_page == 'syllabus.php') ? 'active' : ''; ?>">
+            <i data-lucide="book-open" style="width:16px;"></i>
+            Syllabus
+        </a>
+        
         <a href="assignments.php" class="nav-link <?php echo ($current_page == 'assignments.php') ? 'active' : ''; ?>">
             <i data-lucide="file-text" style="width:16px;"></i>
             Assignments
