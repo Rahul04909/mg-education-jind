@@ -411,6 +411,18 @@
                     <span class="nav-text">Bank Details</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="../../center/manage-fees.php" class="nav-link">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M12 4h9"></path><path d="M4 12h16"></path><path d="M6 16v-8"></path><path d="M10 16v-4"></path><path d="M14 16v-2"></path><path d="M18 16v-1"></path></svg>
+                    <span class="nav-text">Manage Fees</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="../../center/review-mark-assignment.php" class="nav-link">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    <span class="nav-text">Manage Assignments</span>
+                </a>
+            </li>
         </ul>
             <!-- promo card sidebar -->
 
