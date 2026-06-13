@@ -128,18 +128,18 @@
                         Dashboard
                     </a>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="#" class="s-nav-link">
                         <svg class="s-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
                         My Class
                     </a>
-                </li>
-                <li>
+                </li> -->
+                <!-- <li>
                     <a href="my-course.php" class="s-nav-link">
                         <svg class="s-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                         My Course
                     </a>
-                </li>
+                </li> -->
                 
                 <?php
                 $fee_link = "../../student/fees.php"; // Default
