@@ -12,16 +12,17 @@ $student_id = $_SESSION['student_id'];
 $paper_id = intval($_GET['paper_id']);
 
 // Fetch Result
-$sql = "SELECT er.*, i.title as internship_title
+$stmt = $conn->prepare("SELECT er.*, i.title as internship_title
         FROM internship_results er
         JOIN internship_question_papers iqp ON er.internship_paper_id = iqp.id
         JOIN internships i ON iqp.internship_id = i.id
-        WHERE er.student_id = $student_id AND er.internship_paper_id = $paper_id
-        ORDER BY er.id DESC LIMIT 1";
+        WHERE er.student_id = ? AND er.internship_paper_id = ?
+        ORDER BY er.id DESC LIMIT 1");
+$stmt->bind_param("ii", $student_id, $paper_id);
+$stmt->execute();
+$res = $stmt->get_result();
 
-$res = $conn->query($sql);
-
-if ($res && $res->num_rows == 0) {
+if (!$res || $res->num_rows == 0) {
     header("Location: index.php");
     exit;
 }

@@ -28,8 +28,8 @@ if (!$student) {
     die("Student not found.");
 }
 
-// Check if the student has any results in internship_results
-$check_res_sql = "SELECT COUNT(*) as total FROM internship_results WHERE student_id = ?";
+// Check if the student has PASSED results in internship_results
+$check_res_sql = "SELECT COUNT(*) as total FROM internship_results WHERE student_id = ? AND status = 'PASS'";
 $stmt_res = $conn->prepare($check_res_sql);
 $stmt_res->bind_param("i", $student_id);
 $stmt_res->execute();

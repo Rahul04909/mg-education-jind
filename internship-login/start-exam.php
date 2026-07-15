@@ -13,19 +13,22 @@ $student_id = $_SESSION['student_id'];
 $paper_id = intval($_GET['paper_id']);
 
 // 0. Check if already attempted
-$chk_sql = "SELECT id FROM internship_results WHERE internship_paper_id = $paper_id AND student_id = $student_id";
-if ($conn->query($chk_sql)->num_rows > 0) {
+$stmt_chk = $conn->prepare("SELECT id FROM internship_results WHERE internship_paper_id = ? AND student_id = ?");
+$stmt_chk->bind_param("ii", $paper_id, $student_id);
+$stmt_chk->execute();
+if ($stmt_chk->get_result()->num_rows > 0) {
     header("Location: result.php?paper_id=" . $paper_id);
     exit;
 }
 
 // 1. Fetch Exam Paper Details
-$sql = "SELECT iqp.*, i.title as internship_title 
+$stmt_p = $conn->prepare("SELECT iqp.*, i.title as internship_title 
         FROM internship_question_papers iqp 
         JOIN internships i ON iqp.internship_id = i.id 
-        WHERE iqp.id = $paper_id";
-
-$res = $conn->query($sql);
+        WHERE iqp.id = ?");
+$stmt_p->bind_param("i", $paper_id);
+$stmt_p->execute();
+$res = $stmt_p->get_result();
 if ($res->num_rows == 0) {
     die("Invalid Exam or Paper not found.");
 }

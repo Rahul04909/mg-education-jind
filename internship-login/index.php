@@ -14,13 +14,14 @@ $root_path = rtrim(str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME'
 
 // 1. Fetch Student Details
 // Join with internships table to get internship title
-$sql_s = "SELECT s.*, i.title as internship_title, sess.session_name 
+$stmt_s = $conn->prepare("SELECT s.*, i.title as internship_title, sess.session_name 
           FROM internship_enrollments s 
           LEFT JOIN internships i ON s.internship_id = i.id 
           LEFT JOIN internship_sessions sess ON s.session_id = sess.id
-          WHERE s.id = $student_id";
-$res_s = $conn->query($sql_s);
-$student = $res_s->fetch_assoc();
+          WHERE s.id = ?");
+$stmt_s->bind_param("i", $student_id);
+$stmt_s->execute();
+$student = $stmt_s->get_result()->fetch_assoc();
 
 // 2. Fetch Exam Schedule (Question Papers)
 $exams = [];
@@ -28,14 +29,14 @@ $internship_id = $student['internship_id'];
 $session_id = $student['session_id'];
 
 if ($internship_id > 0 && $session_id > 0) {
-    // There is no separate 'exam_schedules' for internships, the 'internship_question_papers' acts as the schedule
-    // because it has exam_date, start_time, etc.
-    $sql_e = "SELECT iqp.*, i.title as internship_title 
+    $stmt_e = $conn->prepare("SELECT iqp.*, i.title as internship_title 
               FROM internship_question_papers iqp 
               JOIN internships i ON iqp.internship_id = i.id 
-              WHERE iqp.internship_id = $internship_id AND iqp.session_id = $session_id
-              ORDER BY iqp.exam_date ASC, iqp.start_time ASC";
-    $res_e = $conn->query($sql_e);
+              WHERE iqp.internship_id = ? AND iqp.session_id = ?
+              ORDER BY iqp.exam_date ASC, iqp.start_time ASC");
+    $stmt_e->bind_param("ii", $internship_id, $session_id);
+    $stmt_e->execute();
+    $res_e = $stmt_e->get_result();
     if($res_e) {
         while($row = $res_e->fetch_assoc()) {
             $exams[] = $row;
@@ -45,8 +46,10 @@ if ($internship_id > 0 && $session_id > 0) {
 
 // 3. Fetch Attempted Exams
 $attempted_map = [];
-$att_sql = "SELECT internship_paper_id, status, obtained_marks, total_marks FROM internship_results WHERE student_id = $student_id";
-$att_res = $conn->query($att_sql);
+$stmt_att = $conn->prepare("SELECT internship_paper_id, status, obtained_marks, total_marks FROM internship_results WHERE student_id = ?");
+$stmt_att->bind_param("i", $student_id);
+$stmt_att->execute();
+$att_res = $stmt_att->get_result();
 if($att_res) {
     while($row = $att_res->fetch_assoc()) {
         $attempted_map[$row['internship_paper_id']] = $row;

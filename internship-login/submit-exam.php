@@ -32,13 +32,22 @@ $paper_id = intval($input['paper_id']);
 $user_answers = $input['answers'] ?? []; // { qId: { selected: 'A', status: '...' } }
 
 // 1. Fetch Paper Details
-$sql = "SELECT * FROM internship_question_papers WHERE id = $paper_id";
-$res = $conn->query($sql);
-if ($res->num_rows == 0) {
+$stmt_paper = $conn->prepare("SELECT * FROM internship_question_papers WHERE id = ?");
+$stmt_paper->bind_param("i", $paper_id);
+$stmt_paper->execute();
+$paper = $stmt_paper->get_result()->fetch_assoc();
+if (!$paper) {
     sendJson(['status' => 'error', 'message' => 'Exam Paper Not Found']);
 }
-$paper = $res->fetch_assoc();
 $marks_per_q = $paper['marks_per_question'];
+
+// 1a. Check if already attempted to prevent duplicate submission
+$stmt_chk = $conn->prepare("SELECT id FROM internship_results WHERE internship_paper_id = ? AND student_id = ?");
+$stmt_chk->bind_param("ii", $paper_id, $student_id);
+$stmt_chk->execute();
+if ($stmt_chk->get_result()->num_rows > 0) {
+    sendJson(['status' => 'error', 'message' => 'Exam already submitted']);
+}
 
 // 2. Fetch Correct Answers from DB
 $q_sql = "SELECT id, correct_option FROM internship_questions WHERE paper_id = $paper_id";

@@ -8,16 +8,19 @@ if (!isset($root_path)) {
 // Ensure we have access to the current page name for active state
 $current_page = basename($_SERVER['PHP_SELF']);
 
-// Check if student has results to conditionally show the certificate menu option
+// Check if student has PASSED results to conditionally show the certificate menu option
 $has_result = false;
 if (isset($_SESSION['student_id']) && isset($conn)) {
-    $check_res_sql = "SELECT COUNT(*) as total FROM internship_results WHERE student_id = " . intval($_SESSION['student_id']);
-    $check_res = $conn->query($check_res_sql);
-    if ($check_res) {
-        $check_row = $check_res->fetch_assoc();
+    $stmt_chk = $conn->prepare("SELECT COUNT(*) as total FROM internship_results WHERE student_id = ? AND status = 'PASS'");
+    if ($stmt_chk) {
+        $sid = $_SESSION['student_id'];
+        $stmt_chk->bind_param("i", $sid);
+        $stmt_chk->execute();
+        $check_row = $stmt_chk->get_result()->fetch_assoc();
         if ($check_row['total'] > 0) {
             $has_result = true;
         }
+        $stmt_chk->close();
     }
 }
 ?>
