@@ -309,7 +309,6 @@ if ($remaining_seconds <= 0) {
         }
 
         function confirmSubmit() {
-            // Check if all questions are answered
             let answeredCount = 0;
             questions.forEach(q => {
                 const resp = userResponses[q.id];
@@ -318,12 +317,13 @@ if ($remaining_seconds <= 0) {
                 }
             });
 
+            let msg = `You have answered ${answeredCount} out of ${totalQuestions} questions.`;
             if (answeredCount < totalQuestions) {
-                alert(`You have answered ${answeredCount} out of ${totalQuestions} questions.\nPlease answer all questions before submitting.`);
-                return;
+                msg += `\n\nUnanswered questions will be marked as wrong.`;
             }
+            msg += `\n\nAre you sure you want to submit? This action cannot be undone.`;
 
-            if(confirm("Are you sure you want to submit the exam? You cannot undo this action.")) {
+            if(confirm(msg)) {
                 submitExam(false);
             }
         }
